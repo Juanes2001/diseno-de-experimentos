@@ -14,3 +14,9 @@ venv/
 .DS_Store
 Thumbs.db
 *~
+
+# Metadatos de Windows/WSL
+*:Zone.Identifier
+
+# Datos personales de terceros (no publicar)
+notas/DOE - Equipos*.pdf
