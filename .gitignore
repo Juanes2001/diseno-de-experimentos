@@ -20,3 +20,6 @@ Thumbs.db
 
 # Datos personales de terceros (no publicar)
 notas/DOE - Equipos*.pdf
+
+# Bibliografía con derechos de autor (se comparte por fuera del repo)
+bibliografia/*.pdf
