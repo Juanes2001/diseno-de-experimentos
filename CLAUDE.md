@@ -32,7 +32,13 @@ Todo se envía a doe_unal@yahoo.com. Retraso: −10 % por día, máximo 3 retras
 - Idioma de notas, README y commits: español.
 - Cada taller va en `talleres/taller-NN-<tema>/` con su enunciado, datos, código y solución.
 - Los datos crudos van en `datos/`; no se modifican, se procesan desde `scripts/` o el taller.
-- Bibliografía y diapositivas se guardan tal cual se reciben (PDF, PPTX, etc.).
+- Bibliografía y diapositivas se guardan tal cual se reciben (PDF, PPTX, etc.). Los PDF de
+  `bibliografia/` están ignorados por git (libros con derechos de autor; el repo es público).
+- El trabajo práctico se documenta en `trabajo-practico/bitacora-trabajo-practico.docx`
+  (Parte I bitácora, Parte II borrador del informe). Es binario: no editarlo en paralelo.
+- Lo que se lea del tema 6 se acumula en `notas/tema-06-factoriales-fraccionados.md`
+  (con fuente y página) para construir la exposición y el informe del caso.
+- Al cerrar cada sesión, registrar lo hecho y lo pendiente en `notas/bitacora-sesiones.md`.
 - Antes de resolver un taller o preparar la exposición, consultar las diapositivas y la
   bibliografía del tema; para el tema 6, priorizar Montgomery y Gutiérrez–De la Vara.
 - Los informes siguen Normas ICONTEC y deben incluir siempre: planteamiento del problema,

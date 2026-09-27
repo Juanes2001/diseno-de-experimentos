@@ -1,19 +1,20 @@
-# Diseño de Experimentos (Design of Experiments)
+# Diseño de Experimentos Avanzados
 
-Repositorio de la materia **Design of Experiments**. Reúne el material teórico, los
+Repositorio de la materia **Diseño de Experimentos Avanzados (3008475)**. Reúne el material teórico, los
 talleres y las herramientas de análisis usadas a lo largo del curso.
 
 ## Estructura
 
 | Carpeta | Contenido |
 |---|---|
-| `bibliografia/` | Libros y artículos de referencia (Montgomery, Box-Hunter-Hunter, etc.) |
+| `bibliografia/` | Libros y artículos de referencia. Los PDF están ignorados por git (derechos de autor): se comparten por fuera del repo |
 | `diapositivas/` | Presentaciones con la teoría de cada tema |
 | `talleres/` | Enunciados y soluciones de los talleres, uno por subcarpeta |
 | `software/` | Herramientas de análisis (scripts, guías de uso, entornos) |
 | `datos/` | Conjuntos de datos usados en talleres y ejemplos |
 | `scripts/` | Código reutilizable para análisis (ANOVA, diseños factoriales, RSM, etc.) |
-| `notas/` | Apuntes y resúmenes por temática |
+| `notas/` | Apuntes y resúmenes por temática; `notas/bitacora-sesiones.md` registra cada sesión de trabajo |
+| `trabajo-practico/` | Bitácora y borrador del informe del trabajo práctico (`bitacora-trabajo-practico.docx`) |
 
 ## Curso
 
