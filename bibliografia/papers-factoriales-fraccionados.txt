@@ -1,0 +1,174 @@
+ARTÍCULOS DE ACCESO ABIERTO QUE USAN DISEÑOS FACTORIALES FRACCIONADOS
+Tema 6 · Diseño de Experimentos Avanzados (3008475) · UNAL 2026-II
+Búsqueda realizada el 3 de octubre de 2026
+
+CÓMO SE ARMÓ ESTA LISTA
+- Fuentes: índices Crossref y OpenAlex (búsqueda por título) y búsqueda web en SciELO, Redalyc y Dialnet.
+- De cada artículo se verificó en OpenAlex el título, los autores, la revista, el año y la condición de
+  acceso abierto, y se comprobó que el DOI resuelve en doi.org (salvo el que se señala abajo).
+- El diseño se anota tal como aparece en el resumen. No se leyó el texto completo de los artículos:
+  antes de elegir el caso hay que abrir el PDF y confirmar el diseño, la tabla ANOVA y la validación
+  de supuestos.
+- Los nombres de los autores están como los entrega el índice (Nombre Apellido); para el informe hay
+  que pasarlos al formato de las Normas ICONTEC.
+
+SUGERENCIA PARA EL CASO DEL INFORME
+- En español: el n.º 1 (nanofluidos, 2^(6-2) de resolución IV, revista colombiana).
+- En inglés: el n.º 4 (pretratamiento de biomasa, 2^(5-1) de resolución V, licencia CC BY).
+  Ambos declaran el diseño exacto, que es lo primero que evalúa el informe.
+
+====================================================================================================
+A. EN ESPAÑOL
+====================================================================================================
+
+[1] Karen Paola Cacua; Robison Buitrago‐Sierra; Elizabeth Pabón; Bernardo Herrera; Jorge Luis Rentería Peláez (2017). Estudio de los factores que afectan la estabilidad de nanofluidos usando un diseño factorial fraccionado. Revista CINTEX, vol. 22, n.º 1, 69-81.
+    DOI: 10.33131/24222208.288
+    Enlace: https://doi.org/10.33131/24222208.288
+    Acceso: revista de acceso abierto sin cargos; licencia no informada por el índice.
+    Diseño: 2^(6-2), resolución IV (indicado en el resumen).
+    Tema: Estabilidad de nanofluidos de Al2O3 y TiO2. Colombiano y en español.
+
+[2] Carlos Orlando Lozada Riascos; Jorge Andrés Urrutia Mosquera (2008). Diseño factorial fraccionado 2k-p aplicado a la determinación del valor de conservación de inmuebles de interés cultural. Scientia et Technica (Universidad Tecnológica de Pereira), año XIV, n.º 39, 280-285.
+    DOI: no tiene DOI válido. El índice le asigna 10.22517/23447214.3229, pero ese DOI no resuelve en doi.org.
+    Enlace: http://revistas.utp.edu.co/index.php/revistaciencia/article/view/3229
+    Acceso: copia abierta en repositorio; licencia no informada por el índice.
+    Diseño: 2^(7-3), 16 corridas (indicado en el texto); reporta ANOVA.
+    Tema: Valor de conservación de inmuebles de interés cultural (Apía, Risaralda). No es un experimento de laboratorio: aplica el diseño a un método de avalúos.
+
+[3] Edgar Salmoran-López; Armando Javier Rios-Lira; Yaquelin Verenice Pantoja-Pacheco (2020). Programa computacional para generar estructuras de alias de diseños factoriales fraccionados de niveles mixtos. Ingeniería Investigación y Tecnología, vol. 21, n.º 4, 1-13.
+    DOI: 10.22201/fi.25940732e.2020.21.4.031
+    Enlace: https://doi.org/10.22201/fi.25940732e.2020.21.4.031
+    Acceso: revista de acceso abierto sin cargos; licencia no informada por el índice.
+    Diseño: Metodológico: no aplica el diseño a datos experimentales.
+    Tema: Programa en MATLAB que construye estructuras de alias de fraccionados de niveles mixtos. Sirve como apoyo teórico, no como caso.
+
+====================================================================================================
+B. EN INGLÉS, CON EL DISEÑO 2^(k-p) INDICADO EN EL RESUMEN
+====================================================================================================
+
+[4] Camila Alves de Rezende; Beatriz W. Atta; Márcia Cristina Breitkreitz; Rachael Simister; Leonardo Dario Gomez; Simon J. McQueen‐Mason (2018). Optimization of biomass pretreatments using fractional factorial experimental design. Biotechnology for Biofuels, vol. 11, n.º 1, art. 206.
+    DOI: 10.1186/s13068-018-1200-2
+    Enlace: https://doi.org/10.1186/s13068-018-1200-2
+    Acceso: revista de acceso abierto; CC BY.
+    Diseño: 2^(5-1), resolución V (indicado en el resumen).
+    Tema: Pretratamientos ácido-álcali y ácido-organosolv de pasto elefante; cinco factores; identifica interacciones dobles.
+
+[5] Xinjiang Hu; Jiawen Xu; Cuiyu Wu; Jianbin Deng; Wenwei Liao; Yuxiang Ling; Yuanxiu Yang; Yina Zhao; Yina Zhao; Yunlin Zhao; Yunlin Zhao; Xi jun Hu; Hui Wang; Yunguo Liu (2017). Ethylenediamine grafted to graphene oxide@Fe3O4 for chromium(VI) decontamination: Performance, modelling, and fractional factorial design. PLoS ONE, vol. 12, n.º 10, art. e0187166.
+    DOI: 10.1371/journal.pone.0187166
+    Enlace: https://doi.org/10.1371/journal.pone.0187166
+    Acceso: revista de acceso abierto; CC BY.
+    Diseño: 2^(5-1) (indicado en el resumen).
+    Tema: Remoción de cromo(VI) con óxido de grafeno magnético; reporta interacciones dobles importantes (AB, AE, BC).
+
+[6] Abderrezzaq Benalia; Walid Chaibraa; Sara Djeghar; Kerroum Derbal; Amel Khalfaoui; Asma Mahfouf; Raouf Bouchareb; Antonio Pánico; A. Pizzi (2023). Use of Extracted Proteins from Oak Leaves as Bio-Coagulant for Water and Wastewater Treatment: Optimization by a Fractional Factorial Design. Water, vol. 15, n.º 11, art. 1984.
+    DOI: 10.3390/w15111984
+    Enlace: https://doi.org/10.3390/w15111984
+    Acceso: revista de acceso abierto; CC BY.
+    Diseño: 2^(8-4) (indicado en el resumen).
+    Tema: Proteínas de hojas de roble como biocoagulante para tratamiento de agua; ocho factores.
+
+[7] Naghmeh Satarzadeh; Bagher Amirheidari; Mojtaba Shakibaie; Hamid Forootanfar (2024). Medium optimization to improve growth and iron uptake by Bacillus tequilensis ASFS1 using fractional factorial designs. Scientific Reports, vol. 14, n.º 1, art. 20141.
+    DOI: 10.1038/s41598-024-70896-4
+    Enlace: https://doi.org/10.1038/s41598-024-70896-4
+    Acceso: revista de acceso abierto; CC BY-NC-ND.
+    Diseño: 2^(5-1) (indicado en el resumen).
+    Tema: Medio de cultivo para crecimiento y captación de hierro de Bacillus tequilensis.
+
+[8] Maxius Gunawan; David Garth Fernig; Veerakiet Boonkanokwong (2025). Screening and characterization of favipiravir-loaded nanostructured lipid carrier formulations by using a 26-2 fractional factorial design. International Journal of Applied Pharmaceutics, 254-267.
+    DOI: 10.22159/ijap.2025v17i4.53891
+    Enlace: https://doi.org/10.22159/ijap.2025v17i4.53891
+    Acceso: revista de acceso abierto sin cargos; CC BY.
+    Diseño: 2^(6-2) (indicado en el título y el resumen).
+    Tema: Tamizado de formulaciones de nanoportadores lipídicos con favipiravir; seis factores.
+
+[9] I.R. Melo; Maria Fernanda Pimentel; Carlos Edison Lopes; G. M. T. Calazans (2007). Application of fractional factorial design to levan production by Zymomonas mobilis. Brazilian Journal of Microbiology, vol. 38, n.º 1, 45-51.
+    DOI: 10.1590/s1517-83822007000100010
+    Enlace: https://doi.org/10.1590/s1517-83822007000100010
+    Acceso: artículo abierto en el sitio de la revista; CC BY-NC.
+    Diseño: 2^(4-1) (indicado en el resumen).
+    Tema: Producción de levana por Zymomonas mobilis; factores: temperatura, agitación, sacarosa y otro nutriente. Artículo corto y sencillo.
+
+====================================================================================================
+C. EN INGLÉS, FRACCIONADOS CUYA FRACCIÓN EXACTA HAY QUE CONFIRMAR EN EL TEXTO
+====================================================================================================
+
+[10] Khalid A. Al‐Saad; Marwa El‐Azazy; Ahmed A. Issa; Asma Al-Yafie; Ahmed S. El‐Shafie; Maetha M. Al-Sulaiti; Basem Shomar (2019). Recycling of Date Pits Into a Green Adsorbent for Removal of Heavy Metals: A Fractional Factorial Design-Based Approach. Frontiers in Chemistry, vol. 7, art. 552.
+    DOI: 10.3389/fchem.2019.00552
+    Enlace: https://doi.org/10.3389/fchem.2019.00552
+    Acceso: revista de acceso abierto; CC BY.
+    Diseño: 2^(k-p) con cuatro factores (la fracción exacta no aparece en el resumen).
+    Tema: Adsorbente a partir de semillas de dátil para remover metales pesados; factores: pH, dosis, concentración, tiempo.
+
+[11] Hui Wang; Yiming Zhou; Xinjiang Hu; Yuan Guo; Xiaoxi Cai; Chunjie Liu; Ping Wang; Yunguo Liu (2020). Optimization of Cadmium Adsorption by Magnetic Graphene Oxide Using a Fractional Factorial Design. International Journal of Environmental Research and Public Health, vol. 17, n.º 18, art. 6648.
+    DOI: 10.3390/ijerph17186648
+    Enlace: https://doi.org/10.3390/ijerph17186648
+    Acceso: revista de acceso abierto; CC BY.
+    Diseño: Fraccionado con cinco factores (la fracción exacta no aparece en el resumen).
+    Tema: Adsorción de cadmio con óxido de grafeno magnético; factores: pH, temperatura, tiempo, concentración inicial, NaCl.
+
+[12] Luciana S. Rocha; Érika M.L. Sousa; M.V. Gil; João A.B.P. Oliveira; Marta Otero; Valdemar I. Esteves; Vânia Calisto (2021). Producing Magnetic Nanocomposites from Paper Sludge for the Adsorptive Removal of Pharmaceuticals from Water—A Fractional Factorial Design. Nanomaterials, vol. 11, n.º 2, art. 287.
+    DOI: 10.3390/nano11020287
+    Enlace: https://doi.org/10.3390/nano11020287
+    Acceso: revista de acceso abierto; CC BY.
+    Diseño: Fraccionado con cuatro factores y tres respuestas (la fracción exacta no aparece en el resumen).
+    Tema: Nanocompuestos magnéticos a partir de lodo de papel para remover fármacos del agua.
+
+[13] Suanny Mosquera-Romero; Juan Anaya-Garzon; Cristina García‐Timermans; Jo Van Dorpe; Anne Hoorens; Nadine Commenges-Bernole; Kim Verbeken; Korneel Rabaey; Jeet Chandrakant Varia (2022). Combined Gold Recovery and Nanoparticle Synthesis in Microbial Systems Using Fractional Factorial Design. Nanomaterials, vol. 13, n.º 1, art. 83.
+    DOI: 10.3390/nano13010083
+    Enlace: https://doi.org/10.3390/nano13010083
+    Acceso: revista de acceso abierto; CC BY.
+    Diseño: Fraccionado con siete factores (la fracción exacta no aparece en el resumen).
+    Tema: Recuperación de oro y síntesis de nanopartículas en sistemas microbianos.
+
+[14] Harshilkumar Jani; Ketan M. Ranch; Vijay Rajeshwarrao Chidrawar; Popat B Mohite; Sudarshan Kumar Singh (2025). Process Parameter Screening Through Fractional Factorial Design for the Synthesis of Gold Nanoparticles. Processes, vol. 13, n.º 10, art. 3157.
+    DOI: 10.3390/pr13103157
+    Enlace: https://doi.org/10.3390/pr13103157
+    Acceso: revista de acceso abierto; CC BY.
+    Diseño: Fraccionado de tamizado a dos niveles (la fracción exacta no aparece en el resumen).
+    Tema: Síntesis de nanopartículas de oro; tamizado de parámetros de proceso.
+
+[15] Sadia Qamar; Yady J. M. Torres; Harendra S. Parekh; James Robert Falconer (2022). Fractional Factorial Design Study for the Extraction of Cannabinoids from CBD-Dominant Cannabis Flowers by Supercritical Carbon Dioxide. Processes, vol. 10, n.º 1, art. 93.
+    DOI: 10.3390/pr10010093
+    Enlace: https://doi.org/10.3390/pr10010093
+    Acceso: revista de acceso abierto; CC BY.
+    Diseño: Fraccionado (el diseño exacto no aparece en el resumen).
+    Tema: Extracción de cannabinoides con CO2 supercrítico.
+
+[16] Eleonora Spinozzi; Marta Ferrati; Desiree Lo Giudice; Eugenio Felicioni; Riccardo Petrelli; Giovanni Benelli; Filippo Maggi; Marco Cespi (2023). Microwave-Assisted Hydrodistillation of the Insecticidal Essential Oil from Carlina acaulis: A Fractional Factorial Design Optimization Study. Plants, vol. 12, n.º 3, art. 622.
+    DOI: 10.3390/plants12030622
+    Enlace: https://doi.org/10.3390/plants12030622
+    Acceso: revista de acceso abierto; CC BY.
+    Diseño: Fraccionado (el diseño exacto no aparece en el resumen).
+    Tema: Hidrodestilación asistida por microondas de un aceite esencial insecticida.
+
+[17] Rubén Escribano-García; Pedro Álvarez; David Marquez-Monje (2022). Calibration of Finite Element Model of Titanium Laser Welding by Fractional Factorial Design. Journal of Manufacturing and Materials Processing, vol. 6, n.º 6, art. 130.
+    DOI: 10.3390/jmmp6060130
+    Enlace: https://doi.org/10.3390/jmmp6060130
+    Acceso: revista de acceso abierto; CC BY.
+    Diseño: Fraccionado (el diseño exacto no aparece en el resumen).
+    Tema: Calibración de un modelo de elementos finitos de soldadura láser de titanio; las corridas son simulaciones.
+
+====================================================================================================
+D. OTROS CAMPOS Y VARIANTES
+====================================================================================================
+
+[18] Abishek Arora; Martin Becker; Catía Marques; Marika Oksanen; Danyang Li; Francesca Mastropasqua; Michelle Evelyn Watts; Manish Arora; Anna Falk; Carsten O. Daub; Ingela Lanekoff; Kristiina Tammimies (2023). Screening autism-associated environmental factors in differentiating human neural progenitors with fractional factorial design-based transcriptomics. Scientific Reports, vol. 13, n.º 1, art. 10519.
+    DOI: 10.1038/s41598-023-37488-0
+    Enlace: https://doi.org/10.1038/s41598-023-37488-0
+    Acceso: revista de acceso abierto; CC BY.
+    Diseño: Fraccionado con seis factores (la fracción exacta no aparece en el resumen).
+    Tema: Seis factores ambientales asociados a autismo sobre progenitores neurales humanos, con transcriptómica. Campo distinto: biomedicina.
+
+[19] Alexandra M. Wright-Hughes; Thomas A. Willis; Stephanie Wilson; Ana Weller; Fabiana Lorencatto; Mohamed Althaf; Valentine Seymour; Amanda J Farrin; Jill Francis; Jamie Brehaut; Noah Michael Ivers; Sarah Louise Alderson; Benjamin C. Brown; Richard G. Feltbower; Chris P Gale; Simon J. Stanworth; Suzanne Hartley; Heather L. Colquhoun; Justin Presseau; Rebecca E. A. Walwyn; Robbie Foy (2022). A randomised fractional factorial screening experiment to predict effective features of audit and feedback. Implementation Science, vol. 17, n.º 1, art. 34.
+    DOI: 10.1186/s13012-022-01208-5
+    Enlace: https://doi.org/10.1186/s13012-022-01208-5
+    Acceso: revista de acceso abierto; CC BY.
+    Diseño: Fraccionado aleatorizado de tamizado con seis factores (la fracción exacta no aparece en el resumen).
+    Tema: Experimento en línea sobre seis modificaciones a informes de auditoría clínica. Campo distinto: servicios de salud.
+
+[20] Oscar Yáñez-Hernández; Armando Javier Ríos-Lira; Yaquelin Verenice Pantoja-Pacheco; José Alfredo Jiménez García; José Antonio Vázquez-López; Salvador Hernández-González (2023). Increase of Trichoderma harzianum Production Using Mixed-Level Fractional Factorial Design. Applied Sciences, vol. 13, n.º 16, art. 9244.
+    DOI: 10.3390/app13169244
+    Enlace: https://doi.org/10.3390/app13169244
+    Acceso: revista de acceso abierto; CC BY.
+    Diseño: Fraccionado de NIVELES MIXTOS 2^1·3^2·4^2; no es un 2^(k-p).
+    Tema: Producción de Trichoderma harzianum; cinco factores. Útil solo si se quiere mostrar la extensión a niveles mixtos.

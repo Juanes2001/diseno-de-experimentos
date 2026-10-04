@@ -41,6 +41,16 @@ Todo se envía a doe_unal@yahoo.com. Retraso: −10 % por día, máximo 3 retras
 - Al cerrar cada sesión, registrar lo hecho y lo pendiente en `notas/bitacora-sesiones.md`.
 - Antes de resolver un taller o preparar la exposición, consultar las diapositivas y la
   bibliografía del tema; para el tema 6, priorizar Montgomery y Gutiérrez–De la Vara.
+- **Montgomery ya está leído y resumido** en `notas/montgomery/` (una ficha técnica por
+  capítulo; índice en `notas/montgomery/README.md`). Consultar la ficha del capítulo que
+  haga falta en lugar de volver a leer el libro; el PDF es un escaneo sin texto y no está en
+  el repo. El tema 6 corresponde a `cap-08-factoriales-fraccionados-2k-p.md`.
+- **Las diapositivas de la profesora** están transcritas en `notas/clases/` (una nota por tema,
+  con una sección final "Estructura didáctica de la profesora"). Las exposiciones del equipo
+  siguen esa estructura: títulos en forma de pregunta, hipótesis como H0/HA, tablas ANOVA con
+  columnas SV, SS, DF, MS, F0, P-Value, supuestos con prueba gráfica y analítica, y Minitab.
+- **Exposición del tema 6**: presentación y guía de estudio en `exposicion-tema-06/`; se
+  regeneran desde `scripts/tema-06/` (el contenido de ambas está en `contenido.py`).
 - Los informes siguen Normas ICONTEC y deben incluir siempre: planteamiento del problema,
   justificación del diseño, plan experimental, análisis e interpretación, validación de
   supuestos, conclusiones y recomendaciones.
