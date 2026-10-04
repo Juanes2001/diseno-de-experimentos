@@ -197,13 +197,13 @@ for k in range(4, 9):
     _rows.append([str(k), str(2 ** k), str(k), str(two), str(tot - k - two),
                   f"{100 * (tot - k - two) / tot:.0f} %"])
 S("¿En qué se gastan las corridas de un 2^{k} completo?",
-  """Un factorial completo con N corridas tiene N − 1 grados de libertad para estimar efectos. La tabla muestra cómo se reparten. En un 2^{6} hay 63 grados de libertad, pero solo 6 corresponden a efectos principales y 15 a interacciones de dos factores; los 42 restantes se gastan en interacciones de tres o más factores, que casi nunca son importantes.
+  """Un factorial completo con N corridas tiene N − 1 grados de libertad para estimar efectos. La tabla muestra cómo se reparten. En un 2^{6} hay 63 grados de libertad, pero solo 6 corresponden a efectos principales y 15 a interacciones de dos factores; los 42 restantes se gastan en interacciones de tres o más factores, que con frecuencia se pueden suponer despreciables.
 
 Si se acepta que esas interacciones de orden alto son despreciables, la información sobre efectos principales e interacciones dobles se puede obtener con una fracción del experimento.""",
   body=[tab(["Factores k", "Corridas 2^{k}", "Efectos principales", "Interacciones de 2 factores",
              "Interacciones de 3 o más", "% en orden alto"], _rows, size=16, hl=[2], first_left=False),
-        note("En un 2^{6}, **42 de 63** grados de libertad estiman interacciones de tres o más factores, "
-             "que rara vez importan. Esa es la información que el fraccionado sacrifica.")])
+        note("En un 2^{6}, **42 de 63** grados de libertad estiman interacciones de tres o más factores. "
+             "Si se pueden suponer despreciables, esa es la información que el fraccionado sacrifica.")])
 
 S("Tres ideas que justifican correr solo una fracción",
   """Escasez de efectos: cuando hay muchas variables, el sistema suele estar dominado por unos pocos efectos principales e interacciones de orden bajo.
@@ -214,17 +214,17 @@ Experimentación secuencial: no hay que correr todo de una vez. Se corre una fra
   body=[cards(("Escasez de efectos",
                "De muchos factores, pocos son activos. Dominan los efectos principales y las interacciones de orden bajo."),
               ("Proyección",
-               "Al descartar factores inactivos, la fracción se convierte en un factorial completo en los factores que quedan."),
+               "Al descartar factores inactivos, la fracción se proyecta en un diseño más fuerte en los que quedan, a menudo un factorial completo."),
               ("Experimentación secuencial",
                "Se corre una fracción, se analiza y se decide. Dos fracciones se combinan para resolver dudas."),
               size=22)])
 
 S("¿Cuándo usar un factorial fraccionado?",
-  """Conviene cuando hay muchos factores (en la práctica cinco o más), cuando cada corrida es costosa o lenta, cuando se está en una etapa exploratoria y cuando es razonable suponer que las interacciones de tres o más factores son despreciables.
+  """Conviene cuando hay muchos factores (Montgomery señala que incluso con cuatro suele preferirse empezar con la fracción 2^{4−1}), cuando cada corrida es costosa o lenta, cuando se está en una etapa exploratoria y cuando es razonable suponer que las interacciones de tres o más factores son despreciables.
 
 No conviene cuando hay pocos factores y el factorial completo es barato, cuando se sabe que hay interacciones importantes entre muchos factores, o cuando se necesita un modelo detallado para optimizar: para eso están los factoriales completos y las superficies de respuesta, normalmente en una etapa posterior. Las conclusiones de un fraccionado son tentativas y deben confirmarse.""",
   left=[txt("**Úselo cuando…**", size=20),
-        bul("Hay **muchos factores** candidatos (k ≥ 5 en la práctica)",
+        bul("Hay **muchos factores** candidatos",
             "Cada corrida es **costosa o lenta**",
             "La etapa es **exploratoria**: interesa saber qué factores importan",
             "Es razonable despreciar interacciones de **tres o más** factores")],
@@ -253,20 +253,20 @@ Ejemplo: un 2^{6−2} estudia 6 factores en 16 corridas, que es la cuarta parte 
               ["2^{7−4}", "7", "8", "1/16", "128"]], size=16, first_left=False)], ratio=0.46)
 
 S("Vocabulario propio del diseño",
-  """Generador: la interacción con la que se define un factor adicional (por ejemplo D = ABC). Escrito como I = ABCD se llama palabra.
+  """Generador: la interacción que define la fracción; por ejemplo ABCD en I = ABCD, que equivale a definir D = ABC. Palabra: cada interacción que aparece en la relación de definición, sea un generador o un producto de generadores.
 
 Relación de definición: el conjunto de todas las palabras iguales a la identidad I; incluye los generadores y todos sus productos.
 
-Alias: efectos que se estiman con la misma columna de signos y por tanto no se pueden distinguir. Una cadena de alias es el grupo completo de efectos que comparten columna.
+Alias: efectos que se estiman con la misma columna de signos (o con la opuesta, en una fracción alterna) y por tanto no se pueden distinguir. Una cadena de alias es el grupo completo de efectos que comparten columna.
 
 Fracción principal: la que se obtiene con todos los generadores en signo positivo. Las demás son fracciones alternas; todas juntas forman la familia.
 
 Diseño básico: el factorial completo en k − p factores sobre el que se construye la fracción. Diseño saturado: el que estudia k = N − 1 factores en N corridas.""",
   body=[tab(["Término", "Significado"],
-            [["Generador", "Interacción con la que se define un factor adicional: D = ABC"],
-             ["Palabra", "El generador escrito contra la identidad: I = ABCD"],
-             ["Relación de definición", "Todas las palabras iguales a I (generadores y sus productos)"],
-             ["Alias", "Efectos que comparten la misma columna de signos y no se distinguen"],
+            [["Generador", "Interacción que define la fracción: ABCD en I = ABCD (equivale a D = ABC)"],
+             ["Palabra", "Cada interacción de la relación de definición: generadores y sus productos"],
+             ["Relación de definición", "El conjunto de todas las palabras, que son iguales a la identidad I"],
+             ["Alias", "Efectos que comparten columna de signos (igual u opuesta) y no se distinguen"],
              ["Fracción principal", "La que usa todos los generadores con signo +"],
              ["Fracción alterna", "Cualquier otra de la misma familia (algún generador con signo −)"],
              ["Diseño básico", "Factorial completo en k − p factores sobre el que se construye"],
@@ -340,7 +340,7 @@ Usar la interacción de mayor orden garantiza la resolución más alta posible, 
 S("La fracción un cuarto: dos generadores",
   """Para una fracción 1/4 se necesitan dos generadores, P y Q. Su producto PQ, la interacción generalizada, también pertenece a la relación de definición: I = P = Q = PQ. Cada efecto tiene entonces tres alias.
 
-Ejemplo: 2^{6−2} con E = ABC y F = BCD. Las palabras son ABCE, BCDF y su producto ADEF. La palabra más corta tiene cuatro letras, así que es resolución IV: los efectos principales son alias de interacciones triples y las interacciones dobles son alias entre sí.
+Ejemplo: 2^{6−2} con E = ABC y F = BCD. Las palabras son ABCE, BCDF y su producto ADEF. La palabra más corta tiene cuatro letras, así que es resolución IV: los efectos principales son alias de interacciones de tres y cinco factores, y las interacciones dobles son alias entre sí y de interacciones de orden superior. Las 15 cadenas son seis de efectos principales, siete de interacciones dobles y dos formadas solo por interacciones triples.
 
 Construcción: se escribe el 2^{4} completo en A, B, C y D (16 corridas) y se agregan las columnas E = ABC y F = BCD.""",
   left=[bul("Dos generadores **P** y **Q**; su producto **PQ** también es palabra",
@@ -352,7 +352,7 @@ Construcción: se escribe el 2^{4} completo en A, B, C y D (16 corridas) y se ag
               ["C = ABE = BDF", "AD = EF"], ["D = BCF = AEF", "AE = BC = DF"],
               ["E = ABC = ADF", "AF = DE"], ["F = BCD = ADE", "BD = CF"], ["", "BF = CD"]],
              size=15, first_left=False),
-         txt("Alias hasta interacciones de tres factores", size=13)], ratio=0.48)
+         txt("Faltan dos cadenas, solo de interacciones triples: ABD = CDE = ACF = BEF y ACD = BDE = ABF = CEF", size=13)], ratio=0.48)
 
 S("El caso general 2^{k−p}",
   """Las reglas se generalizan. Con p generadores independientes, la relación de definición completa tiene 2^{p} − 1 palabras: los p generadores más todos sus productos. Cada efecto tiene 2^{p} − 1 alias. El diseño solo permite estimar 2^{k−p} − 1 cadenas de alias, una por cada grado de libertad.
@@ -371,7 +371,7 @@ La resolución es la longitud de la palabra más corta. Para construirlo se escr
 S("¿Qué generadores elijo?",
   """Primer criterio: máxima resolución. Segundo criterio, para desempatar entre diseños de igual resolución: aberración mínima, es decir, el menor número de palabras de longitud mínima.
 
-La tabla compara tres diseños 2^{7−2} de resolución IV. El diseño C tiene una sola palabra de cuatro letras, frente a tres y dos de los diseños A y B; por eso deja menos interacciones dobles confundidas entre sí y es el preferido. En la práctica no hay que buscar los generadores: las tablas de diseños recomendados y Minitab ya entregan el diseño de máxima resolución y aberración mínima.""",
+La tabla compara tres diseños 2^{7−2} de resolución IV. El diseño C tiene una sola palabra de cuatro letras, frente a tres y dos de los diseños A y B; por eso deja menos interacciones dobles confundidas entre sí y es el preferido. En la práctica no hay que buscar los generadores: las tablas de diseños recomendados ya entregan el diseño de máxima resolución y aberración mínima, y el software estadístico trae generadores predeterminados.""",
   body=[tab(["", "Diseño A", "Diseño B", "Diseño C"],
             [["Generadores", "F = ABC,  G = BCD", "F = ABC,  G = ADE", "F = ABCD,  G = ABDE"],
              ["Relación de definición", "I = ABCF = BCDG = ADFG", "I = ABCF = ADEG = BCDEFG",
@@ -384,7 +384,9 @@ La tabla compara tres diseños 2^{7−2} de resolución IV. El diseño C tiene u
         note("El diseño C tiene una sola palabra de 4 letras: es el de **aberración mínima**")])
 
 S("Diseños recomendados hasta 32 corridas",
-  """Esta tabla reúne los diseños de máxima resolución y aberración mínima para 3 a 8 factores con un máximo de 32 corridas. Se lee por filas: número de factores, diseño con su resolución, corridas y generadores. Todos los generadores admiten signo positivo o negativo; con todos positivos se obtiene la fracción principal. Son los mismos generadores que Minitab usa por defecto.""",
+  """Esta tabla reúne los diseños de máxima resolución y aberración mínima para 3 a 8 factores con un máximo de 32 corridas. Se lee por filas: número de factores, diseño con su resolución, corridas y generadores. Todos los generadores admiten signo positivo o negativo; con todos positivos se obtiene la fracción principal. Minitab ofrece estos diseños con generadores predeterminados; para el 2^{6−2}, por ejemplo, usa E = ABC y F = BCD.
+
+Nota para quien coteje con el libro: la tabla 8-14 de Montgomery imprime el 2^{7−3} con resolución III. Es una errata: todas las palabras de su relación de definición tienen cuatro letras y el propio texto lo trata como resolución IV.""",
   body=[tab(["Factores", "Diseño", "Corridas", "Generadores"],
             [["3", "2^{3−1}_{III}", "4", "C = AB"],
              ["4", "2^{4−1}_{IV}", "8", "D = ABC"],
@@ -417,10 +419,10 @@ Dos límites útiles: un diseño de resolución III admite como máximo k = N �
 S("La propiedad de proyección",
   """Un diseño de resolución R contiene un factorial completo en cualquier subconjunto de R − 1 factores. Si al analizar resulta que solo unos pocos factores son activos, se descartan los demás y el diseño se convierte, sin correr nada más, en un factorial completo (posiblemente con réplicas) en los factores activos.
 
-En general, un 2^{k−p} se proyecta en un factorial completo en cualquier subconjunto de factores que no forme una palabra de la relación de definición. Consecuencia práctica: al asignar los factores a las columnas conviene que los que se creen más importantes no formen juntos una palabra.""",
+En general, un 2^{k−p} se proyecta en un factorial completo en cualquier subconjunto de r ≤ k − p factores que no contenga una palabra de la relación de definición; si la contiene, lo que queda es un factorial fraccionado con réplicas. Consecuencia práctica: al asignar los factores a las columnas conviene que los que se creen más importantes no formen juntos una palabra.""",
   left=[bul("Resolución **R** ⇒ factorial completo en cualquier subconjunto de **R − 1** factores",
             "Al descartar factores inactivos se ganan **réplicas** sin correr nada más",
-            "Falla solo si los factores activos forman una **palabra** de la relación de definición"),
+            "Si los factores activos contienen una **palabra**, queda un fraccionado con réplicas, no un completo"),
         note("Asigne los factores que cree importantes de modo que **no formen una palabra**")],
   right=[tab(["Diseño", "Se proyecta en…"],
              [["2^{3−1}_{III}", "2^{2} completo en cualquier par de factores"],
@@ -451,7 +453,7 @@ En cada corrida se reajustan todos los niveles, aunque coincidan con los de la c
             "En cada corrida se **reajustan** todos los niveles",
             "Se guarda el **orden de corrida**: se usa para verificar independencia",
             "Sin condiciones homogéneas: **bloques**, confundiendo una cadena de orden alto"),
-        note("¡Forme bloques con lo que pueda y aleatorice lo que no pueda!")],
+        note("«Forme bloques con lo que pueda y aleatorice lo que no pueda» (Box, Hunter y Hunter)")],
   right=[tab(["Orden de corrida", "Orden estándar", "A", "B", "C", "D", "Respuesta"], _rows,
              size=15, first_left=False),
          txt("Ejemplo de orden aleatorio para un 2^{4−1} (D = ABC)", size=13)], ratio=0.45)
@@ -460,28 +462,30 @@ En cada corrida se reajustan todos los niveles, aunque coincidan con los de la c
 section(4, "Modelo e hipótesis", "Qué se estima y qué se prueba")
 
 S("¿Cuál es el modelo matemático del diseño?",
-  """El modelo es el mismo del factorial 2^{k}: un modelo de regresión en variables codificadas, donde cada x vale −1 o +1. β_{0} es la media general, cada β_{j} es la mitad del efecto principal del factor j y cada β_{ij} es la mitad del efecto de la interacción. El error ε se supone normal, independiente, con media cero y varianza constante σ².
+  """El modelo es el mismo del factorial 2^{k}: un modelo de regresión en variables codificadas, donde cada x vale −1 o +1. β_{0} es la media general, y cada coeficiente se estima con la mitad del efecto correspondiente: β_{j} con la mitad del efecto principal del factor j y β_{ij} con la mitad del efecto de la interacción. El error ε se supone normal, independiente, con media cero y varianza constante σ².
 
-La diferencia con el factorial completo es que no todos los términos se pueden estimar por separado. Cada columna del diseño estima una cadena de alias completa: el efecto que nos interesa más todos sus alias. El modelo final incluye un solo término por cadena, el que se juzga más razonable.""",
+La diferencia con el factorial completo es que no todos los términos se pueden estimar por separado. Cada columna del diseño estima una cadena de alias completa: el efecto que nos interesa más todos sus alias. El modelo final incluye un solo término por cada cadena que resulte activa, el que se juzga más razonable; las cadenas inactivas quedan fuera.""",
   body=[form("Y = β_{0} + Σ β_{j} x_{j} + ΣΣ β_{ij} x_{i} x_{j} + ε", "ε ~ NID(0, σ^{2})", size=24),
         bul("**x_{j}** = −1 (nivel bajo) o +1 (nivel alto) del factor j",
-            "**β_{0}**: media general;  **β_{j}** = efecto / 2;  **β_{ij}** = efecto de interacción / 2",
+            "Se estiman así:  **β_{0}** con el promedio general;  **β_{j}** con efecto / 2;  **β_{ij}** con efecto de interacción / 2",
             "En la fracción cada columna estima una **cadena de alias**:  ℓ_{A} → A + BCD",
-            "El modelo final lleva **un término por cadena**: el más razonable"),
+            "El modelo final lleva **un término por cada cadena activa**: el más razonable"),
         note("Se supone que las interacciones de orden alto de cada cadena son despreciables")])
 
 S("¿Cuál es la hipótesis del diseño?",
-  """Se plantea una hipótesis por cada cadena de alias que se quiere probar. La hipótesis nula dice que el efecto es cero y la alterna que es distinto de cero; se puede escribir en términos del coeficiente o del efecto, que son equivalentes.
+  """Se plantea una hipótesis por cada cadena de alias que se quiere probar. La hipótesis nula dice que el efecto de la cadena es cero y la alterna que es distinto de cero.
+
+Montgomery no plantea hipótesis en el capítulo de fraccionados; en el del 2^{k} plantea la hipótesis global de que todos los coeficientes son cero y luego prueba cada efecto con F. La formulación por cadena es la adaptación de esa idea al fraccionado.
 
 Lo que realmente se prueba es la cadena completa: rechazar H_{0} para la columna de A significa que A + BCD es distinto de cero. Atribuirlo a A es una decisión del analista, apoyada en el supuesto de que BCD es despreciable.
 
 Regla de decisión: se rechaza H_{0} si F_{0} supera el valor crítico F_{α, 1, gl del error}, o de forma equivalente si el valor p es menor que α = 0.05.""",
-  left=[form("H_{0}: β_{j} = 0", "H_{A}: β_{j} ≠ 0", size=26),
-        txt("Una hipótesis por cada cadena de alias que entra al modelo", size=16),
+  left=[form("H_{0}: efecto de la cadena = 0", "H_{A}: efecto de la cadena ≠ 0", size=24),
+        txt("Ejemplo, columna A del 2^{4−1}:   H_{0}: β_{A} + β_{BCD} = 0", size=16),
         form("Se rechaza H_{0} si  F_{0} > F_{α, 1, gl del error}", "o si  valor p < α", size=20)],
-  right=[bul("Equivale a probar que el **efecto** es cero",
+  right=[bul("Una hipótesis por cada **cadena de alias** que entra al modelo",
              "Se prueba la **cadena completa**: A + BCD, no A sola",
-             "Asignarlo a A exige suponer que BCD es **despreciable**",
+             "Si BCD es **despreciable**, equivale a  H_{0}: β_{A} = 0",
              "Nivel de significancia habitual: **α = 0.05**"),
          note("H_{0}: el factor no afecta la respuesta.  H_{A}: el factor sí la afecta.")])
 
@@ -489,7 +493,9 @@ Regla de decisión: se rechaza H_{0} si F_{0} supera el valor crítico F_{α, 1,
 section(5, "Análisis estadístico", "De los datos a los efectos activos")
 
 S("¿Cómo debo analizar los datos recolectados?",
-  """La ruta de análisis tiene siete pasos. Se calculan los contrastes y los efectos de todas las cadenas de alias. Se identifican los efectos activos: si no hay réplicas, con la gráfica de probabilidad normal o seminormal y el diagrama de Pareto. Se interpreta cada cadena activa para decidir a qué efecto se atribuye. Se ajusta el modelo reducido y se construye la tabla ANOVA, usando los efectos descartados como error. Se verifican los supuestos con los residuos. Se interpretan los efectos con gráficas de efectos principales, de interacción y de cubo. Por último se informa la conclusión en términos del problema del investigador y se confirma.""",
+  """La ruta de análisis tiene siete pasos. Se calculan los contrastes y los efectos de todas las cadenas de alias. Se identifican los efectos activos: si no hay réplicas, con la gráfica de probabilidad normal o seminormal y el diagrama de Pareto. Se interpreta cada cadena activa para decidir a qué efecto se atribuye. Se ajusta el modelo reducido y se construye la tabla ANOVA, usando los efectos descartados como error. Se verifican los supuestos con los residuos. Se interpretan los efectos con gráficas de efectos principales, de interacción y de cubo. Por último se informa la conclusión en términos del problema del investigador y se confirma.
+
+Es una adaptación del procedimiento de seis pasos que Montgomery da para el 2^{k}: estimar efectos, formar el modelo inicial, hacer las pruebas, refinar el modelo, analizar residuales e interpretar.""",
   body=[num("Calcular **contrastes y efectos** de todas las cadenas de alias",
             "Identificar los **efectos activos**: gráfica normal o seminormal y Pareto",
             "**Interpretar las cadenas** activas: ¿a qué efecto se atribuye cada una?",
@@ -508,7 +514,7 @@ La última columna muestra el cálculo para el factor A del ejemplo 1 (N = 8): c
               "−45 + 100 − 45 + 65 − 75 + 60 − 80 + 96 = 76"],
              ["Efecto", "ℓ_{i} = Contraste_{i} / (N/2)", "Promedio en (+) menos promedio en (−)",
               f"76 / 4 = {f(_e)}"],
-             ["Coeficiente", "β_{i} = ℓ_{i} / 2", "Cambio en Y por unidad codificada", f"19.00 / 2 = {f(_e / 2)}"],
+             ["Coeficiente", "β_{i} estimado = ℓ_{i} / 2", "Cambio en Y por unidad codificada", f"19.00 / 2 = {f(_e / 2)}"],
              ["Suma de cuadrados", "SS_{i} = (Contraste_{i})^{2} / N", "Variabilidad explicada (1 g.l.)",
               f"76^{{2}} / 8 = {f(_s, 1)}"]], size=16, colw=[0.16, 0.26, 0.27, 0.31]),
         note("Con una sola réplica, N = 2^{k−p}. El intercepto es el promedio general:  β_{0} = ȳ")])
@@ -518,7 +524,9 @@ S("Tabla ANOVA del factorial fraccionado",
 
 El estadístico de prueba de cada efecto es F_{0} = MS del efecto / MS del error, que se compara con F de 1 y N − 1 − m grados de libertad.
 
-Si el diseño tiene n réplicas, N = n·2^{k−p} y el error incluye además el error puro, con 2^{k−p}(n − 1) grados de libertad.""",
+Si el diseño tiene n réplicas, N = n·2^{k−p} y el error incluye además el error puro, con 2^{k−p}(n − 1) grados de libertad.
+
+Montgomery presenta esta tabla para el 2^{k} con réplicas; la versión para el fraccionado es la misma con N = 2^{k−p} y coincide con las ANOVA de sus ejemplos.""",
   body=[tab(["SV", "SS", "DF", "MS", "F_{0}"],
             [["Efecto i (cadena de alias)", "SS_{i} = (Contraste_{i})^{2} / N", "1", "MS_{i} = SS_{i}",
               "MS_{i} / MS_{E}"],
@@ -536,9 +544,11 @@ La gráfica de probabilidad normal (o seminormal) de los efectos: los efectos in
 
 El método de Lenth, que usa Minitab para trazar la línea de referencia del diagrama de Pareto: estima un pseudo error estándar (PSE) a partir de la mediana de los efectos y declara activo todo efecto cuyo valor absoluto supere el margen de error.
 
-Y los principios de interpretación de cadenas: escasez de efectos, jerarquía (los efectos de orden bajo son más probables) y herencia (una interacción es más creíble si sus factores tienen efecto principal).""",
+Montgomery advierte que el método de Lenth solo es razonable cuando hay pocos efectos activos y recomienda usarlo como complemento de la gráfica normal. En el ejemplo 1, donde cinco de siete efectos son grandes, Lenth no detecta ninguno (PSE = 24.75).
+
+Y los principios de interpretación de cadenas: escasez de efectos (el que Montgomery nombra en este capítulo), jerarquía (los efectos de orden bajo son más probables) y herencia (una interacción es más creíble si sus factores tienen efecto principal). Los dos últimos son nombres usuales en otros textos, como Wu y Hamada.""",
   left=[bul("**Gráfica normal o seminormal de efectos**: los inactivos caen sobre una recta",
-            "**Pareto con método de Lenth**: activo si |efecto| > margen de error",
+            "**Pareto con método de Lenth**: activo si |efecto| > margen de error; complementa la gráfica normal, no la sustituye",
             "Los efectos descartados pasan a formar el **error** del ANOVA"),
         form("s_{0} = 1.5 · mediana |ℓ_{i}|", "PSE = 1.5 · mediana { |ℓ_{i}| : |ℓ_{i}| < 2.5 s_{0} }",
              "ME = t_{0.025, m/3} · PSE", size=17)],
@@ -574,9 +584,9 @@ _hs = [_ND().inv_cdf(0.5 + 0.5 * (i + 0.5) / 7) for i in range(7)]
 S("Ejemplo 1 · Efectos estimados y alias",
   """La tabla muestra el efecto estimado con cada columna y la cadena de alias que realmente estima. Tres efectos principales son grandes: A (19.0), C (14.0) y D (16.5). También son grandes las cadenas AC + BD (−18.5) y AD + BC (19.0). B y AB + CD son pequeños.
 
-En la gráfica seminormal, los dos efectos pequeños quedan cerca del origen y los otros cinco se separan con claridad.
+En la gráfica seminormal, los dos efectos pequeños quedan cerca del origen y los otros cinco quedan claramente más lejos. Esta gráfica es un cálculo propio: el libro solo presenta la tabla de efectos.
 
-Interpretación de las cadenas: como B no tiene efecto, es más razonable atribuir AC + BD a AC y AD + BC a AD (principio de herencia). El modelo tentativo es A, C, D, AC y AD.""",
+Interpretación de las cadenas: como B no tiene efecto, es más razonable atribuir AC + BD a AC y AD + BC a AD. Montgomery lo justifica con la navaja de Ockham: la explicación más simple suele ser la correcta. El modelo tentativo es A, C, D, AC y AD.""",
   left=[tab(["Columna", "Efecto", "Estima"],
             [[w, f(ef1[w][1]), alias1[w]] for w in ["A", "B", "C", "D", "AB", "AC", "AD"]],
             size=16, hl=[0, 2, 3, 5, 6], first_left=False),
@@ -591,7 +601,7 @@ _an += [["Error", f(m1["sse"], 1), str(m1["dfe"]), f(m1["mse"]), "", ""],
 S("Ejemplo 1 · ANOVA e interpretación",
   f"""Se ajusta el modelo con A, C, D, AC y AD. Los dos efectos descartados (B y AB) forman el error, con 2 grados de libertad. Los cinco términos son significativos al 5 %: todos tienen F_{{0}} mayor que F_{{0.05, 1, 2}} = {f(f_ppf(0.05, 1, 2))} y valores p menores que 0.01. El modelo explica el {100 * m1['r2']:.2f} % de la variabilidad.
 
-Advertencia: con solo 2 grados de libertad en el error la prueba es poco potente y los supuestos apenas se pueden verificar; la conclusión es tentativa.
+Advertencia: esta tabla ANOVA no aparece en el libro, que en este ejemplo solo estima los efectos y da el modelo; se calculó aquí a partir de los datos. El error tiene solo 2 grados de libertad y se formó con los dos efectos más pequeños, elegidos después de ver los datos, de modo que los valores F y p son optimistas y los supuestos apenas se pueden verificar. La conclusión es tentativa.
 
 Interpretación: la temperatura (A) aumenta la filtración; el efecto de la concentración (C) depende de la temperatura (interacción AC negativa) y el de la agitación (D) también (interacción AD positiva). La presión (B) no influye, de modo que el diseño se proyecta en un 2^{{3}} completo en A, C y D. La mejor condición es A alto, C bajo y D alto. El factorial completo original llegó a las mismas conclusiones con el doble de corridas.""",
   left=[tab(["SV", "SS", "DF", "MS", "F_{0}", "P-Value"], _an, size=15),
@@ -600,7 +610,7 @@ Interpretación: la temperatura (A) aumenta la filtración; el efecto de la conc
              f"R^{{2}} = {100 * m1['r2']:.2f} %;  R^{{2}} ajustado = {100 * m1['r2adj']:.2f} %",
              "B no influye: el diseño se **proyecta** en un 2^{3} completo en A, C, D",
              "Mejor condición: **A alto, C bajo, D alto**", size=17),
-         note("Solo 2 g.l. en el error: conclusión **tentativa**, hay que confirmar", size=15)],
+         note("ANOVA calculada aquí (no está en el libro). Solo 2 g.l. de error: conclusión **tentativa**", size=15)],
   ratio=0.56)
 
 S("Ejemplo 2 · Rendimiento de un circuito integrado",
@@ -627,7 +637,9 @@ S("Ejemplo 2 · ¿Qué efectos son activos?",
 
 El método de Lenth coincide: el pseudo error estándar es PSE = {f(pse2, 4)} y el margen de error es ME = {f(me2)}; solo esos cuatro efectos lo superan.
 
-Como el diseño es de resolución V, AB es alias de CDE, una interacción triple, y se atribuye sin ambigüedad a AB.""",
+Como el diseño es de resolución V, AB es alias de CDE, una interacción triple, y se atribuye a AB suponiendo que las interacciones triples son despreciables.
+
+El libro usa solo la gráfica normal en este ejemplo; el cálculo de Lenth y el Pareto se agregaron aquí.""",
   left=[scatter([(_vals[i], _z[i]) for i in _srt], "Efecto", "Puntuación normal", h=4.6,
                 labels={k: w2[i] for k, i in enumerate(_srt) if w2[i] in ("A", "B", "C", "AB")},
                 title="Gráfica normal de efectos")],
@@ -658,12 +670,12 @@ _an3 = [[t, f(ss, 2), "1", f(ss, 2), f(F), pv(p)] for t, ss, _, _, F, p in m3["a
 _an3 += [["Error", f(m3["sse"], 2), str(m3["dfe"]), f(m3["mse"], 2), "", ""],
          ["Total", f(m3["sst"], 2), "15", "", "", ""]]
 S("Ejemplo 3 · Contracción en moldeo por inyección",
-  f"""En un proceso de moldeo por inyección las piezas se contraen demasiado. Se estudian seis factores: A temperatura del molde, B velocidad del tornillo, C tiempo de retención, D duración del ciclo, E tamaño del vaciadero y F presión de retención. Se corre un 2^{{6−2}} de resolución IV con E = ABC y F = BCD: 16 corridas en lugar de 64.
+  f"""En un proceso de moldeo por inyección las piezas se contraen demasiado. Se estudian seis factores: A temperatura de moldeo, B velocidad del tornillo (enroscado), C tiempo de retención, D duración del ciclo, E tamaño del vaciadero y F presión de retención. Se corre un 2^{{6−2}} de resolución IV con E = ABC y F = BCD: 16 corridas en lugar de 64.
 
 La tabla muestra los ocho efectos de mayor magnitud. Sobresalen B (35.63), A (13.88) y la cadena AB + CE (11.88). Como A y B son activos y C y E no, la cadena se atribuye a AB.
 
-El ANOVA del modelo A, B, AB confirma que los tres términos son significativos (F_{{0.05, 1, 12}} = {f(f_ppf(0.05, 1, 12))}), con R² = {100 * m3['r2']:.2f} %. Fuente: Montgomery, ejemplo 8-4.""",
-  left=[bul("Respuesta: **contracción** de la pieza (se quiere reducir)",
+El ANOVA del modelo A, B, AB confirma que los tres términos son significativos (F_{{0.05, 1, 12}} = {f(f_ppf(0.05, 1, 12))}), con R² = {100 * m3['r2']:.2f} %. Fuente: Montgomery, ejemplo 8-4. El libro no presenta la tabla ANOVA de este ejemplo; se calculó aquí a partir de los datos.""",
+  left=[bul("Respuesta: **contracción** de la pieza, × 10 (se quiere reducir)",
             "Seis factores en 16 corridas: **E = ABC, F = BCD**",
             "Resolución IV: I = ABCE = BCDF = ADEF", size=17),
         tab(["Cadena", "Efecto", "SS"], _rows, size=14, hl=[0, 1, 2], first_left=False)],
@@ -672,26 +684,26 @@ El ANOVA del modelo A, B, AB confirma que los tres términos son significativos 
          note("AB + CE se atribuye a **AB**: A y B son activos, C y E no", size=15)], ratio=0.46)
 
 S("Ejemplo 3 · Interacción AB y dispersión",
-  """Gráfica de interacción: con la velocidad del tornillo baja (B −), la contracción es pequeña y casi no depende de la temperatura; con B alta, la contracción es grande y muy sensible a la temperatura. La recomendación para reducir la contracción media es trabajar con B en nivel bajo.
+  """Gráfica de interacción: con la velocidad del tornillo baja (B −), la contracción es pequeña y casi no depende de la temperatura; con B alta, la contracción es grande y muy sensible a la temperatura. La recomendación para reducir la contracción media es trabajar con B en nivel bajo (en el estudio se decidió bajar tanto la temperatura como la velocidad).
 
-Los residuos contra el tiempo de retención (C) muestran algo más: con C bajo los residuos están muy concentrados y con C alto están mucho más dispersos. C no afecta la media de la contracción, pero sí su variabilidad: es un efecto de dispersión. Conclusión: B bajo para reducir la contracción media y C bajo para reducir la variabilidad entre piezas.""",
+Los residuos contra el tiempo de retención (C) muestran algo más: con C bajo los residuos están muy concentrados y con C alto están mucho más dispersos. C no afecta la media de la contracción, pero sí su variabilidad: es un efecto de dispersión. El libro lo cuantifica con el estadístico F* = ln[S²(C+)/S²(C−)] = 2.50, el único que se separa en la gráfica normal de los quince valores. Conclusión: B bajo para reducir la contracción media y C bajo para reducir la variabilidad entre piezas.""",
   left=[lines(["A bajo (−)", "A alto (+)"],
               [("B bajo (−)", [ab3[(-1, -1)], ab3[(1, -1)]]), ("B alto (+)", [ab3[(-1, 1)], ab3[(1, 1)]])],
               "Contracción promedio", h=4.3, title="Interacción AB"),
         note("Con **B bajo** la contracción es pequeña a cualquier temperatura", size=15)],
   right=[scatter([(row["C"], e) for row, e in zip(r3, m3["res"])], "Nivel de C (tiempo de retención)",
                  "Residuo", h=4.3, title="Residuos contra el factor C"),
-         note("Con **C alto** los residuos se dispersan mucho más", size=15)], ratio=0.5)
+         note("Con **C alto** los residuos se dispersan mucho más (F* = 2.50)", size=15)], ratio=0.5)
 
 # ------------------------------------------------------------------ 7
 section(7, "Resolver ambigüedades", "Fracción alterna, doblez y diseños de Plackett-Burman")
 
 S("¿Qué hago si los alias me dejan dudas?",
-  """Las conclusiones de un fraccionado son tentativas porque siempre existe una explicación alternativa basada en los alias. Hay cuatro formas de resolver la duda, de menor a mayor costo.
+  """Las conclusiones de un fraccionado son tentativas porque siempre existe una explicación alternativa basada en los alias. Hay cuatro formas de resolver la duda.
 
-Corrida de confirmación: predecir con el modelo la respuesta en una condición nueva y comprobarla. Fracción alterna: en una fracción un medio, correr la otra mitad completa el factorial. Doblez completo: correr una segunda fracción con los signos de todos los factores invertidos; separa los efectos principales de las interacciones dobles y convierte un diseño de resolución III en uno de resolución IV. Doblez de un factor: invertir los signos de un solo factor; deja limpio ese factor y todas sus interacciones dobles.
+Corrida de confirmación: predecir con el modelo la respuesta en una condición nueva y comprobarla. Fracción alterna: en una fracción un medio, correr la otra mitad completa el factorial. Doblez completo: correr una segunda fracción con los signos de todos los factores invertidos; separa los efectos principales de las interacciones dobles y convierte un diseño de resolución III en uno de resolución IV. Doblez de un factor: invertir los signos de un solo factor; en un diseño de resolución III o mayor, y despreciando interacciones de tres o más factores, deja limpio ese factor y todas sus interacciones dobles. Cuesta las mismas corridas que el doblez completo.
 
-En todos los casos las dos fracciones se combinan con la semisuma y la semidiferencia de las estimaciones.""",
+Cuando se agrega una segunda fracción, las dos se combinan con la semisuma y la semidiferencia de las estimaciones.""",
   left=[tab(["Estrategia", "Qué se corre", "Qué se gana"],
             [["Confirmación", "Una o pocas corridas nuevas", "Verifica la predicción del modelo"],
              ["Fracción alterna", "La otra mitad del 2^{k−1}", "Completa el factorial"],
@@ -720,7 +732,7 @@ Las 16 corridas forman el factorial 2^{4} completo, corrido en dos bloques con A
 
 _rows = [[str(i + 1)] + [sg(r[c]) for c in "ABCDEFG"] for i, r in enumerate(r4)]
 S("Resolución III saturada: el 2^{7−4}",
-  """Los diseños de resolución III permiten estudiar hasta k = N − 1 factores en N corridas. El 2^{7−4} estudia siete factores en solo ocho corridas: se escribe el 2^{3} completo en A, B y C y se definen D = AB, E = AC, F = BC y G = ABC. Se dice que el diseño está saturado porque usa todos los grados de libertad para efectos principales.
+  """Los diseños de resolución III permiten estudiar hasta k = N − 1 factores en N corridas, con N múltiplo de 4. El 2^{7−4} estudia siete factores en solo ocho corridas: se escribe el 2^{3} completo en A, B y C y se definen D = AB, E = AC, F = BC y G = ABC. Se dice que el diseño está saturado porque usa todos los grados de libertad para efectos principales.
 
 El costo es alto: cada efecto principal es alias de tres interacciones dobles. Solo sirve si se puede suponer que las interacciones son despreciables o si se planea un doblez posterior.""",
   left=[tab(["Corrida", "A", "B", "C", "D = AB", "E = AC", "F = BC", "G = ABC"], _rows, size=14,
@@ -748,33 +760,35 @@ _rows = []
 for w in "ABCDEFG":
     a, b = ef4[w], ef4b[w]
     _rows.append([w, f(a), f(b), f"{w} = {f((a + b) / 2)}", f"{alias4[w]} = {f((a - b) / 2)}"])
-S("Ejemplo 4 · El doblez completo resuelve la duda",
+S("Ejemplo 4 · Qué aclara el doblez completo",
   """Se corre una segunda fracción de ocho corridas con los signos de todos los factores invertidos. En ella cada efecto principal aparece con sus interacciones dobles con signo negativo, de modo que la semisuma aísla el efecto principal y la semidiferencia aísla el grupo de interacciones.
 
-Resultado: los efectos principales grandes son B = 38.05 y D = 29.38. El efecto de A es solo 1.48; lo que parecía el efecto de A era en realidad la cadena BD + CE + FG = 19.15, que se atribuye a BD porque B y D son activos. La explicación correcta era la cuarta.
+Resultado: los efectos principales grandes son B = 38.05 y D = 29.38. El efecto de A es solo 1.48; lo que parecía el efecto de A era en realidad la cadena BD + CE + FG = 19.15, que es razonable atribuir a BD porque B y D son activos. BD sigue aliada con CE y FG; en el estudio se confirmó con experimentos posteriores. La explicación más plausible era la cuarta.
 
-Las 16 corridas forman un 2^{7−3} de resolución IV: el doblez completo de un diseño de resolución III siempre produce uno de resolución IV.""",
+Las 16 corridas forman un 2^{7−3} de resolución IV: el doblez completo de un diseño de resolución III siempre produce uno de resolución IV.
+
+Nota para quien coteje con el libro: en la fila F, Montgomery imprime −1.53; con sus propios datos el valor es −1.13.""",
   body=[tab(["Columna", "ℓ  (1.ª fracción)", "ℓ′  (doblez)", "½ (ℓ + ℓ′)", "½ (ℓ − ℓ′)"], _rows, size=15,
             hl=[0, 1, 3], colw=[0.12, 0.17, 0.17, 0.2, 0.34], first_left=False),
-        note("Activos: **B**, **D** y la interacción **BD**. El aparente efecto de A era BD. "
+        note("Activos: **B**, **D** y la cadena **BD + CE + FG**, que es razonable atribuir a BD. "
              "Diseño combinado: 2^{7−3} de resolución **IV**")])
 
 S("Diseños de Plackett-Burman",
-  """Son diseños de resolución III para estudiar k = N − 1 factores en N corridas, donde N es múltiplo de 4 y no solo potencia de 2: 12, 20, 24, 28, 36. Cubren los huecos entre 8, 16 y 32 corridas.
+  """Son diseños de resolución III para estudiar k = N − 1 factores en N corridas, donde N es múltiplo de 4 y no solo potencia de 2: 12, 20, 24, 28, 36. Dan tamaños intermedios entre los de los diseños 2^{k−p} (8, 16, 32 corridas).
 
-Se construyen a partir de un renglón generador que se desplaza cíclicamente una posición cada vez; al final se agrega un renglón con todos los signos negativos.
+Se construyen a partir de un renglón generador que se desplaza cíclicamente una posición cada vez; al final se agrega un renglón con todos los signos negativos. Para N = 28 la construcción es distinta, con tres bloques de signos.
 
-Advertencia: su estructura de alias es muy compleja. En el diseño de 12 corridas cada efecto principal es alias parcial de todas las interacciones dobles en las que no participa. Si hay interacciones importantes, pueden aparecer como falsos efectos principales. Úselos solo para tamizado cuando sea razonable suponer que no hay interacciones, y con mucho cuidado.""",
+Advertencia: su estructura de alias es muy compleja. En el diseño de 12 corridas cada efecto principal es alias parcial de todas las interacciones dobles en las que no participa. Si hay interacciones importantes, pueden aparecer como falsos efectos principales. Montgomery recomienda usarlos con mucho cuidado. A su favor: se proyectan en un factorial completo en cualesquiera tres factores, y bajo ciertas condiciones sus alias se pueden desenredar con técnicas de regresión.""",
   left=[bul("Resolución III para **k = N − 1** factores en N corridas",
             "N **múltiplo de 4**: 12, 20, 24, 28, 36",
-            "Se construye **desplazando cíclicamente** un renglón generador y agregando un renglón de signos −"),
+            "Para N = 12, 20, 24 y 36 se construye **desplazando cíclicamente** un renglón generador y agregando un renglón de signos −"),
         tab(["N", "Renglón generador"], [["12", "+ + − + + + − − − + −"],
              ["20", "+ + − − + + + + − + − + − − − − + + −"],
              ["24", "+ + + + + − + − + + − − + + − − + − + − − − −"]], size=14, colw=[0.1, 0.9], first_left=False)],
   right=[note("**Cuidado:** cada efecto principal es **alias parcial** de muchas interacciones dobles. "
               "Una interacción real puede aparecer como varios falsos efectos principales.", size=17),
-         bul("Úselos solo para **tamizado**, suponiendo que no hay interacciones",
-             "Si la diferencia de corridas es pequeña, prefiera un **2^{k−p}**", size=17)], ratio=0.52)
+         bul("Úselos **con mucho cuidado**, para tamizado, cuando no se esperan interacciones importantes",
+             "Un **2^{k−p}** de tamaño parecido puede ser mejor elección", size=17)], ratio=0.52)
 
 # ------------------------------------------------------------------ 8
 section(8, "Supuestos", "Qué debemos verificar sobre el modelo")
@@ -782,7 +796,7 @@ section(8, "Supuestos", "Qué debemos verificar sobre el modelo")
 S("¿Qué debemos verificar sobre el modelo?",
   """Las pruebas F del ANOVA son válidas si los errores son normales, tienen varianza constante y son independientes. Los errores no se observan, así que se trabaja con los residuos: la diferencia entre cada respuesta observada y el valor que predice el modelo ajustado.
 
-Cada supuesto tiene una prueba gráfica y una analítica. Normalidad: gráfica de probabilidad normal de los residuos y prueba de Anderson-Darling (la que Minitab usa por defecto) o Shapiro-Wilk. Varianza constante: gráfica de residuos contra valores ajustados y contra cada factor, y prueba de Bartlett o de Levene. Independencia: gráfica de residuos contra el orden de corrida y prueba de Durbin-Watson.
+Montgomery verifica los supuestos con gráficas de residuales y solo da pruebas formales para la igualdad de varianzas (Bartlett y Levene modificada). Siguiendo la estructura de la clase, aquí se propone además una prueba analítica para cada supuesto; Anderson-Darling, Shapiro-Wilk y Durbin-Watson no provienen del libro. Normalidad: gráfica de probabilidad normal de los residuos y prueba de Anderson-Darling (disponible en Minitab) o Shapiro-Wilk. Varianza constante: gráfica de residuos contra valores ajustados y contra cada factor, y prueba de Bartlett o de Levene modificada; Bartlett es muy sensible a la falta de normalidad y no debe usarse si esta está en duda. Independencia: gráfica de residuos contra el orden de corrida y prueba de Durbin-Watson.
 
 En un fraccionado sin réplicas los residuos provienen de los efectos descartados; si el modelo deja pocos grados de libertad para el error, la verificación tiene poca potencia.""",
   left=[form("e = y − ŷ", size=26),
@@ -790,7 +804,7 @@ En un fraccionado sin réplicas los residuos provienen de los efectos descartado
         note("Con pocos g.l. en el error, la verificación tiene **poca potencia**")],
   right=[tab(["Supuesto", "Prueba gráfica", "Prueba analítica"],
              [["Normalidad", "Probabilidad normal de residuos", "Anderson-Darling, Shapiro-Wilk"],
-              ["Varianza constante", "Residuos contra ajustados y contra cada factor", "Bartlett, Levene"],
+              ["Varianza constante", "Residuos contra ajustados y contra cada factor", "Bartlett, Levene modificada"],
               ["Independencia", "Residuos contra orden de corrida", "Durbin-Watson"]],
              size=16, colw=[0.26, 0.4, 0.34])], ratio=0.36)
 
@@ -822,30 +836,37 @@ Independencia: se verifica graficando los residuos contra el orden real de corri
          note("Sin el orden de corrida registrado, la independencia **no se puede verificar**", size=15)],
   ratio=0.54)
 
+import math as _math
+_fstar = _math.log(bart3[3][0] / bart3[3][1])
 S("Ejemplo 3 · Cuando la varianza no es constante",
-  f"""En el ejemplo 3 la gráfica de residuos contra el factor C mostró más dispersión con C alto. La prueba de Bartlett lo confirma. Hipótesis: H_{{0}}: las varianzas de los residuos son iguales en los dos niveles de C; H_{{A}}: son distintas.
+  f"""En el ejemplo 3 la gráfica de residuos contra el factor C mostró más dispersión con C alto. El criterio del libro es el estadístico F* = ln[S²(+)/S²(−)], que se calcula para cada columna de signos: si las varianzas son iguales, F* es aproximadamente normal con media cero, y se juzga con una gráfica de probabilidad normal de los quince valores. La desviación estándar de los residuos es {f(bart3[3][0] ** 0.5)} con C alto y {f(bart3[3][1] ** 0.5)} con C bajo, de modo que F* = {f(_fstar)} para C, el único valor que se separa de los demás. Esto solo es válido si el modelo de localización (A, B, AB) es correcto.
 
-La desviación estándar de los residuos es {f(bart3[3][0] ** 0.5)} con C alto y {f(bart3[3][1] ** 0.5)} con C bajo. El estadístico de Bartlett es {f(bart3[0])} con 1 grado de libertad y valor p = {f(bart3[2], 4)}: se rechaza H_{{0}}.
+Como apoyo descriptivo se agrega aquí la prueba de Bartlett sobre los residuos agrupados por nivel de C: χ² = {f(bart3[0])} con 1 grado de libertad y valor p = {f(bart3[2], 4)}. No está en el libro y debe leerse con cautela: los residuos de un mismo modelo no son muestras independientes, C se eligió después de mirar quince columnas y Bartlett es sensible a la falta de normalidad.
 
-Aquí la violación del supuesto es en sí misma un hallazgo: el tiempo de retención no cambia la contracción media, pero sí su variabilidad. Para detectar este tipo de efecto en todas las columnas se usa el estadístico F* = ln[S²(+)/S²(−)]; los valores que se alejan de cero señalan efectos de dispersión.""",
-  left=[form("H_{0}: σ^{2}(C+) = σ^{2}(C−)", "H_{A}: σ^{2}(C+) ≠ σ^{2}(C−)", size=20),
+Aquí la violación del supuesto es en sí misma un hallazgo: el tiempo de retención no cambia la contracción media, pero sí su variabilidad. La decisión es fijar C en el nivel bajo para reducir la variabilidad entre piezas.""",
+  left=[form("F*_{i} = ln [ S^{2}(i+) / S^{2}(i−) ]", size=20),
+        txt("Criterio del libro: se calcula para cada columna y se grafica en probabilidad normal. "
+            "Si no hay efecto de dispersión, F* es aproximadamente normal con media cero", size=15),
         tab(["Nivel de C", "Desv. estándar de residuos", "n"],
-            [["C alto (+)", f(bart3[3][0] ** 0.5), "8"], ["C bajo (−)", f(bart3[3][1] ** 0.5), "8"]], size=16),
-        tab(["Bartlett", "Valor"], [["Estadístico χ^{2}", f(bart3[0])], ["g.l.", "1"],
-                                    ["Valor p", f(bart3[2], 4)]], size=16)],
-  right=[note("Valor p < 0.05: **se rechaza H_{0}**. La varianza depende de C", size=17),
-         bul("C no cambia la media, pero sí la **variabilidad**: efecto de dispersión",
-             "Decisión: **C bajo** reduce la variabilidad entre piezas", size=17),
-         form("F*_{i} = ln [ S^{2}(i+) / S^{2}(i−) ]", size=19),
-         txt("Se calcula para cada columna; los valores lejos de cero señalan efectos de dispersión", size=15)],
+            [["C alto (+)", f(bart3[3][0] ** 0.5), "8"], ["C bajo (−)", f(bart3[3][1] ** 0.5), "8"]], size=16,
+            colw=[0.3, 0.5, 0.2], first_left=False),
+        note(f"F* de C = ln({f(bart3[3][0] ** 0.5)}^{{2}} / {f(bart3[3][1] ** 0.5)}^{{2}}) = **{f(_fstar)}**: "
+             "el único de los quince que se separa", size=16)],
+  right=[bul("C no cambia la media, pero sí la **variabilidad**: efecto de dispersión",
+             "Decisión: **C bajo** reduce la variabilidad entre piezas",
+             "Válido solo si el modelo de localización (A, B, AB) es correcto", size=17),
+         tab(["Bartlett (apoyo descriptivo)", "Valor"], [["Estadístico χ^{2}", f(bart3[0])], ["g.l.", "1"],
+                                    ["Valor p", f(bart3[2], 4)]], size=16, colw=[0.65, 0.35]),
+         txt("Bartlett no está en el libro y es solo indicativo: los residuos no son independientes "
+             "y C se eligió después de ver los datos", size=14)],
   ratio=0.5)
 
 S("¿Qué hago si se viola un supuesto?",
   """Si falla la normalidad: revisar datos atípicos y errores de registro, y considerar una transformación de la respuesta; el ANOVA es robusto a desviaciones moderadas.
 
-Si la varianza no es constante: transformar la respuesta (logaritmo, raíz cuadrada, o Box-Cox para elegir la transformación) o, si la varianza depende de un factor, tratarlo como efecto de dispersión y aprovecharlo.
+Si la varianza no es constante: transformar la respuesta (logaritmo, raíz cuadrada, recíproco; la elección puede guiarse por la relación entre la desviación estándar y la media, o por el método de Box-Cox) o, si la varianza depende de un factor, tratarlo como efecto de dispersión y aprovecharlo.
 
-Si falla la independencia: es el problema más grave y no se corrige con el análisis. Suele deberse a no haber aleatorizado. Si existe una fuente identificable (tiempo, lote), puede incorporarse como bloque o covariable.
+Si falla la independencia: es un problema potencialmente serio y difícil de corregir; la aleatorización es la principal forma de prevenirlo. Si existe una fuente identificable (tiempo, lote), debe controlarse en experimentos futuros o incluirse en el análisis como bloque o covariable.
 
 Si el modelo deja residuos con patrón: probablemente falta un término; hay que revisar las cadenas de alias y, si es necesario, agregar corridas.""",
   body=[tab(["Problema", "Síntoma", "Qué hacer"],
@@ -854,7 +875,7 @@ Si el modelo deja residuos con patrón: probablemente falta un término; hay que
              ["Varianza no constante", "Embudo en residuos contra ajustados",
               "Transformar (logaritmo, raíz, Box-Cox) o tratar como efecto de dispersión"],
              ["Dependencia", "Tendencia o rachas contra el orden de corrida",
-              "No se corrige en el análisis: aleatorizar; agregar bloque o covariable"],
+              "Difícil de corregir: prevenir aleatorizando; incluir la fuente como bloque o covariable"],
              ["Modelo incompleto", "Patrón en los residuos",
               "Revisar cadenas de alias; agregar términos o corridas"]],
             size=16, colw=[0.2, 0.36, 0.44])])
@@ -865,19 +886,19 @@ section(9, "Minitab", "Cómo crear el diseño, ingresar los datos y analizarlos"
 S("Minitab en cinco pasos",
   """El trabajo en Minitab sigue cinco pasos. Crear el diseño: Minitab genera la matriz y el orden aleatorio. Ingresar la respuesta en la hoja de trabajo. Analizar el diseño: efectos, alias, ANOVA y gráficas de efectos. Verificar supuestos con las gráficas de residuos y las pruebas analíticas. Interpretar con gráficas factoriales y, si hace falta, agregar un doblez.
 
-Los nombres de los menús corresponden a Minitab en español; pueden variar ligeramente entre versiones.""",
+Minitab llama «plegar» al doblez. Los nombres de menús y opciones se cotejaron con la documentación de soporte de Minitab en español; pueden variar entre versiones.""",
   body=[cards(("1 · Crear el diseño", "Estadísticas > DOE > Factorial > Crear diseño factorial"),
               ("2 · Ingresar la respuesta", "Una columna nueva en la hoja de trabajo"),
               ("3 · Analizar", "Estadísticas > DOE > Factorial > Analizar diseño factorial"),
               ("4 · Verificar supuestos", "Gráficas de residuos y prueba de normalidad"),
-              ("5 · Interpretar y ampliar", "Gráficas factoriales; Modificar diseño > Doblar"),
+              ("5 · Interpretar y ampliar", "Gráficas factoriales; Modificar diseño > Plegar diseño"),
               size=18, cols=3),
-        txt("Los nombres de menú corresponden a Minitab en español y pueden variar entre versiones", size=13)])
+        txt("Nombres cotejados con la documentación de soporte de Minitab en español; pueden variar entre versiones", size=13)])
 
 S("Paso 1 · Crear el diseño",
   """Ruta: Estadísticas > DOE > Factorial > Crear diseño factorial. En tipo de diseño se deja «Factorial de 2 niveles (generadores predeterminados)» y se indica el número de factores.
 
-En «Diseños» se elige la fracción: Minitab lista las opciones con sus corridas y su resolución; ahí mismo se definen réplicas, puntos centrales y bloques. En «Factores» se escribe el nombre real de cada factor y sus niveles bajo y alto. En «Opciones» se deja marcada la casilla de aleatorizar corridas y se elige la fracción (principal u otra) o el doblez. En «Resultados» se pide la estructura de alias.
+En «Diseños» se elige la fracción: Minitab lista las opciones con sus corridas y su resolución; ahí mismo se definen réplicas, puntos centrales y bloques. En «Factores» se escribe el nombre real de cada factor y sus niveles bajo y alto. En «Opciones» se deja marcada la casilla de aleatorizar corridas y se elige la fracción (principal u otra) o el plegado del diseño, que es como Minitab llama al doblez. En «Resultados» se pide la estructura de alias.
 
 Si se necesitan generadores propios, se usa el tipo «Factorial de 2 niveles (especificar generadores)».""",
   body=[path("Estadísticas", "DOE", "Factorial", "Crear diseño factorial…"),
@@ -886,21 +907,20 @@ Si se necesitan generadores propios, se usa el tipo «Factorial de 2 niveles (es
              ["Número de factores", "El número k de factores del experimento"],
              ["Botón Diseños…", "La fracción (1/2, 1/4…): muestra corridas y resolución. Réplicas, puntos centrales, bloques"],
              ["Botón Factores…", "Nombre, tipo y niveles bajo y alto de cada factor"],
-             ["Botón Opciones…", "Aleatorizar corridas; fracción principal u otra; doblar diseño"],
+             ["Botón Opciones…", "Aleatorizar corridas; fracción principal u otra; plegar diseño (doblez)"],
              ["Botón Resultados…", "Tabla de resumen y estructura de alias"]],
             size=16, colw=[0.27, 0.73])])
 
 S("Paso 1 · ¿Qué fracciones ofrece Minitab?",
   """El botón «Mostrar diseños disponibles» abre una tabla que cruza el número de corridas con el número de factores e indica la resolución de cada combinación. Es la misma información de la tabla de diseños recomendados.
 
-Se lee así: con 5 factores y 16 corridas el diseño es de resolución V; con 7 factores y 8 corridas es de resolución III. Minitab colorea las celdas: rojo para resolución III, amarillo para IV y verde para V o superior.""",
+Se lee así: con 5 factores y 16 corridas el diseño es de resolución V; con 7 factores y 8 corridas es de resolución III.""",
   body=[tab(["Corridas", "3 factores", "4 factores", "5 factores", "6 factores", "7 factores", "8 factores"],
             [["4", "III", "", "", "", "", ""],
              ["8", "Completo", "IV", "III", "III", "III", ""],
              ["16", "", "Completo", "V", "IV", "IV", "IV"],
              ["32", "", "", "Completo", "VI", "IV", "IV"]], size=18, first_left=False),
-        note("Botón **Mostrar diseños disponibles…**: resolución de cada combinación de factores y corridas. "
-             "Minitab colorea: rojo = III, amarillo = IV, verde = V o más"),
+        note("Botón **Mostrar diseños disponibles…**: resolución de cada combinación de factores y corridas"),
         bul("Elija la celda con la **mayor resolución** que permita su presupuesto de corridas", size=17)])
 
 _ws = sorted([[str(i + 1), str(o), "1", "1", sg(r["A"]) + "1", sg(r["B"]) + "1", sg(r["C"]) + "1",
@@ -926,12 +946,12 @@ S("Paso 3 · Analizar el diseño",
 
 En «Términos» se decide qué entra al modelo. En el primer análisis se incluyen todos los términos disponibles para ver todos los efectos; después se regresa y se dejan solo los activos, con lo cual los descartados pasan al error.
 
-En «Gráficas» se marcan las gráficas de efectos (Pareto, normal y seminormal) y las gráficas de residuos «Cuatro en uno». En «Almacenamiento» se piden los ajustes y los residuos para las pruebas analíticas.""",
+En «Gráficas» se marcan las gráficas de efectos (Pareto, Normal y Normales (absolutos), que es la seminormal) y las gráficas de residuos «Cuatro en uno». Cuando no hay grados de libertad para el error, Minitab traza la línea de referencia con el método de Lenth. En «Almacenamiento» se piden los ajustes y los residuos para las pruebas analíticas.""",
   body=[path("Estadísticas", "DOE", "Factorial", "Analizar diseño factorial…"),
         tab(["En el cuadro de diálogo", "Qué elegir"],
             [["Respuestas", "La columna con la respuesta"],
              ["Botón Términos…", "1.ª pasada: todos los términos.  2.ª pasada: solo los efectos activos"],
-             ["Botón Gráficas…", "Gráficas de efectos: Pareto, Normal, Seminormal.  Residuos: Cuatro en uno"],
+             ["Botón Gráficas…", "Gráficas de efectos: Pareto, Normal, Normales (absolutos).  Residuos: Cuatro en uno"],
              ["Botón Almacenamiento…", "Ajustes y Residuos (para las pruebas de supuestos)"]],
             size=16, colw=[0.27, 0.73]),
         note("Sin réplicas, la primera pasada no da valores p: se decide con la gráfica normal y el Pareto")])
@@ -961,33 +981,33 @@ for _t in ["AC", "AD"]:
     _L.append(_row("    " + _t[0] + "*" + _t[1], 1, m1["ss"][_t], m1["ss"][_t] / _mse,
                    _fsf(m1["ss"][_t] / _mse, 1, 2)))
 _L += [_row("Error", 2, m1["sse"]), f"{'Total':<24}{7:>4}{m1['sst']:>12.2f}", "", "Resumen del modelo",
-       f"{'S':>7}{'R-cuad.':>10}{'R-cuad.(ajustado)':>20}{'R-cuad.(pred)':>16}",
-       f"{m1['S']:>7.5f}{100 * m1['r2']:>9.2f}%{100 * m1['r2adj']:>19.2f}%{100 * r2pred1:>15.2f}%"]
+       f"{'S':>7}{'R-cuadrado':>12}{'R-cuadrado(ajustado)':>22}{'R-cuadrado (pred)':>19}",
+       f"{m1['S']:>7.5f}{100 * m1['r2']:>11.2f}%{100 * m1['r2adj']:>21.2f}%{100 * r2pred1:>18.2f}%"]
 _out = "\n".join(_L)
 S("Paso 4 · Leer la salida",
-  """La salida tiene tres partes que hay que leer en orden. Primero la estructura de alias: confirma qué efectos están mezclados; hay que revisarla antes de interpretar cualquier efecto. Segundo, el análisis de varianza: cada término con sus grados de libertad, suma de cuadrados, F y valor p; se rechaza H_{0} para los términos con valor p menor que 0.05. Tercero, el resumen del modelo: S es la raíz del cuadrado medio del error y R-cuad el porcentaje de variabilidad explicada.
+  """La salida tiene tres partes que hay que leer en orden. Primero la estructura de alias: confirma qué efectos están mezclados; hay que revisarla antes de interpretar cualquier efecto. Segundo, el análisis de varianza: cada término con sus grados de libertad, suma de cuadrados, F y valor p; se rechaza H_{0} para los términos con valor p menor que 0.05. Tercero, el resumen del modelo: S es la raíz del cuadrado medio del error y R-cuadrado el porcentaje de variabilidad explicada.
 
 La salida mostrada es la que corresponde al modelo reducido del ejemplo 1; los valores se calcularon a partir de los datos y deben coincidir con los que entregue Minitab.""",
   left=[mono(_out, size=12)],
   right=[num("**Estructura de alias**: qué está mezclado con qué",
              "**Análisis de varianza**: valor p < 0.05  →  término significativo",
-             "**Resumen del modelo**: S = raíz de MS_{E};  R-cuad = % explicado", size=16),
+             "**Resumen del modelo**: S = raíz de MS_{E};  R-cuadrado = % explicado", size=16),
          note("Valores calculados a partir de los datos del ejemplo 1; verifíquelos en Minitab", size=14)],
   ratio=0.64)
 
 S("Paso 5 · Gráficas, supuestos y doblez",
-  """Para interpretar: las gráficas factoriales muestran los efectos principales y las interacciones; la gráfica de cubos muestra la respuesta media en cada vértice de los factores activos.
+  """Para interpretar: las gráficas factoriales muestran los efectos principales y las interacciones; la gráfica de cubo muestra la respuesta media en cada vértice de los factores activos.
 
 Para los supuestos: las gráficas de residuos «Cuatro en uno» se piden dentro del análisis; la prueba de normalidad se aplica a la columna de residuos almacenada, y la prueba de igualdad de varianzas compara la dispersión de los residuos entre niveles de un factor.
 
-Para ampliar el experimento: Modificar diseño permite doblar el diseño (en todos los factores o en uno solo); Minitab agrega las corridas nuevas a la hoja. Los diseños de Plackett-Burman se crean desde el mismo cuadro de Crear diseño factorial, eligiendo ese tipo de diseño.""",
+Para ampliar el experimento: Modificar diseño permite plegar el diseño, es decir hacer el doblez (en todos los factores o en uno solo); Minitab agrega las corridas nuevas a la hoja. Los diseños de Plackett-Burman se crean desde el mismo cuadro de Crear diseño factorial, eligiendo ese tipo de diseño.""",
   body=[tab(["Para…", "Ruta en Minitab"],
             [["Efectos principales e interacciones", "Estadísticas > DOE > Factorial > Gráficas factoriales…"],
-             ["Respuesta en cada vértice", "Estadísticas > DOE > Factorial > Gráfica de cubos…"],
+             ["Respuesta en cada vértice", "Estadísticas > DOE > Factorial > Gráfica de cubo…"],
              ["Residuos (normalidad, ajustes, orden)", "Analizar diseño factorial > Gráficas… > Cuatro en uno"],
              ["Prueba de normalidad", "Estadísticas > Estadísticas básicas > Prueba de normalidad…"],
              ["Igualdad de varianzas", "Estadísticas > ANOVA > Prueba de igualdad de varianzas…"],
-             ["Doblez completo o de un factor", "Estadísticas > DOE > Modificar diseño… > Doblar diseño"],
+             ["Doblez completo o de un factor", "Estadísticas > DOE > Modificar diseño… > Plegar diseño"],
              ["Plackett-Burman", "Crear diseño factorial… > Diseño de Plackett-Burman"]],
             size=16, colw=[0.36, 0.64])])
 
@@ -997,7 +1017,7 @@ section(10, "Cierre", "Lo que hay que recordar")
 S("Lo que hay que recordar",
   """Un factorial fraccionado estudia muchos factores en pocas corridas a cambio de mezclar efectos. La notación 2^{k−p} dice cuántos factores, cuántos generadores y cuántas corridas. La relación de definición determina los alias y la resolución dice qué tan grave es la mezcla. El análisis es el del 2^{k}: contrastes, efectos, gráfica normal de efectos, ANOVA del modelo reducido y residuos. Las conclusiones son tentativas y se confirman con una fracción alterna, un doblez o una corrida de verificación.
 
-Errores frecuentes: interpretar un efecto sin mirar sus alias; elegir una resolución III cuando se esperan interacciones; no aleatorizar o no guardar el orden de corrida; asignar los factores importantes a letras que forman una palabra; y dar por definitivas las conclusiones sin confirmar.""",
+Errores frecuentes: interpretar un efecto sin mirar sus alias; usar una resolución III sin prever un doblez cuando puede haber interacciones; no aleatorizar o no guardar el orden de corrida; no cuidar la asignación de los factores a las columnas cuando se tiene idea de cuáles importan; y dar por definitivas las conclusiones sin confirmar.""",
   left=[txt("**Ideas clave**", size=20),
         bul("Muchos factores en pocas corridas, **a cambio de alias**",
             "La **relación de definición** determina los alias",
@@ -1006,9 +1026,9 @@ Errores frecuentes: interpretar un efecto sin mirar sus alias; elegir una resolu
             "Las conclusiones son **tentativas**: hay que confirmar", size=17)],
   right=[txt("**Errores frecuentes**", size=20),
          bul("Interpretar un efecto **sin revisar sus alias**",
-             "Usar resolución III cuando se esperan interacciones",
+             "Usar resolución III **sin prever un doblez** cuando puede haber interacciones",
              "No aleatorizar o no guardar el **orden de corrida**",
-             "Asignar los factores importantes a letras que forman una **palabra**",
+             "No cuidar la **asignación** de factores a columnas (alias y proyección)",
              "Dar por definitivo lo que no se ha confirmado", size=17)])
 
 S("Referencias",

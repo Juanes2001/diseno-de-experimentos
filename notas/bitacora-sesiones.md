@@ -19,17 +19,28 @@ qué queda pendiente. La entrada más reciente va arriba.
   más la fracción alterna del 8-3) y todas las cifras se recalcularon desde los datos.
 - Se buscaron artículos de acceso abierto que usan factoriales fraccionados para el caso del
   informe: 20 referencias con DOI en `bibliografia/papers-factoriales-fraccionados.txt`.
+- Se contrastó toda la presentación y la guía contra las páginas del libro (caps. 3, 6 y 8) y
+  la parte de Minitab contra la documentación de soporte de Minitab en español. No se encontró
+  ningún error de cifras, tablas, generadores ni alias. Se corrigieron imprecisiones de redacción
+  (definiciones de generador y palabra, proyección, hipótesis por cadena, alcance del doblez,
+  Plackett-Burman, supuestos) y términos de Minitab ("Plegar diseño", "Normales (absolutos)",
+  "Gráfica de cubo", "R-cuadrado"). La guía indica ahora qué no proviene del libro: las ANOVA de
+  los ejemplos 1 y 3, Lenth en el ejemplo 2, Anderson-Darling, Durbin-Watson y Bartlett.
+- Erratas del libro detectadas: la tabla 8-14 imprime el 2^(7−3) como resolución III (es IV);
+  el ejemplo 8-7 imprime −1.53 donde los datos dan −1.13; la tabla 8-6 intercambia los nombres
+  de los factores B y C del ejemplo 8-2.
+- Confirmados contra el libro: los nombres de los factores del ejemplo 1 (pág. 246) y el año de
+  la edición (© 2004, Limusa).
 
 ### Pendiente
-- [ ] Verificar en Minitab las rutas de menú, los nombres de las columnas de la hoja de trabajo
-      y la salida de la diapositiva 60; reemplazar las tablas dibujadas por capturas reales.
-      (Minitab no estaba instalado en el equipo donde se armó la presentación.)
+- [ ] Correr el ejemplo 1 en Minitab, comparar con la salida de la diapositiva 60 y reemplazar
+      las tablas dibujadas por capturas reales. Las rutas de menú y los nombres de opciones ya
+      se cotejaron con la documentación de Minitab, pero no en el programa (no estaba instalado
+      en el equipo donde se armó la presentación).
 - [ ] Elegir el paper del caso entre los candidatos, leer el texto completo y confirmar diseño,
       ANOVA y supuestos. Enviarlo a los compañeros a más tardar el miércoles 28 oct 2026.
 - [ ] Agregar el caso a la presentación (las reglas piden que la exposición lo incluya).
 - [ ] Consultar Gutiérrez–De la Vara, cap. 8: la presentación solo usa Montgomery.
-- [ ] Confirmar contra el libro los nombres de los factores B y C del ejemplo 1 y el año de la
-      edición de Montgomery que aparece en las referencias (se escribieron de memoria).
 - [ ] Decidir si se suben al repo las fotos de las diapositivas de la profesora
       (`notas/Diseño de un solo factor/` y `notas/Diseño por bloques Latino y grecolatino/`);
       por ahora están solo en local.
