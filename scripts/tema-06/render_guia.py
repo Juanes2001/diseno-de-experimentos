@@ -296,6 +296,9 @@ def build(out):
         o.append('<div class="bloques">')
         if s.get("body"):
             o.append("".join(block(b) for b in s["body"]))
+        elif any(b["t"] == "mono" for b in s["left"] + s["right"]):
+            # Una salida de texto fijo no cabe en media página: se apila a todo el ancho.
+            o.append("".join(block(b) for b in s["left"] + s["right"]))
         else:
             r = s["ratio"]
             o.append(f'<div class="cols"><div style="flex:{r}">{"".join(block(b) for b in s["left"])}</div>'

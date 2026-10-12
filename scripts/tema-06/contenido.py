@@ -546,7 +546,7 @@ El método de Lenth, que usa Minitab para trazar la línea de referencia del dia
 
 Montgomery advierte que el método de Lenth solo es razonable cuando hay pocos efectos activos y recomienda usarlo como complemento de la gráfica normal. En el ejemplo 1, donde cinco de siete efectos son grandes, Lenth no detecta ninguno (PSE = 24.75).
 
-Y los principios de interpretación de cadenas: escasez de efectos (el que Montgomery nombra en este capítulo), jerarquía (los efectos de orden bajo son más probables) y herencia (una interacción es más creíble si sus factores tienen efecto principal). Los dos últimos son nombres usuales en otros textos, como Wu y Hamada.""",
+Y los principios de interpretación de cadenas: escasez de efectos (Montgomery lo nombra en la introducción del capítulo), jerarquía (los efectos de orden bajo son más probables; Montgomery lo invoca en el ejemplo 8-6, pág. 335, para conservar el factor D en el modelo junto con la interacción AD) y herencia (una interacción es más creíble si sus factores tienen efecto principal; este nombre es usual en otros textos, como Wu y Hamada).""",
   left=[bul("**Gráfica normal o seminormal de efectos**: los inactivos caen sobre una recta",
             "**Pareto con método de Lenth**: activo si |efecto| > margen de error; complementa la gráfica normal, no la sustituye",
             "Los efectos descartados pasan a formar el **error** del ANOVA"),

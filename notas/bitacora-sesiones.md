@@ -3,6 +3,31 @@
 Registro de cada sesión de trabajo en el repositorio: qué se hizo, qué decisiones se tomaron y
 qué queda pendiente. La entrada más reciente va arriba.
 
+## 2026-10-11 (domingo) — Corroboración de la exposición del tema 6 contra Montgomery
+
+### Hecho
+- Se leyó de nuevo, página por página sobre el escaneo, el capítulo 8 completo (págs. 303–350;
+  las 351–362 son problemas) y las págs. 242–243 y 254–255 del cap. 6 (procedimiento de
+  análisis, tabla ANOVA del 2^k y método de Lenth), y se cotejó cada diapositiva y cada apartado
+  de la guía (47 págs.). Toda la teoría, las definiciones, los generadores, las relaciones de
+  definición, las cadenas de alias, las tablas 8-13, 8-14 y 8-29, los renglones de Plackett-Burman
+  y las citas al libro coinciden con el texto.
+- Se recalcularon desde los datos del libro todas las cifras de los cuatro ejemplos (efectos,
+  contrastes, SS, ANOVA, F y p, R², R² ajustado y predicho, Lenth, Anderson-Darling, F* de
+  dispersión, Bartlett, fracción alterna y doblez). Todo coincide con la guía y con el libro.
+  Se confirman las tres erratas del libro ya anotadas (tabla 8-14, ejemplo 8-7, tabla 8-6).
+- Correcciones hechas: (1) la guía decía que el principio de jerarquía no está en Montgomery;
+  sí lo nombra en el ejemplo 8-6 (pág. 335), se corrigió en `contenido.py`; (2) la salida de
+  Minitab de la pág. 45 de la guía salía recortada por la derecha (sin la columna Valor p ni el
+  R² predicho) porque el bloque de texto fijo no cabía en media página; `render_guia.py` ahora
+  apila esos bloques a todo el ancho. Se regeneraron el pptx y el PDF.
+- `build.sh` ahora genera el PDF con Chrome sin abrirlo (ruta de Windows desde WSL) y usa el
+  entorno `.venv` (pymupdf, python-pptx, numpy, scipy; ignorado por git).
+
+### Pendiente
+- Los mismos pendientes de la sesión del 3 de octubre (Minitab real, paper del caso, caso en la
+  presentación, Gutiérrez–De la Vara, envío el 30 oct).
+
 ## 2026-10-03 (sábado) — Clase 6: bloques, latinos y grecolatinos; preparación del tema 6
 
 ### Hecho
