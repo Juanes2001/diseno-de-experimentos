@@ -1,0 +1,402 @@
+REFERENCIAS SOBRE AUTOCORRELADORES DE INTENSIDAD (MEDICIÓN DE ANCHO DE PULSO)
+Trabajo práctico · Diseño de Experimentos Avanzados (3008475) · UNAL 2026-II
+Búsqueda realizada el 13 de octubre de 2026
+
+PARA QUÉ ES ESTA LISTA
+- Sustenta la exposición del conocimiento no estadístico del proyecto: la física del autocorrelador
+  de intensidad y los factores que cambian el ancho de pulso que se mide.
+- Más adelante sirve para el "planteamiento del problema con referencias" del informe final.
+
+CÓMO SE ARMÓ ESTA LISTA
+- Los candidatos salieron de los libros de texto de óptica ultrarrápida, de las reseñas del área y de
+  búsquedas en Crossref y en la web.
+- Cada DOI se consultó en la API de Crossref: título, autores, revista, volumen, páginas y año están
+  como los entrega ese índice. Los dos DOI que tenía mal de memoria (Weiner 1983 y Rhodes 2013) se
+  corrigieron así.
+- No se leyó el texto completo de ningún artículo. La línea "Para qué sirve" resume el aporte
+  conocido del trabajo; hay que confirmarla al leerlo.
+- Los nombres de los autores están como los entrega el índice; para el informe hay que pasarlos al
+  formato de las Normas ICONTEC.
+- Los libros (sección A) normalmente no son de acceso abierto: hay que conseguirlos por la biblioteca
+  de la UNAL (SpringerLink, ScienceDirect y Wiley suelen estar en las bases suscritas) o en físico.
+  Sus PDF van en bibliografia/ y quedan fuera del repo (.gitignore).
+
+POR DÓNDE EMPEZAR (si el tiempo no alcanza para todo)
+  1. Diels y Rudolph [A1], capítulo de técnicas de diagnóstico: teoría completa de la autocorrelación.
+  2. Monmayrant, Weber y Chatel [B1]: guía introductoria, buena para armar las diapositivas.
+  3. Sala, Kenney-Wallace y Hall [C6]: factores de deconvolución según la forma del pulso.
+  4. Weiner [E1]: efecto del espesor del cristal (desajuste de velocidad de grupo).
+  5. Donnelly y Grossman [G1]: montaje didáctico completo, cercano a lo que haremos.
+
+====================================================================================================
+A. LIBROS DE TEXTO (CONSEGUIRLOS: no tengo acceso al texto completo)
+====================================================================================================
+
+[A1] Jean-Claude Diels; Wolfgang Rudolph (2006). Ultrashort Laser Pulse Phenomena: Fundamentals,
+     Techniques, and Applications on a Femtosecond Time Scale. 2.ª ed. Academic Press / Elsevier.
+     DOI: 10.1016/B978-0-12-215493-5.X5000-9
+     Para qué sirve: la referencia central. El capítulo de técnicas de diagnóstico (cap. 9 en la
+     2.ª ed.) deduce las autocorrelaciones de intensidad e interferométrica, la relación de fondo
+     y los factores de deconvolución; los primeros capítulos cubren dispersión y chirp.
+
+[A2] Rick Trebino (2000). Frequency-Resolved Optical Gating: The Measurement of Ultrashort Laser
+     Pulses. Springer US.
+     DOI: 10.1007/978-1-4615-1181-6
+     Para qué sirve: explica por qué la autocorrelación de intensidad no determina la forma del
+     pulso, y qué técnicas la superan. Útil para la sección de limitaciones.
+
+[A3] Andrew M. Weiner (2008). Ultrafast Optics. Wiley.
+     DOI: 10.1002/9780470473467
+     Para qué sirve: texto de posgrado con capítulos sobre generación de pulsos (mode-locking),
+     dispersión y medición por correlación.
+
+[A4] Claude Rullière (ed.) (2005). Femtosecond Laser Pulses: Principles and Experiments. 2.ª ed.
+     Springer New York (Advanced Texts in Physics).
+     DOI: 10.1007/b137908
+     Para qué sirve: libro con enfoque experimental; tiene un capítulo dedicado a la medición de
+     pulsos ultracortos (autocorrelación, FROG, SPIDER).
+
+[A5] Ursula Keller (2021). Ultrafast Lasers: A Comprehensive Introduction to Fundamental Principles
+     with Practical Applications. Springer (Graduate Texts in Physics).
+     DOI: 10.1007/978-3-030-82532-4
+     Para qué sirve: generación de pulsos (mode-locking) y su caracterización; actualizado.
+
+[A6] Robert W. Boyd (2020). Nonlinear Optics. 4.ª ed. Academic Press / Elsevier.
+     DOI: 10.1016/C2015-0-05510-1
+     Para qué sirve: generación de segundo armónico (SHG) y ajuste de fase (phase matching), el
+     proceso no lineal en el que se basa el autocorrelador.
+
+[A7] Valentin G. Dmitriev; Gagik G. Gurzadyan; David N. Nikogosyan (1999). Handbook of Nonlinear
+     Optical Crystals. 3.ª ed. Springer (Springer Series in Optical Sciences).
+     DOI: 10.1007/978-3-540-46793-9
+     Para qué sirve: datos de los cristales (BBO, KDP, LBO): ángulos de ajuste de fase, coeficientes
+     no lineales, aceptancia espectral. Sirve para justificar el cristal y su espesor.
+
+Libros sin DOI que también tratan el tema (buscarlos en la biblioteca):
+- Anthony E. Siegman (1986). Lasers. University Science Books. Mode-locking y forma de los pulsos.
+- Bahaa E. A. Saleh; Malvin C. Teich (2019). Fundamentals of Photonics. 3.ª ed. Wiley. Capítulos de
+  pulsos ultracortos y de óptica no lineal; nivel de pregrado.
+- Eugene Hecht. Optics. Pearson. Interferómetro de Michelson y coherencia (base del montaje).
+
+====================================================================================================
+B. RESEÑAS Y TUTORIALES (para entender la técnica completa)
+====================================================================================================
+
+[B1] Antoine Monmayrant; Sébastien Weber; Béatrice Chatel (2010). A newcomer's guide to ultrashort
+     pulse shaping and characterization. Journal of Physics B: Atomic, Molecular and Optical
+     Physics, vol. 43, art. 103001.
+     DOI: 10.1088/0953-4075/43/10/103001
+     Para qué sirve: tutorial para principiantes; explica la autocorrelación y sus límites.
+
+[B2] Ian A. Walmsley; Christophe Dorrer (2009). Characterization of ultrashort electromagnetic
+     pulses. Advances in Optics and Photonics, vol. 1, 308.
+     DOI: 10.1364/AOP.1.000308
+     Para qué sirve: reseña extensa y rigurosa de todas las técnicas de caracterización.
+
+[B3] R. Trebino; R. Jafari; S. A. Akturk; P. Bowlan; Z. Guang; P. Zhu et al. (2020). Highly reliable
+     measurement of ultrashort laser pulses. Journal of Applied Physics, vol. 128, art. 171103.
+     DOI: 10.1063/5.0022552
+     Para qué sirve: tutorial reciente sobre los errores frecuentes al medir pulsos, entre ellos
+     los de la autocorrelación.
+
+[B4] Michelle Rhodes; Günter Steinmeyer; Rick Trebino (2014). Standards for ultrashort-laser-pulse-
+     measurement techniques and their consideration for self-referenced spectral interferometry.
+     Applied Optics, vol. 53, D1.
+     DOI: 10.1364/AO.53.0000D1
+     Para qué sirve: criterios para juzgar si una técnica de medición es confiable.
+
+[B5] Günter Steinmeyer (2003). A review of ultrafast optics and optoelectronics. Journal of Optics A:
+     Pure and Applied Optics, vol. 5, R1-R15.
+     DOI: 10.1088/1464-4258/5/1/201
+     Para qué sirve: panorama general de la generación y medición de pulsos ultracortos.
+
+====================================================================================================
+C. ARTÍCULOS FUNDACIONALES DE LA AUTOCORRELACIÓN
+====================================================================================================
+
+[C1] M. Maier; W. Kaiser; J. A. Giordmaine (1966). Intense light bursts in the stimulated Raman
+     effect. Physical Review Letters, vol. 17, 1275-1277.
+     DOI: 10.1103/PhysRevLett.17.1275
+     Para qué sirve: primera medición de pulsos por correlación con segundo armónico.
+
+[C2] J. A. Armstrong (1967). Measurement of picosecond laser pulse widths. Applied Physics Letters,
+     vol. 10, 16-18.
+     DOI: 10.1063/1.1754787
+     Para qué sirve: propone la autocorrelación de intensidad por SHG con retardo variable, la
+     configuración de nuestro autocorrelador.
+
+[C3] H. P. Weber (1967). Method for pulsewidth measurement of ultrashort light pulses generated by
+     phase-locked lasers using nonlinear optics. Journal of Applied Physics, vol. 38, 2231-2234.
+     DOI: 10.1063/1.1709859
+     Para qué sirve: análisis teórico temprano de la autocorrelación por SHG.
+
+[C4] J. A. Giordmaine; P. M. Rentzepis; S. L. Shapiro; K. W. Wecht (1967). Two-photon excitation of
+     fluorescence by picosecond light pulses. Applied Physics Letters, vol. 11, 216-218.
+     DOI: 10.1063/1.1755105
+     Para qué sirve: autocorrelación por fluorescencia de dos fotones; origen de la discusión sobre
+     la relación pico/fondo.
+
+[C5] Jean-Claude M. Diels; Joel J. Fontaine; Ian C. McMichael; Francesco Simoni (1985). Control and
+     measurement of ultrashort pulse shapes (in amplitude and phase) with femtosecond accuracy.
+     Applied Optics, vol. 24, 1270.
+     DOI: 10.1364/AO.24.001270
+     Para qué sirve: autocorrelación interferométrica (con franjas, relación 8:1) y lo que revela
+     del chirp.
+
+[C6] K. Sala; G. Kenney-Wallace; G. Hall (1980). CW autocorrelation measurements of picosecond laser
+     pulses. IEEE Journal of Quantum Electronics, vol. 16, 990-996.
+     DOI: 10.1109/JQE.1980.1070606
+     Para qué sirve: autocorrelación de láseres continuos en modo amarrado; tabula la relación entre
+     el ancho de la autocorrelación y el del pulso para varias formas (gaussiana, sech², etc.).
+
+[C7] K. Naganuma; K. Mogi; H. Yamada (1989). General method for ultrashort light pulse chirp
+     measurement. IEEE Journal of Quantum Electronics, vol. 25, 1225-1233.
+     DOI: 10.1109/3.29252
+     Para qué sirve: cómo recuperar información de fase (chirp) a partir de autocorrelaciones y el
+     espectro.
+
+====================================================================================================
+D. LÍMITES DE LA AUTOCORRELACIÓN DE INTENSIDAD (forma supuesta, ambigüedad, artefactos)
+====================================================================================================
+
+[D1] Jung-Ho Chung; A. M. Weiner (2001). Ambiguity of ultrashort pulse shapes retrieved from the
+     intensity autocorrelation and the power spectrum. IEEE Journal of Selected Topics in Quantum
+     Electronics, vol. 7, 656-666.
+     DOI: 10.1109/2944.974237
+     Para qué sirve: muestra que pulsos distintos producen la misma autocorrelación y el mismo
+     espectro. Justifica por qué el factor de deconvolución es un supuesto.
+
+[D2] Justin Ratner; Günter Steinmeyer; Tsz Chun Wong; Randy Bartels; Rick Trebino (2012). Coherent
+     artifact in modern pulse measurements. Optics Letters, vol. 37, 2874.
+     DOI: 10.1364/OL.37.002874
+     Para qué sirve: el "artefacto coherente": con trenes de pulsos inestables la autocorrelación
+     muestra un pico angosto que subestima el ancho real.
+
+[D3] Michelle Rhodes; Günter Steinmeyer; Justin Ratner; Rick Trebino (2013). Pulse-shape
+     instabilities and their measurement. Laser & Photonics Reviews, vol. 7, 557-565.
+     DOI: 10.1002/lpor.201200102
+     Para qué sirve: cómo la variación de pulso a pulso altera lo que mide un autocorrelador que
+     promedia muchos pulsos.
+
+====================================================================================================
+E. FACTORES EXPERIMENTALES QUE CAMBIAN EL ANCHO MEDIDO
+====================================================================================================
+
+[E1] A. Weiner (1983). Effect of group velocity mismatch on the measurement of ultrashort optical
+     pulses via second harmonic generation. IEEE Journal of Quantum Electronics, vol. 19, 1276-1283.
+     DOI: 10.1109/JQE.1983.1072036
+     Para qué sirve: el espesor del cristal y el desajuste de velocidad de grupo ensanchan y
+     distorsionan la traza. Factor: espesor y tipo de cristal.
+     (Hay una corrección publicada: DOI 10.1109/JQE.1984.1072407.)
+
+[E2] I. V. Kuzmin; S. Yu. Mironov; E. A. Khazanov (2020). Accuracy of the duration estimates of
+     ultrashort laser pulses using a single-shot second-order intensity autocorrelator. Quantum
+     Electronics, vol. 50, 354-360.
+     DOI: 10.1070/QEL17310
+     Para qué sirve: cuantifica el error en la duración según el espesor del cristal y el ángulo
+     entre los haces.
+
+[E3] A. Baltuska; M. S. Pshenichnikov; D. A. Wiersma (1999). Second-harmonic generation frequency-
+     resolved optical gating in the single-cycle regime. IEEE Journal of Quantum Electronics,
+     vol. 35, 459-478.
+     DOI: 10.1109/3.753651
+     Para qué sirve: análisis detallado del ancho de banda de ajuste de fase y de la geometría no
+     colineal en mediciones por SHG.
+
+[E4] R. L. Fork; O. E. Martinez; J. P. Gordon (1984). Negative dispersion using pairs of prisms.
+     Optics Letters, vol. 9, 150.
+     DOI: 10.1364/OL.9.000150
+     Para qué sirve: dispersión de las componentes ópticas y su compensación con prismas. Factor:
+     vidrio y material atravesado antes del cristal (ensanchamiento por GDD).
+
+[E5] E. Treacy (1969). Optical pulse compression with diffraction gratings. IEEE Journal of Quantum
+     Electronics, vol. 5, 454-458.
+     DOI: 10.1109/JQE.1969.1076303
+     Para qué sirve: compresión de pulsos con chirp; complementa [E4].
+
+[E6] Toshiyuki Hirayama; Mansoor Sheik-Bahae (2002). Real-time chirp diagnostic for ultrashort laser
+     pulses. Optics Letters, vol. 27, 860.
+     DOI: 10.1364/OL.27.000860
+     Para qué sirve: diagnóstico del chirp con un montaje tipo autocorrelador.
+
+====================================================================================================
+F. VARIANTES DEL AUTOCORRELADOR (detector, barrido, disparo único)
+====================================================================================================
+
+Detección por absorción de dos fotones (sin cristal):
+[F1] D. T. Reid; M. Padgett; C. McGowan; W. E. Sleat; W. Sibbett (1997). Light-emitting diodes as
+     measurement devices for femtosecond laser pulses. Optics Letters, vol. 22, 233.
+     DOI: 10.1364/OL.22.000233
+
+[F2] Jinendra K. Ranka; Alexander L. Gaeta; Andrius Baltuska; Maxim S. Pshenichnikov; Douwe A.
+     Wiersma (1997). Autocorrelation measurement of 6-fs pulses based on the two-photon-induced
+     photocurrent in a GaAsP photodiode. Optics Letters, vol. 22, 1344.
+     DOI: 10.1364/OL.22.001344
+
+[F3] Yoshihiro Takagi; Shunji Imamura; Tohru Kobayashi; Keitaro Yoshihara (1992). Multiple- and
+     single-shot autocorrelator based on two-photon conductivity in semiconductors. Optics Letters,
+     vol. 17, 658.
+     DOI: 10.1364/OL.17.000658
+
+Barrido rápido del retardo:
+[F4] Piotr Myslinski (1987). Rapid scanning autocorrelator for measurements of ultrafast laser
+     pulses. Review of Scientific Instruments, vol. 58, 711-713.
+     DOI: 10.1063/1.1139245
+
+[F5] Akira Watanabe; Hiroshi Saito; Yuzo Ishida; Tatsuo Yajima (1989). A rapid scanning
+     interferometric autocorrelator for monitoring femtosecond pulses. Optics Communications,
+     vol. 69, 405-408.
+     DOI: 10.1016/0030-4018(89)90029-1
+
+Disparo único (single-shot, haces cruzados en ángulo):
+[F6] J. Janszky; G. Corradi; R. N. Gyuzalian (1977). On a possibility of analysing the temporal
+     characteristics of short light pulses. Optics Communications, vol. 23, 293-298.
+     DOI: 10.1016/0030-4018(77)90365-0
+
+[F7] C. Kolmeder; W. Zinth; W. Kaiser (1979). Second harmonic beam analysis, a sensitive technique to
+     determine the duration of single ultrashort laser pulses. Optics Communications, vol. 30,
+     453-457.
+     DOI: 10.1016/0030-4018(79)90392-4
+
+[F8] F. Salin; P. Georges; G. Roger; A. Brun (1987). Single-shot measurement of a 52-fs pulse.
+     Applied Optics, vol. 26, 4528.
+     DOI: 10.1364/AO.26.004528
+
+[F9] A. Brun; P. Georges; G. Le Saux; F. Salin (1991). Single-shot characterization of ultrashort
+     light pulses. Journal of Physics D: Applied Physics, vol. 24, 1225-1233.
+     DOI: 10.1088/0022-3727/24/8/001
+
+[F10] M. Raghuramaiah; A. K. Sharma; P. A. Naik; P. D. Gupta; R. A. Ganeev (2001). A second-order
+     autocorrelator for single-shot measurement of femtosecond laser pulse durations. Sadhana,
+     vol. 26, 603-611.
+     DOI: 10.1007/BF02703461
+     Para qué sirve: describe el diseño y la calibración paso a paso; es de lectura accesible.
+
+====================================================================================================
+G. MONTAJES DIDÁCTICOS (los más cercanos a nuestro experimento)
+====================================================================================================
+
+[G1] T. D. Donnelly; Carl Grossman (1998). Ultrafast phenomena: A laboratory experiment for
+     undergraduates. American Journal of Physics, vol. 66, 677-685.
+     DOI: 10.1119/1.18932
+     Para qué sirve: práctica de pregrado con láser de pulsos y autocorrelación; trata dispersión,
+     transformada de Fourier, interferencia y óptica no lineal.
+
+[G2] Daniel Upcraft; Andrew Schaffer; Connor Fredrick; Daniel Mohr; Nathan Parks; Andrew Thomas
+     et al. (2021). Ultrafast optics with a mode-locked erbium fiber laser in the undergraduate
+     laboratory. American Journal of Physics, vol. 89, 1152-1160.
+     DOI: 10.1119/10.0005890
+     Para qué sirve: autocorrelador casero tipo Michelson con detección por absorción de dos
+     fotones en un fotodiodo de silicio.
+
+[G3] M. García Arthur; R. Rangel Rojo; N. Jamasbi; M. Mohebi (2003). Diseño y construcción de un
+     autocorrelador de pulsos de femtosegundos usando absorción de dos fotones en un diodo
+     luminiscente. Revista Mexicana de Física, vol. 49, n.º 3.
+     DOI: no tiene DOI.
+     Enlace: https://rmf.smf.mx/ojs/index.php/rmf/article/view/3161
+     Para qué sirve: único texto en español encontrado; diseño, construcción y trazas de
+     autocorrelación de intensidad e interferométrica de un láser de Ti:zafiro (< 100 fs).
+
+====================================================================================================
+H. ORIGEN DEL PULSO (física de la fuente y de la no linealidad)
+====================================================================================================
+
+[H1] P. A. Franken; A. E. Hill; C. W. Peters; G. Weinreich (1961). Generation of optical harmonics.
+     Physical Review Letters, vol. 7, 118-119.
+     DOI: 10.1103/PhysRevLett.7.118
+     Para qué sirve: primera observación del segundo armónico óptico.
+
+[H2] J. A. Armstrong; N. Bloembergen; J. Ducuing; P. S. Pershan (1962). Interactions between light
+     waves in a nonlinear dielectric. Physical Review, vol. 127, 1918-1939.
+     DOI: 10.1103/PhysRev.127.1918
+     Para qué sirve: teoría de la SHG y del ajuste de fase.
+
+[H3] Hermann A. Haus (1975). Theory of mode locking with a fast saturable absorber. Journal of
+     Applied Physics, vol. 46, 3049-3058.
+     DOI: 10.1063/1.321997
+     Para qué sirve: de aquí sale la forma sech² que se supone para pulsos de láseres en modo amarrado.
+
+[H4] H. A. Haus (2000). Mode-locking of lasers. IEEE Journal of Selected Topics in Quantum
+     Electronics, vol. 6, 1173-1185.
+     DOI: 10.1109/2944.902165
+     Para qué sirve: reseña del mode-locking, de lectura más accesible que [H3].
+
+[H5] D. E. Spence; P. N. Kean; W. Sibbett (1991). 60-fsec pulse generation from a self-mode-locked
+     Ti:sapphire laser. Optics Letters, vol. 16, 42.
+     DOI: 10.1364/OL.16.000042
+
+[H6] P. M. W. French (1995). The generation of ultrashort laser pulses. Reports on Progress in
+     Physics, vol. 58, 169-262.
+     DOI: 10.1088/0034-4885/58/2/001
+
+[H7] Ursula Keller (2003). Recent developments in compact ultrafast lasers. Nature, vol. 424,
+     831-838.
+     DOI: 10.1038/nature01938
+
+====================================================================================================
+I. TÉCNICAS QUE SUPERAN A LA AUTOCORRELACIÓN (para contrastar en la exposición)
+====================================================================================================
+
+[I1] Rick Trebino; Daniel J. Kane (1993). Using phase retrieval to measure the intensity and phase of
+     ultrashort pulses: frequency-resolved optical gating. JOSA A, vol. 10, 1101.
+     DOI: 10.1364/JOSAA.10.001101
+[I2] D. J. Kane; R. Trebino (1993). Characterization of arbitrary femtosecond pulses using
+     frequency-resolved optical gating. IEEE Journal of Quantum Electronics, vol. 29, 571-579.
+     DOI: 10.1109/3.199311
+[I3] Rick Trebino; Kenneth W. DeLong; David N. Fittinghoff; John N. Sweetser; Marco A. Krumbügel;
+     Bruce A. Richman et al. (1997). Measuring ultrashort laser pulses in the time-frequency domain
+     using frequency-resolved optical gating. Review of Scientific Instruments, vol. 68, 3277-3295.
+     DOI: 10.1063/1.1148286
+[I4] C. Iaconis; I. A. Walmsley (1998). Spectral phase interferometry for direct electric-field
+     reconstruction of ultrashort optical pulses (SPIDER). Optics Letters, vol. 23, 792.
+     DOI: 10.1364/OL.23.000792
+[I5] Patrick O'Shea; Mark Kimmel; Xun Gu; Rick Trebino (2001). Highly simplified device for
+     ultrashort-pulse measurement (GRENOUILLE). Optics Letters, vol. 26, 932.
+     DOI: 10.1364/OL.26.000932
+[I6] Vadim V. Lozovoy; Igor Pastirk; Marcos Dantus (2004). Multiphoton intrapulse interference. IV.
+     Ultrashort laser pulse spectral phase characterization and compensation (MIIPS). Optics
+     Letters, vol. 29, 775.
+     DOI: 10.1364/OL.29.000775
+
+====================================================================================================
+J. RECURSOS WEB (sin DOI; verificado que el enlace responde)
+====================================================================================================
+
+- RP Photonics Encyclopedia, "Autocorrelators": https://www.rp-photonics.com/autocorrelators.html
+- RP Photonics Encyclopedia, "Time-bandwidth product":
+  https://www.rp-photonics.com/time_bandwidth_product.html
+- Clases de óptica ultrarrápida de Rick Trebino (Georgia Tech), con diapositivas sobre
+  autocorrelación: https://frog.gatech.edu/lectures.html
+
+====================================================================================================
+MAPA: FACTORES QUE PUEDEN CAMBIAR EL ANCHO DE PULSO MEDIDO (borrador para la exposición)
+====================================================================================================
+Separados en lo que cambia el pulso real y lo que cambia la medición. Entre corchetes, la referencia.
+
+1. Fuente (el pulso que realmente llega)
+   - Ancho de banda espectral y límite de Fourier: producto tiempo-ancho de banda mínimo de
+     0,441 (gaussiano) o 0,315 (sech²) [A1, J].
+   - Estado del mode-locking y estabilidad pulso a pulso [H3, H4, D2, D3].
+2. Propagación hasta el autocorrelador
+   - Dispersión de velocidad de grupo (GDD) de lentes, ventanas, divisor de haz y el propio
+     cristal: un pulso con chirp se ensancha. Para un pulso gaussiano limitado por transformada,
+     τ_sal = τ_ent · sqrt(1 + (4 ln2 · GDD / τ_ent²)²) [A1, A3, E4].
+   - Compresión previa con prismas o rejillas [E4, E5].
+3. Proceso no lineal en el autocorrelador
+   - Espesor del cristal y desajuste de velocidad de grupo; aceptancia espectral [E1, E2, A7].
+   - Ángulo de ajuste de fase y tipo de cristal (BBO, KDP) [A6, A7].
+   - Alternativa sin cristal: absorción de dos fotones en LED o fotodiodo [F1, F2, G2, G3].
+4. Geometría y retardo
+   - Calibración del retardo: un desplazamiento Δx del espejo produce Δτ = 2Δx/c [A1, G1].
+   - Ángulo entre haces (geometría no colineal) y tamaño del haz: ensanchamiento geométrico,
+     sobre todo en disparo único [E2, E3, F6-F10].
+   - Alineación y superposición espacial de los brazos [G1, G2].
+5. Interpretación de la traza
+   - Factor de deconvolución según la forma supuesta: τ_AC/τ_p = 1,414 (gaussiano),
+     1,543 (sech²) [C6, A1].
+   - Ambigüedad de la forma: la autocorrelación no determina el pulso [D1, A2].
+   - Relación pico/fondo (3:1 para la de intensidad con fondo, 8:1 para la interferométrica) como
+     control de calidad de la alineación [C4, C5, A1].
+   - Artefacto coherente con trenes inestables [D2, D3].
+6. Detección
+   - Linealidad y saturación del detector, ruido y promedio sobre muchos pulsos [B3, D3].
