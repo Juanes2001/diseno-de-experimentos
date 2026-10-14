@@ -3,6 +3,27 @@
 Registro de cada sesión de trabajo en el repositorio: qué se hizo, qué decisiones se tomaron y
 qué queda pendiente. La entrada más reciente va arriba.
 
+## 2026-10-13 (martes) — Notación del 2^k en la exposición del tema 6
+
+### Hecho
+- Se hizo `git pull`: Sebastián subió `bibliografia/autocorrelador-intensidad-referencias.txt`.
+- Al leer la guía, Juan Esteban notó que la diapositiva "La fracción un medio" usa la tabla de
+  signos del 2³ y las etiquetas (1), a, b, ab… sin explicarlas. Se agregaron dos diapositivas al
+  inicio de la sección 3 (ahora son las 13 y 14; la presentación queda en 67):
+  - "¿Cómo se lee la tabla de un factorial 2^k?": columnas en mayúsculas (factores y efectos),
+    filas en minúsculas (combinaciones de tratamientos), letra presente = nivel alto, (1) = todo
+    bajo, orden estándar (Yates), la minúscula también denota la respuesta observada, la I se
+    reserva para la identidad (fuente: Montgomery, cap. 6, secs. 6-2 a 6-4, págs. 218–240).
+  - "¿Cómo se completa la tabla de signos del 2^k?": columnas de interacción como producto de
+    signos, columna I, balance N/2, producto de columnas y letra² = I, ortogonalidad y contraste.
+- Se regeneraron el PPTX y el PDF con `scripts/tema-06/build.sh` y se revisaron las dos
+  diapositivas nuevas exportadas desde PowerPoint y las páginas 10–11 de la guía.
+
+### Pendiente
+- [ ] Seguir leyendo la guía y anotar qué más falta explicar (la exposición asumía conocida la
+      maquinaria del 2^k del tema anterior; conviene revisar también Yates y la gráfica normal).
+- [ ] Hacer commit y push de los cambios para que Sebastián los vea.
+
 ## 2026-10-11 (domingo) — Corroboración de la exposición del tema 6 contra Montgomery
 
 ### Hecho

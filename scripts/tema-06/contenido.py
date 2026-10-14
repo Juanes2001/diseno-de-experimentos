@@ -291,8 +291,47 @@ Regla práctica: usar la resolución más alta que permita el presupuesto de cor
 section(3, "Construcción y protocolo", "Cómo se arma la fracción y cómo se corre el experimento")
 
 _r = basic(3)
-_rows = []
 _names = ["(1)", "a", "b", "ab", "c", "ac", "bc", "abc"]
+_sig = ["ninguno (todos en nivel bajo)", "A", "B", "A y B", "C", "A y C", "B y C", "A, B y C"]
+_rows = [[str(i + 1), sg(row["A"]), sg(row["B"]), sg(row["C"]), nm, sig]
+         for i, (row, nm, sig) in enumerate(zip(_r, _names, _sig))]
+S("¿Cómo se lee la tabla de un factorial 2^{k}?",
+  """Antes de fraccionar hay que saber leer la tabla del factorial completo, porque la fracción se recorta de ella. La tabla usa dos alfabetos. Las letras mayúsculas A, B, C encabezan las columnas y nombran los factores (y también sus efectos). Las letras minúsculas identifican las filas, es decir, las combinaciones de tratamientos: una letra presente indica que ese factor está en su nivel alto (+1) y una letra ausente indica que está en su nivel bajo (−1). Así, ac es la corrida con A y C altos y B bajo, y (1) es la corrida con todos los factores en nivel bajo.
+
+Las filas se escriben en el orden estándar o de Yates: se introduce un factor a la vez y se combina con todos los anteriores. Para tres factores: (1), a, b, ab, c, ac, bc, abc. En ese orden la columna A alterna −, +; la de B va de dos en dos y la de C de cuatro en cuatro. Montgomery usa la misma minúscula para nombrar la corrida y para denotar la respuesta (o el total de respuestas) observada en ella; por eso más adelante se escriben contrastes como a − b − c + abc. La letra I se reserva para la columna identidad, de modo que el noveno factor se llama J.""",
+  left=[tab(["Corrida", "A", "B", "C", "Etiqueta", "Factores en nivel alto"], _rows, size=15,
+            colw=[0.13, 0.09, 0.09, 0.09, 0.15, 0.45], first_left=False)],
+  right=[bul("**Columnas, mayúsculas**: los factores A, B, C (y sus efectos)",
+             "**Filas, minúsculas**: las combinaciones de tratamientos",
+             "Letra **presente** = factor en nivel alto (+); **ausente** = nivel bajo (−)",
+             "**(1)** = todos los factores en nivel bajo",
+             "**Orden estándar (Yates)**: A alterna de uno en uno, B de dos en dos, C de cuatro en cuatro",
+             "La minúscula también denota la **respuesta observada** en esa corrida", size=16),
+         note("La letra I se reserva para la identidad; por eso tras H el siguiente factor es J", size=14)],
+  ratio=0.56)
+
+_rows = []
+for nm, row in zip(_names, _r):
+    abc = row["A"] * row["B"] * row["C"]
+    _rows.append([nm, "+", sg(row["A"]), sg(row["B"]), sg(row["C"]), sg(row["A"] * row["B"]),
+                  sg(row["A"] * row["C"]), sg(row["B"] * row["C"]), sg(abc)])
+S("¿Cómo se completa la tabla de signos del 2^{k}?",
+  """Las columnas de los factores no bastan: hace falta una columna por cada efecto que el diseño puede estimar, y un 2^{k} estima 2^{k} − 1 efectos. Las columnas de las interacciones se obtienen multiplicando, fila por fila, los signos de los factores que las componen: en la corrida a, A es + y B es −, de modo que AB es −; en la corrida ab, ambos son + y AB es +. La columna ABC es el producto de las tres. Se agrega además la columna I, toda positiva, que corresponde al promedio general.
+
+La tabla completa tiene tres propiedades que se usan en todo el tema. Cada columna de efecto tiene la mitad de signos positivos y la mitad negativos (está balanceada). El producto de dos columnas cualesquiera es otra columna de la tabla, y una letra multiplicada por sí misma da I porque (±1)² = 1: A·AB = A²B = B. Las columnas son ortogonales entre sí, por lo que cada efecto se estima de forma independiente con su propio contraste: la suma de las respuestas multiplicadas por los signos de la columna, dividida entre N/2.
+
+De esta tabla sale la fracción: elegir media fracción es quedarse con las filas en que una columna de interacción tiene el mismo signo.""",
+  left=[tab(["Trat.", "I", "A", "B", "C", "AB", "AC", "BC", "ABC"], _rows, size=15),
+        note("Las columnas de interacción son **productos de signos**: en la fila a, AB = (+)(−) = −", size=14)],
+  right=[bul("**2^{k} − 1 columnas** de efectos: 3 principales, 3 dobles y 1 triple en el 2^{3}",
+             "La columna **I** es toda positiva y corresponde al promedio general",
+             "Cada columna de efecto tiene **N/2 signos +** y **N/2 signos −**",
+             "El producto de dos columnas es otra columna; una letra al cuadrado es I",
+             "Columnas **ortogonales**: cada efecto se estima con su propio contraste", size=16),
+         form("A · AB = A^{2}B = B", "ℓ_{A} = Σ (signo_{A}) · y / (N/2)", size=18)],
+  ratio=0.56)
+
+_rows = []
 for nm, row in zip(_names, _r):
     abc = row["A"] * row["B"] * row["C"]
     _rows.append([nm, sg(row["A"]), sg(row["B"]), sg(row["C"]), sg(row["A"] * row["B"]),
