@@ -3,6 +3,50 @@
 Registro de cada sesión de trabajo en el repositorio: qué se hizo, qué decisiones se tomaron y
 qué queda pendiente. La entrada más reciente va arriba.
 
+## 2026-10-15 (jueves) — Trabajo práctico: referencias y estructura de la exposición del 17 oct
+
+### Hecho
+- Tema del trabajo práctico: autocorrelador de intensidad para medir anchos de pulso. El sábado
+  17 oct se expone el conocimiento no estadístico (física del experimento y factores que cambian
+  el ancho medido).
+- `bibliografia/autocorrelador-intensidad-referencias.txt`: 58 referencias con DOI verificado en
+  Crossref, más un mapa preliminar de factores.
+- `trabajo-practico/estructura-exposicion-no-estadistica.md`: estructura de 22 diapositivas en
+  seis bloques, títulos en forma de pregunta, con referencias, figuras por preparar y reparto
+  propuesto entre los dos expositores.
+
+### Pendiente
+- [ ] Conseguir los libros de la sección A de las referencias (Diels–Rudolph primero).
+- [ ] Completar los datos del montaje marcados con ⚠ en la estructura (láser, detector,
+      geometría, barrido, ópticas, espectrómetro, parámetros variables).
+- [ ] Armar las diapositivas y las figuras; registrar el tema en la bitácora del .docx.
+
+### Hecho (continuación)
+- Se creó `bibliografia/papers/` con seis PDF (Diels–Rudolph, Sala, Chung–Weiner, Ratner,
+  Donnelly–Grossman, Monmayrant). `.gitignore` ahora excluye `bibliografia/**/*.pdf`.
+- **Enfoque decidido:** el trabajo práctico es un diseño de comparación simple, técnica de
+  intensidad frente al patrón (datos del fabricante), para calibrar y diagnosticar el láser. Los
+  factores que cambian el ancho se exponen completos, pero se fijan; estudiarlos es trabajo futuro.
+- Se reestructuró la exposición (25 diapositivas) hacia ese argumento y se verificaron las cifras
+  contra los PDF, con página. Corrección: Δν·τₚ de la lorentziana es 0,2206 (Sala, tabla II), no
+  0,142; el factor 2,0 de la lorentziana no está en Diels–Rudolph, solo en Sala.
+
+### Pendiente (continuación)
+- [ ] Conseguir la ficha técnica del láser (ancho nominal, cómo lo midió el fabricante).
+- [ ] Confirmar en Haus (1975) que el absorbedor saturable rápido da pulsos sech².
+
+### Hecho (presentación)
+- Se generó la presentación de la exposición del 17 oct (26 diapositivas):
+  `trabajo-practico/exposicion-17-oct/Autocorrelador_Fundamentos_y_Calibracion.pptx`. Se
+  regenera con `scripts/trabajo-practico/build.sh` (figuras simuladas en `figuras.py`, diapositivas
+  en `render_pptx.py`). Fuente: Bahnschrift (Windows 10/11), ecuaciones en Cambria Math. Notas del
+  orador con la explicación y las páginas de cada fuente. Revisada exportando desde PowerPoint.
+- Se recreó `.venv` (python-pptx, matplotlib, numpy, scipy, pymupdf).
+
+### Pendiente (presentación)
+- [ ] Llenar la diapositiva 7 (ficha técnica del láser) y los recuadros "Pendiente" de las
+      diapositivas 10 (esquema real) y 22 (valores del patrón y n).
+
 ## 2026-10-13 (martes) — Notación del 2^k en la exposición del tema 6
 
 ### Hecho

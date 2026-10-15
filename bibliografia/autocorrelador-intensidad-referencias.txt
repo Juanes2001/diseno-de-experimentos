@@ -7,6 +7,11 @@ PARA QUÉ ES ESTA LISTA
   de intensidad y los factores que cambian el ancho de pulso que se mide.
 - Más adelante sirve para el "planteamiento del problema con referencias" del informe final.
 
+PDF DISPONIBLES (solo en local, en bibliografia/papers/, ignorados por git)
+- [A1] Diels y Rudolph, [B1] Monmayrant et al., [C6] Sala et al., [D1] Chung y Weiner,
+  [D2] Ratner et al., [G1] Donnelly y Grossman. Se leyeron el 15 oct 2026; lo verificado, con
+  página, está en trabajo-practico/estructura-exposicion-no-estadistica.md.
+
 CÓMO SE ARMÓ ESTA LISTA
 - Los candidatos salieron de los libros de texto de óptica ultrarrápida, de las reseñas del área y de
   búsquedas en Crossref y en la web.
@@ -35,9 +40,10 @@ A. LIBROS DE TEXTO (CONSEGUIRLOS: no tengo acceso al texto completo)
 [A1] Jean-Claude Diels; Wolfgang Rudolph (2006). Ultrashort Laser Pulse Phenomena: Fundamentals,
      Techniques, and Applications on a Femtosecond Time Scale. 2.ª ed. Academic Press / Elsevier.
      DOI: 10.1016/B978-0-12-215493-5.X5000-9
-     Para qué sirve: la referencia central. El capítulo de técnicas de diagnóstico (cap. 9 en la
-     2.ª ed.) deduce las autocorrelaciones de intensidad e interferométrica, la relación de fondo
-     y los factores de deconvolución; los primeros capítulos cubren dispersión y chirp.
+     Para qué sirve: la referencia central. El capítulo 9, "Diagnostic Techniques", deduce las
+     autocorrelaciones de intensidad e interferométrica, las relaciones de fondo 3:1 y 8:1
+     (pág. 462) y los factores de deconvolución (tabla 9.1, pág. 477); el capítulo 1 cubre
+     dispersión y chirp (ensanchamiento por GDD, ec. 1.125, pág. 34). Verificado en el PDF.
 
 [A2] Rick Trebino (2000). Frequency-Resolved Optical Gating: The Measurement of Ultrashort Laser
      Pulses. Springer US.
@@ -146,8 +152,9 @@ C. ARTÍCULOS FUNDACIONALES DE LA AUTOCORRELACIÓN
 [C6] K. Sala; G. Kenney-Wallace; G. Hall (1980). CW autocorrelation measurements of picosecond laser
      pulses. IEEE Journal of Quantum Electronics, vol. 16, 990-996.
      DOI: 10.1109/JQE.1980.1070606
-     Para qué sirve: autocorrelación de láseres continuos en modo amarrado; tabula la relación entre
-     el ancho de la autocorrelación y el del pulso para varias formas (gaussiana, sech², etc.).
+     Para qué sirve: autocorrelación de láseres continuos en modo amarrado; la tabla II (pág. 993)
+     da, para 10 formas de pulso, τp/τAC y Δν·τp (gaussiana 0,7071 y 0,4413; sech² 0,6482 y
+     0,3148; lorentziana 0,5 y 0,2206). Verificado en el PDF.
 
 [C7] K. Naganuma; K. Mogi; H. Yamada (1989). General method for ultrashort light pulse chirp
      measurement. IEEE Journal of Quantum Electronics, vol. 25, 1225-1233.

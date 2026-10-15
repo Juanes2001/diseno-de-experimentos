@@ -22,4 +22,4 @@ Thumbs.db
 notas/DOE - Equipos*.pdf
 
 # Bibliografía con derechos de autor (se comparte por fuera del repo)
-bibliografia/*.pdf
+bibliografia/**/*.pdf
