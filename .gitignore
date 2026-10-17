@@ -23,3 +23,6 @@ notas/DOE - Equipos*.pdf
 
 # Bibliografía con derechos de autor (se comparte por fuera del repo)
 bibliografia/**/*.pdf
+
+# Fotos de clase (material de la profesora, con compañeros visibles; solo local)
+notas/**/WhatsApp*/
