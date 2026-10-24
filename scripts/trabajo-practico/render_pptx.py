@@ -421,32 +421,39 @@ def build(out, figdir):
     image(s, F("modos"), 6.55, TOP - 0.05, w=6.2)
 
     # 7 · Fabricante -------------------------------------------------------------
+    # Fuente: Calmar Laser, hoja de datos Carmel X-780, Rev. E (10/1/2025), págs. 2 y 3.
+    # Variante asumida: X-780. Las demás (X-1550, X-780/1550, X-1030, X-515) están en
+    # notas/laser-carmel-x-ficha-tecnica.md; el modelo exacto se lee en la etiqueta del equipo.
     s = d.content("2 · ¿Qué dice el fabricante?", "¿Qué especifica el fabricante y cómo lo midió?",
-                  "Esta diapositiva define el patrón del experimento. Faltan los datos del láser: "
-                  "se completan cuando tengamos la ficha técnica. Lo importante es qué tipo de dato "
-                  "es el ancho: un valor típico del modelo, un máximo (\"< X fs\") o una medición "
-                  "de este equipo en fábrica. También con qué técnica y qué forma supuesta lo midió "
-                  "el fabricante, porque para comparar hay que usar la misma. La antigüedad y el uso "
-                  "del láser desde esa medición es justamente lo que el experimento diagnostica.")
-    P = "Pendiente"
-    table(s, MX, TOP, 7.6, [
-        ["Parámetro", "Valor", "Lo que hay que averiguar"],
-        ["Ancho de pulso nominal", P, "¿Típico, máximo o medido en este equipo?"],
-        ["Forma supuesta", P, "¿sech² o gaussiana?"],
-        ["Técnica de medición", P, "¿Autocorrelación? ¿Otra?"],
-        ["Longitud de onda central", P, "—"],
-        ["Ancho espectral", P, "Permite calcular Δν·τ_{p}"],
-        ["Tasa de repetición", P, "—"],
-        ["Potencia media", P, "—"],
-        ["Fecha de la medición de fábrica", P, "Uso del equipo desde entonces"],
-    ], [2.75, 1.45, 3.4], 14, row_h=0.5, pending_col=1)
-    rect(s, 8.6, TOP, 4.13, 2.55, RED_T)
-    text(s, 8.85, TOP + 0.22, 3.7, 0.4, "EL PATRÓN DEL EXPERIMENTO", 13, RED, HEAD)
-    text(s, 8.85, TOP + 0.7, 3.7, 1.8, "El ancho que reporta el fabricante es la referencia "
-         "contra la que se compara la técnica.", 19, INK, HEAD)
-    card(s, 8.6, TOP + 2.8, 4.13, 1.7, "El patrón más fuerte",
-         "Una hoja de pruebas de fábrica de **este** equipo, no el valor típico del modelo.", size=15)
-    pending(s, 8.6, TOP + 4.65, 4.13, 0.55, "ficha técnica del láser")
+                  "El láser es un Calmar Laser Carmel X, de fibra, con mode-locking pasivo por "
+                  "absorbedor saturable. Su hoja de datos (variante X-780, Rev. E, 2025) define el "
+                  "patrón: el ancho de pulso es un máximo garantizado, < 90 fs, no un valor "
+                  "nominal, y el fabricante lo obtuvo con la misma técnica nuestra: una traza de "
+                  "autocorrelación de segundo armónico, deconvolucionada suponiendo forma sech² "
+                  "con factor 0,65 (nota 2 de la tabla de especificaciones). Por eso la prueba es "
+                  "de una cola y hay que usar la misma forma al deconvolucionar. El espectro "
+                  "típico (λc = 781,3 nm, Δλ = 10,4 nm RMS) y la traza típica (FWHM ≈ 0,14 ps, es "
+                  "decir ≈ 90 fs) son del modelo, no de este equipo. Falta leer el modelo exacto "
+                  "en la etiqueta del controlador (CFL-04, -10 o -15RFF; o la variante de 1550 nm) "
+                  "y buscar si vino con hoja de pruebas de fábrica, que sería el patrón más fuerte.",
+                  "Calmar Laser, hoja de datos Carmel X-780, Rev. E (2025), págs. 2–3")
+    table(s, MX, TOP, 7.0, [
+        ["Parámetro", "Carmel X-780 (hoja de datos)", "Para la comparación"],
+        ["Ancho de pulso", "**< 90 fs** (máximo)", "Prueba de una cola: H_{A}: μ_{τ} > 90 fs"],
+        ["Técnica del fabricante", "Autocorrelación de 2.º armónico", "La misma que la nuestra"],
+        ["Forma supuesta", "sech², factor 0,65", "τ_{p} = 0,65 · τ_{AC}: usar la misma"],
+        ["Longitud de onda central", "780 ± 3 nm", "Espectro típico: λ_{c} = 781,3 nm"],
+        ["Ancho espectral (FWHM)", "8 – 10 nm", "9 nm y 90 fs → Δν·τ_{p} ≈ 0,40"],
+        ["Tasa de repetición", "50 u 80 MHz, según modelo", "Leer en la etiqueta del equipo"],
+        ["Potencia media", "0,25 / 1,0 / 1,5 W (-04/-10/-15)", "Leer en la etiqueta del equipo"],
+    ], [2.25, 2.45, 2.3], 13, row_h=0.5)
+    rect(s, 7.85, TOP, 4.88, 1.3, RED_T)
+    text(s, 8.1, TOP + 0.15, 4.45, 0.35, "EL PATRÓN DEL EXPERIMENTO", 12.5, RED, HEAD)
+    text(s, 8.1, TOP + 0.5, 4.45, 0.8, "Un máximo garantizado, medido con autocorrelación y "
+         "forma sech².", 16, INK, HEAD)
+    image(s, F("fabricante_traza"), 8.45, TOP + 1.45, w=3.65)   # 586x421 px → 2.62 in de alto
+    text(s, 7.85, TOP + 4.12, 4.88, 0.55, "Traza de autocorrelación típica del X-780 (hoja de "
+         "datos, pág. 3). FWHM ≈ 0,14 ps; con 0,65 da ≈ 90 fs.", 11.5, MUTED)
 
     # 8 · Dispersión ------------------------------------------------------------
     s = d.content("2 · ¿De dónde sale el pulso?",
@@ -536,7 +543,6 @@ def build(out, figdir):
     for t_, c_ in [("■ ", RED), ("Fundamental (≈ 800 nm)      ", MUTED), ("■ ", VIOLET),
                    ("Segundo armónico (≈ 400 nm)", MUTED)]:
         runs(par, t_, 13, c_)
-    pending(s, 7.9, 4.72, 4.83, 0.45, "esquema y componentes del montaje real")
     card(s, MX, 5.35, 5.9, 1.5, "Colineal", "Haces superpuestos: aparecen **franjas** y **fondo**; "
          "relación pico/fondo 3:1 u 8:1.", size=15)
     card(s, 6.83, 5.35, 5.9, 1.5, "No colineal", "Haces cruzados en ángulo: la señal de suma "
@@ -794,8 +800,8 @@ def build(out, figdir):
 
     # 22 · Qué se compara ------------------------------------------------------------------------
     s = d.content("6 · ¿Por qué empezar por calibrar?", "¿Qué se compara exactamente?",
-                  "Dos lados. Patrón: el ancho del fabricante (y, si los da, el ancho espectral y "
-                  "la tasa de repetición). Técnica: el ancho medido con el autocorrelador, con la "
+                  "Dos lados. Patrón: el ancho máximo del fabricante, < 90 fs, con su ancho espectral "
+                  "de 8 a 10 nm y su tasa de repetición. Técnica: el ancho medido con el autocorrelador, con la "
                   "misma forma supuesta y las condiciones fijadas. La respuesta es τp en fs; la "
                   "respuesta secundaria es el ancho espectral, si hay espectrómetro, para calcular "
                   "Δν·τp. Las repeticiones deben ser independientes: realinear o volver a barrer "
@@ -804,8 +810,9 @@ def build(out, figdir):
     rect(s, MX, TOP, 5.45, 2.75, RED_T)
     text(s, MX + 0.3, TOP + 0.22, 4.9, 0.4, "PATRÓN", 14, RED, HEAD)
     text(s, MX + 0.3, TOP + 0.65, 4.9, 0.6, "Dato del fabricante", 22, INK, HEAD)
-    bullets(s, MX + 0.3, TOP + 1.35, 4.9, 1.5, ["Ancho de pulso nominal", "Ancho espectral y tasa "
-                                                "de repetición, si los da"], 16)
+    bullets(s, MX + 0.3, TOP + 1.35, 4.9, 1.5, ["Ancho de pulso máximo: **< 90 fs** (sech², "
+                                                "factor 0,65)", "Ancho espectral 8 – 10 nm; "
+                                                "f_{rep} 50 u 80 MHz"], 16)
     rect(s, 6.08, TOP + 1.0, 1.15, 1.15, INK, shape=MSO_SHAPE.OVAL)
     text(s, 6.08, TOP + 1.0, 1.15, 1.15, "vs", 24, WHITE, HEAD, PP_ALIGN.CENTER, MSO_ANCHOR.MIDDLE)
     rect(s, 7.28, TOP, 5.45, 2.75, VIO_T)
@@ -819,35 +826,37 @@ def build(out, figdir):
              ("Repeticiones", "n mediciones independientes, en días distintos")]
     for i, (t_, b_) in enumerate(items):
         card(s, MX + i * 4.1, TOP + 3.0, 3.85, 1.5, t_, b_, size=15, tsize=16)
-    pending(s, MX, 6.42, 6.0, 0.42, "valores del patrón y número de repeticiones n")
 
     # 23 · Hipótesis --------------------------------------------------------------------------------
     s = d.content("6 · ¿Por qué empezar por calibrar?", "¿Cuál es la hipótesis del experimento?",
                   "Es la comparación de una media con un valor especificado (Montgomery, cap. 2, "
                   "sec. 2-4.6): la media de los anchos medidos frente al ancho del fabricante. "
                   "Montgomery menciona las especificaciones como origen válido del valor de "
-                  "referencia. Si el fabricante da un máximo, la prueba es de una cola. Si el "
+                  "referencia. Como la hoja de datos da un máximo (< 90 fs) y no un valor nominal, "
+                  "la prueba es de una cola: solo un pulso más largo que 90 fs contradice al "
+                  "fabricante. Si el "
                   "laboratorio tiene otro autocorrelador de referencia, la comparación pasa a ser "
                   "de dos tratamientos o pareada (secs. 2-4 y 2-5): es una pregunta para la "
                   "asesoría.", "Montgomery (2004), cap. 2, sec. 2-4.6, ec. 2-37")
     rect(s, MX, TOP, 7.1, 1.35, RED_T)
     text(s, MX + 0.3, TOP, 1.2, 1.35, "H₀:", 30, RED, HEAD, anchor=MSO_ANCHOR.MIDDLE)
-    text(s, MX + 1.5, TOP, 5.4, 1.35, ["μ_{τ} = τ_{fabricante}", "la técnica reproduce el patrón: "
-                                       "láser e instrumento en especificación"], 17, INK,
+    text(s, MX + 1.5, TOP, 5.4, 1.35, ["μ_{τ} = 90 fs", "el ancho medido está en el límite que garantiza el "
+                                       "fabricante: láser e instrumento en especificación"], 17, INK,
          anchor=MSO_ANCHOR.MIDDLE, space=2)
     for r in s.shapes[-1].text_frame.paragraphs[0].runs:
         r.font.size = Pt(26)
     rect(s, MX, TOP + 1.55, 7.1, 1.35, VIO_T)
     text(s, MX + 0.3, TOP + 1.55, 1.2, 1.35, "H_{A}:", 30, VIOLET, HEAD, anchor=MSO_ANCHOR.MIDDLE)
-    text(s, MX + 1.5, TOP + 1.55, 5.4, 1.35, ["μ_{τ} ≠ τ_{fabricante}", "el ancho medido difiere "
-                                              "del patrón"], 17, INK, anchor=MSO_ANCHOR.MIDDLE,
+    text(s, MX + 1.5, TOP + 1.55, 5.4, 1.35, ["μ_{τ} > 90 fs", "el pulso es más largo que lo que "
+                                              "garantiza el fabricante"], 17, INK, anchor=MSO_ANCHOR.MIDDLE,
          space=2)
     for r in s.shapes[-1].text_frame.paragraphs[0].runs:
         r.font.size = Pt(26)
     equation(s, 8.0, TOP, 4.73, 2.9, "t₀ = (ȳ − τ_{fab}) / (S / √n)", 24,
-             caption="Montgomery, ec. 2-37; se compara con t_{α/2, n−1}")
-    card(s, MX, TOP + 3.2, 5.9, 1.65, "Si el fabricante da un máximo",
-         "\"< X fs\": la prueba es de una cola, H_{A}: μ_{τ} > τ_{fabricante}.", size=15)
+             caption="Montgomery, ec. 2-37; una cola: se rechaza H₀ si t₀ > t_{α, n−1}")
+    card(s, MX, TOP + 3.2, 5.9, 1.65, "Por qué es de una cola",
+         "La hoja de datos garantiza un máximo (\"< 90 fs\"), no un valor nominal: un pulso más "
+         "corto no contradice al fabricante.", size=15)
     card(s, 6.83, TOP + 3.2, 5.9, 1.65, "Pregunta para la asesoría",
          "Si hay otro autocorrelador de referencia: dos tratamientos o comparación pareada "
          "(secs. 2-4 y 2-5).", RED_T, RED, size=15)
@@ -891,7 +900,8 @@ def build(out, figdir):
                "calibrado.")
     text(s, MX, 0.9, 10, 0.4, "6 · ¿POR QUÉ EMPEZAR POR CALIBRAR?", 13, VIOLET_L, HEAD)
     text(s, MX, 1.3, 11, 0.9, "¿Qué sigue?", 40, WHITE, HEAD)
-    nxt = [("1", "Ficha técnica del láser", "Fija el patrón: ancho, forma supuesta, espectro."),
+    nxt = [("1", "Hoja de pruebas del equipo", "La ficha ya fija el patrón (< 90 fs, sech²); falta "
+            "la medición de fábrica de este láser."),
            ("2", "Calibrar el retardo y alinear", "Escala de τ verificada; relación pico/fondo; "
             "sin pedestal."),
            ("3", "Serie de mediciones repetidas", "Comparación simple frente al fabricante."),

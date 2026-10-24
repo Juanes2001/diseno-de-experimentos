@@ -45,6 +45,9 @@ Todo se envía a doe_unal@yahoo.com. Retraso: −10 % por día, máximo 3 retras
   capítulo; índice en `notas/montgomery/README.md`). Consultar la ficha del capítulo que
   haga falta en lugar de volver a leer el libro; el PDF es un escaneo sin texto y no está en
   el repo. El tema 6 corresponde a `cap-08-factoriales-fraccionados-2k-p.md`.
+- **Gutiérrez–De la Vara** se resume igual en `notas/gutierrez-de-la-vara/` (por ahora el cap. 2;
+  el PDF local sí tiene capa de texto). La teoría del diseño de comparación simple (cap. 2 de ambos
+  libros) se ensambla en PDF con `scripts/trabajo-practico/build_teoria.sh`.
 - **Las diapositivas de la profesora** están transcritas en `notas/clases/` (una nota por tema,
   con una sección final "Estructura didáctica de la profesora"). Las exposiciones del equipo
   siguen esa estructura: títulos en forma de pregunta, hipótesis como H0/HA, tablas ANOVA con

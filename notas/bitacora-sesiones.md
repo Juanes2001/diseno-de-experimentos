@@ -3,6 +3,145 @@
 Registro de cada sesión de trabajo en el repositorio: qué se hizo, qué decisiones se tomaron y
 qué queda pendiente. La entrada más reciente va arriba.
 
+## 2026-10-23 (viernes) — Protocolo del diseño de comparación simple para la asesoría del 24 oct
+
+### Hecho
+- `git pull`: llegó un commit de Sebastián que ignora las fotos de clase de WhatsApp (`.gitignore`).
+- Juan Esteban informa que el autocorrelador ya mide la autocorrelación de los pulsos y que el láser
+  es el **Calmar Carmel CFL-05RFFUNC** (780 nm, 0,5 W). Se buscó en la red el ancho de pulso del
+  fabricante para varias corrientes: **no existe**; Calmar da un solo máximo (< 90 fs, sech², 0,65)
+  en el punto nominal y el sufijo UNC no está documentado. Detalle en
+  `notas/laser-carmel-x-ficha-tecnica.md`.
+- Se escribió el protocolo del experimento (PDF) en
+  `trabajo-practico/protocolo/Protocolo_Comparacion_Simple_Ancho_de_Pulso.pdf`, generado por
+  `scripts/trabajo-practico/render_protocolo.py` + `build_protocolo.sh` (Chrome, como la guía del
+  tema 6). Una primera versión proponía hipótesis (t de una muestra, una cola contra 90 fs; dos
+  corrientes como t pareada) y tablas de n; Juan Esteban aclaró que el láser es un pedido a la
+  medida (sufijo UNC), ajustable de 0 a 7,12 A, con **hoja de pruebas de fábrica propia** que da el
+  ancho de pulso a cada corriente nominal, y **decidió no fijar ninguna prueba de hipótesis hasta
+  tener esos valores exactos**. La versión final (15 págs.): lo que ya se sabe del fabricante;
+  formularios en blanco para los datos que faltan (numeral 1 identidad del equipo y numeral 2
+  ancho por corriente, indispensables; 3 y 4 complementarios); hipótesis marcadas "por definir";
+  definición de réplica, piloto de 5 trazas y n pendiente; procedimiento de medición completo con
+  hoja de registro y reglas de exclusión; análisis descriptivo y supuestos; cronograma; lista de
+  aprobación.
+- Juan Esteban confirmó datos del equipo: 780 nm, 50 MHz, salida en espacio libre, serie 881139. Se
+  llenaron en el numeral 1 del protocolo y en la ficha del láser.
+- A pedido de Juan Esteban se generó la **teoría completa del diseño de comparación simple** en PDF
+  (33 págs.): `trabajo-practico/teoria/Teoria_Diseno_de_Comparacion_Simple.pdf`, con
+  `scripts/trabajo-practico/render_teoria.py` + `build_teoria.sh` (markdown → HTML, fórmulas con
+  KaTeX desde CDN, PDF con Chrome). Parte I: ficha del cap. 2 de Montgomery; parte II: ficha nueva
+  del cap. 2 de Gutiérrez–De la Vara (`notas/gutierrez-de-la-vara/`, leída del PDF con texto);
+  parte III: mapa de decisión, una o dos colas, secuencia del análisis, fórmulas en Python y
+  errores frecuentes.
+- **Noticia:** el láser será retirado del laboratorio. Juan Esteban pidió tomar todos los datos antes del
+  30 oct 2026, en 3 o 4 días con varias réplicas por día, y dejar días libres para desmontar el montaje.
+  El protocolo (16 págs.) quedó con: situación en la portada y el resumen; plan de 3–4 sesiones (lun 26 a
+  jue 29 oct) con 5 réplicas nominales + 4 por cada una de dos corrientes reducidas por sesión (13 trazas/día);
+  puesta a punto incluida en la sesión 1; medición a tres corrientes aunque la hoja de pruebas no aparezca;
+  potencia calculada a posteriori; **sin medición de temperatura ni humedad** (no hay medidores; se anota la
+  hora y se declara como limitación); cronograma reescrito; sin casillas de firma.
+- El protocolo tiene ahora un **anexo A de ecuaciones** (KaTeX): deconvolución y eje de retardo,
+  estimadores, estadísticos candidatos (t de una muestra, IC, pareada, F, t combinada, Welch, χ²), las
+  cuatro formas del número mínimo de réplicas (curvas OC, aproximación normal, t no central, error
+  máximo E) y una tabla de la δ detectable con el plan de 3–4 sesiones según σ. 16 págs.
+- La teoría (parte III) tiene ahora el **esquema de los nueve casos**: árbol de decisión en SVG
+  (parámetro → una o dos poblaciones → pareadas → varianza conocida → varianzas iguales), tabla de
+  los nueve casos con H0, estadístico, distribución, rechazo, IC y fuente, y el protocolo común por
+  grupo de casos. 25 págs.
+- **Plan definitivo acordado con Juan Esteban** (17 págs.): prueba piloto separada el sábado 24 oct (15 trazas,
+  5 por corriente en orden sorteado, cronometradas; σ previa = la mayor S de las tres); esa noche n por curva OC con σ previa
+  conservadora (1,56·S, límite superior del 80 % con n = 5), δ = 10 fs, α = 0,05, potencia 0,90; tres sesiones
+  lun 26 a mié 28 con 13 trazas/día (5 N + 4 R1 + 4 R2), orden completamente aleatorizado dentro del día;
+  jueves 29 de reserva. El día no es factor: balanceado, queda en el error con opción de bloquear después.
+  Prohibido agrupar las réplicas por corriente; compromiso de pares consecutivos si el cambio es lento.
+- Se dejó por escrito en la sección 4 del protocolo la justificación de δ = 10 fs (error sistemático de la
+  forma supuesta ≈ 8 fs; 11 % de potencia pico; alcanzable con el plan) y la distinción entre la δ que
+  importa (entrada de la curva OC, decisión de ingeniería) y la δ detectable (salida con n fijo por el plazo);
+  la tabla del sábado por la noche tiene casillas para ambas y para la comprobación δ_det ≤ 10 fs.
+- A pedido de Juan Esteban, el anexo A del protocolo quedó **solo con las fórmulas del caso 2** (una media
+  frente al valor del fabricante, varianza desconocida): se quitaron la t pareada, la F, la t combinada, Welch,
+  χ² y las versiones de dos muestras del tamaño de muestra; la tabla A.5 es solo de una muestra (n = 12, 15, 20).
+- **Corrección importante:** las tres corrientes del diseño son **nominales**, cada una con su patrón en la
+  hoja de pruebas (no "una nominal y dos reducidas", que venía de la versión sin hoja). Se corrigió en todo el
+  protocolo: 5 réplicas por corriente y por día (15 trazas/día), n = 15 por corriente en tres días (20 en
+  cuatro), piloto de 5 por corriente, sorteo de I1×5, I2×5, I3×5, tabla A.5 con n = 10, 15 y 20.
+- δ dejó de estar "en el aire": la sección 4 tiene una **regla de precedencia** para fijarla con datos del
+  fabricante (tolerancia τ0 ± t → δ = t; valor medido y máximo garantizado → δ = τmáx − τ0; banda de
+  aceptación; estabilidad % rms; y solo si no hay nada, 10 fs), con piso δ ≥ 2u si declara incertidumbre.
+  La sección 2 tiene casillas para esos cinco datos y el correo a Calmar los pide explícitamente.
+- **Reescritura completa del protocolo en lenguaje simple** para la profesora (18 págs.): frases cortas,
+  sin historia interna ni referencias al repo, un cuadro "En una frase" en la portada, resumen de una página,
+  secciones con títulos directos (¿Qué sabemos?, ¿Qué falta?, ¿Hipótesis?, ¿Réplicas?, ¿Cómo se mide?,
+  ¿Cómo se analiza?, ¿Calendario?, ¿Qué aprobar?) y el anexo de fórmulas del caso 2. El generador
+  `render_protocolo.py` se reescribió entero (cuerpo de `build`).
+- Aclaración de Juan Esteban: el piloto del sábado es **solo 5 réplicas por corriente** (15 trazas en total),
+  únicamente para estimar el número de réplicas del experimento real. Se reescribieron las cinco menciones
+  (resumen, sección 4, cronograma y lista de aprobación) para que el 15 no se lea como "por corriente".
+- Se quitaron del protocolo todas las cantidades de réplicas por día de los días de medición (lun–mié):
+  el n por corriente se calcula el sábado por la noche con la curva OC y se reparte por igual entre
+  corrientes y días. Solo queda fijo el piloto (5 por corriente, 15 en total). La tabla "Réplicas por día"
+  quedó en blanco y la tabla A.5 pasó a ser de apoyo con n = 6, 8, 10, 12, 15 y 20.
+- Por decisión de Juan Esteban se asume el autocorrelador como perfecto (no se escribe en el documento): se
+  quitaron del protocolo el inventario de vidrio y la estimación del GDD, la calibración del eje de retardo,
+  la verificación de linealidad del detector y el diagnóstico por chirp/instrumento. Queda: programa de
+  análisis fijo, alineación verificada entre réplicas, barrido fijo, calentamiento y temperatura como limitación.
+- Como las mediciones son en días seguidos, Juan Esteban decidió suponer que no habrá desalineaciones: se
+  quitó la verificación pico/fondo de la definición de réplica, de los pasos de cada día y de cada réplica,
+  de la hoja de registro y de las reglas de descarte. La réplica queda definida por bloquear el haz y
+  reiniciar el barrido desde otra posición.
+- Se verificó que calmarlaser.com (ya accesible) no tiene sección de soporte, descargas ni acceso
+  con contraseña: la hoja de pruebas por corriente no está en la web, viaja con el equipo.
+
+### Pendiente
+- [ ] Llevar el protocolo a la asesoría del 24 oct y anotar las observaciones de la profesora.
+- [ ] Sáb 24 oct: calibrar el eje de retardo, linealidad del detector, inventario óptico, script congelado;
+      **piloto** (15 trazas, 5 por corriente, orden sorteado, cronometradas); por la noche S_piloto por corriente, n por curva OC, sorteo del orden de cada día.
+- [ ] Lun 26 – mié 28 oct: sesiones 1–3 (13 trazas/día en orden sorteado); jue 29 de reserva; respaldar
+      los archivos crudos en dos sitios.
+- [ ] Leer la etiqueta del láser (serie, tasa de repetición, generación) y preguntar por la hoja de
+      pruebas de fábrica; si no hay, escribir a sales@calmarlaser.com con el número de serie.
+- [ ] Llenar los numerales 1 y 2 del protocolo con la etiqueta y la hoja de pruebas de fábrica
+      (buscar en la caja, la memoria del software, la orden de compra o pedirla a Calmar con el
+      número de serie); guardar las fotos en `bibliografia/laser-carmel/`.
+- [ ] Con esos valores, escribir las hipótesis, los niveles de corriente y el n (siguiente asesoría).
+- [ ] Registrar el protocolo en `trabajo-practico/bitacora-trabajo-practico.docx` (Parte I).
+- [ ] Commit y push de los cambios de esta sesión y de las anteriores (hay archivos sin confirmar
+      desde el 16 oct).
+
+## 2026-10-16 (viernes) — Hoja de datos del láser para la exposición del 17 oct
+
+### Hecho
+- `git pull`: sin cambios.
+- Juan Esteban identificó el láser: Calmar Laser, Carmel X (etiqueta "Carmel fiber laser
+  controller"). Se bajaron las hojas de datos de todas las variantes (X-780, X-1550, X-780/1550,
+  X-1030, X-515), el white paper de 2016 y el catálogo 2023 a `bibliografia/laser-carmel/`
+  (ignorados por git). El sitio calmarlaser.com daba error 526; se usaron copias de archive.org.
+- Resumen y tabla comparativa en `notas/laser-carmel-x-ficha-tecnica.md`; referencias [K1]–[K5]
+  en `bibliografia/autocorrelador-intensidad-referencias.txt`.
+- **Hallazgo clave:** el fabricante especifica el ancho como **máximo** ("< 90 fs" en 780 nm) y lo
+  mide con autocorrelación de segundo armónico suponiendo sech² con factor 0,65 (nota 2 de la
+  tabla, igual en todas las variantes). Por eso la hipótesis pasa a ser de una cola
+  (H0: μ_τ = 90 fs; HA: μ_τ > 90 fs) y hay que deconvolucionar con la misma forma.
+- Presentación regenerada (26 diapositivas): la 7 ya tiene la tabla con la hoja de datos y la
+  traza de autocorrelación típica del fabricante (`figuras/fabricante_traza.png`, extraída del
+  PDF con `scripts/trabajo-practico/ficha_laser.py`, que `build.sh` ejecuta si el PDF existe);
+  la 22, la 23 (hipótesis de una cola) y la 25 se actualizaron en consecuencia. Se asumió la
+  variante **X-780**; las cifras de la 1550 están en la nota por si fuera esa.
+- `.venv` no tenía matplotlib ni python-pptx en este equipo; se instalaron.
+- A pedido de Juan Esteban se quitaron de las diapositivas los recuadros "Pendiente" que
+  quedaban (7, 10 y 22) y la fila "Medición de este equipo" de la tabla de la 7. Lo que falta
+  averiguar sigue registrado abajo y en `notas/laser-carmel-x-ficha-tecnica.md`.
+
+### Pendiente
+- [ ] Leer en la etiqueta del controlador o del cabezal el modelo exacto (CFL-04/-10/-15RFF, doble
+      salida RCFF, o X-1550) y la tasa de repetición; si no es 780 nm, cambiar las cifras de las
+      diapositivas 7, 22 y 23 en `render_pptx.py` con la tabla de la nota.
+- [ ] Preguntar en el laboratorio si el láser vino con hoja de pruebas de fábrica (con fecha) y
+      cuántas horas de uso lleva.
+- [ ] Revisar la diapositiva 7 abriendo el pptx en PowerPoint (aquí no hay LibreOffice para
+      renderizar). El esquema real del montaje (diapositiva 10) sigue sin confirmarse.
+
 ## 2026-10-15 (jueves) — Trabajo práctico: referencias y estructura de la exposición del 17 oct
 
 ### Hecho

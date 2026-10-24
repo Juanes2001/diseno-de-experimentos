@@ -7,7 +7,7 @@ PARA QUÉ ES ESTA LISTA
   de intensidad y los factores que cambian el ancho de pulso que se mide.
 - Más adelante sirve para el "planteamiento del problema con referencias" del informe final.
 
-PDF DISPONIBLES (solo en local, en bibliografia/papers/, ignorados por git)
+PDF DISPONIBLES (solo en local, en bibliografia/papers/ y bibliografia/laser-carmel/, ignorados por git)
 - [A1] Diels y Rudolph, [B1] Monmayrant et al., [C6] Sala et al., [D1] Chung y Weiner,
   [D2] Ratner et al., [G1] Donnelly y Grossman. Se leyeron el 15 oct 2026; lo verificado, con
   página, está en trabajo-practico/estructura-exposicion-no-estadistica.md.
@@ -374,6 +374,36 @@ J. RECURSOS WEB (sin DOI; verificado que el enlace responde)
   https://www.rp-photonics.com/time_bandwidth_product.html
 - Clases de óptica ultrarrápida de Rick Trebino (Georgia Tech), con diapositivas sobre
   autocorrelación: https://frog.gatech.edu/lectures.html
+
+====================================================================================================
+K. FABRICANTE DEL LÁSER (hojas de datos; PDF en bibliografia/laser-carmel/, ignorados por git)
+====================================================================================================
+El láser del laboratorio es un Calmar Laser Carmel X (controlador "Carmel fiber laser controller").
+Variante asumida: X-780; el modelo exacto (sufijo CFL-xx) falta leerlo en la etiqueta del equipo.
+Resumen y tabla comparativa de todas las variantes en notas/laser-carmel-x-ficha-tecnica.md.
+El sitio calmarlaser.com daba error 526 el 16 oct 2026; se usaron las copias de archive.org.
+
+[K1] Calmar Laser (2025). Carmel X-780: 780 nm High Power Femtosecond Fiber Laser. Hoja de datos,
+     Rev. E, 10/1/2025, 4 págs. https://www.calmarlaser.com/docs/datasheets/high_power/Carmel.780.pdf
+     Para qué sirve: define el patrón del experimento. Ancho de pulso < 90 fs (máximo), 780 ± 3 nm,
+     8–10 nm FWHM, 50 u 80 MHz, 0,25–1,5 W según modelo. Nota 2: "A sech² pulse shape
+     (deconvolution factor of 0.65) is used to determine the pulse width from the second harmonic
+     autocorrelation trace". Pág. 3: traza de autocorrelación y espectro típicos.
+[K2] Calmar Laser (2025). Carmel X-1550: 1550 nm High Power Femtosecond Fiber Laser. Hoja de datos,
+     Rev. B, 12/1/2025. https://calmarlaser.com/docs/datasheets/high_power/Carmel.1550.pdf
+     Para qué sirve: por si el equipo es la variante de 1550 nm (< 100 fs, > 30 nm, 10–80 MHz).
+[K3] Calmar Laser (2023). Carmel X-780/1550: 780/1550 nm High Power Femtosecond Fiber Laser. Hoja
+     de datos, Rev. B, 05/01/2023.
+     https://www.calmarlaser.com/docs/datasheets/high_power/Carmel.780-1550.pdf
+     Para qué sirve: variante de doble salida (conmutador en el cabezal).
+[K4] Calmar Laser (2016). Carmel X-series: Microscopy and Biophotonics Applications Using
+     Fiber-Based Femtosecond Lasers. White paper, Rev. 1.2, 12 págs.
+     https://www.calmarlaser.com/docs/Carmel%20White%20Paper%20Rev%201.2%20Feb%202016.pdf
+     Para qué sirve: esquema del láser de fibra con mode-locking pasivo (fig. 1, pág. 3); afirma
+     que el pulso es limitado por transformada y que el pedestal está ~20 dB por debajo (pág. 4);
+     tabla de especificaciones de la serie original (780 nm, < 90 fs, pág. 5).
+[K5] Calmar Laser (2023). Calmar Laser Catalog 2023, 71 págs. (Carmel X en págs. 4–23).
+     https://calmarlaser.com/docs/datasheets/Calmar_Laser_Catalog_2023.pdf
 
 ====================================================================================================
 MAPA: FACTORES QUE PUEDEN CAMBIAR EL ANCHO DE PULSO MEDIDO (borrador para la exposición)

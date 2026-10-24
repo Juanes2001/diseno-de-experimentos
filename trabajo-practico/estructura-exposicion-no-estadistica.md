@@ -99,15 +99,19 @@ especificación del fabricante: fundamentos físicos". Nombres, materia, fecha.
   "a sech² or a Gaussian shape" (Diels y Rudolph, pág. 459).
 - Figura: suma de N modos en fase frente a fases aleatorias.
 
-**7. ¿Qué especifica el fabricante y cómo lo midió?** ⚠
-- Ficha técnica del láser real: medio activo, λ central, ancho espectral, tasa de repetición,
-  potencia media y **ancho de pulso nominal**.
-- Preguntas clave para que la comparación sea justa: ¿el ancho es un valor típico, un máximo
-  ("< X fs") o una medición del equipo concreto (hoja de pruebas de fábrica)? ¿Con qué técnica y
-  qué forma supuesta (casi siempre autocorrelación con sech²)? ¿Medido a la salida del láser?
-- Este es el **patrón** del experimento. Si el fabricante entregó una hoja de pruebas del equipo,
-  es el patrón más fuerte posible.
-- Antigüedad y uso del láser desde esa medición: es lo que el experimento va a diagnosticar.
+**7. ¿Qué especifica el fabricante y cómo lo midió?** [K1] (variante asumida: X-780 ⚠)
+- Láser: Calmar Laser, Carmel X (fibra, mode-locking pasivo por absorbedor saturable "Mendocino").
+  Hoja de datos X-780, Rev. E (2025): λ = 780 ± 3 nm, ancho espectral 8–10 nm FWHM, 50 u 80 MHz,
+  0,25 / 1,0 / 1,5 W según modelo (CFL-04/-10/-15RFF), M² < 1,1, haz de 1,25 mm.
+- **Ancho de pulso: < 90 fs, un máximo garantizado**, no un valor nominal. Nota 2 de la tabla:
+  "A sech² pulse shape (deconvolution factor of 0.65) is used to determine the pulse width from
+  the second harmonic autocorrelation trace". Es la misma técnica nuestra: hay que deconvolucionar
+  con sech² (0,65) y la prueba es de una cola (HA: μ_τ > 90 fs).
+- Pág. 3: traza de autocorrelación típica (FWHM ≈ 0,14 ps → ≈ 90 fs) y espectro típico
+  (λc = 781,3 nm, Δλ = 10,4 nm RMS). Con 9 nm y 90 fs, Δν·τₚ ≈ 0,40 (límite sech²: 0,315).
+- Son datos del modelo, no de este equipo. Si vino con hoja de pruebas de fábrica, es el patrón
+  más fuerte. ⚠ Falta: modelo exacto en la etiqueta del controlador, tasa de repetición, fecha de
+  compra y horas de uso. Resumen completo en `notas/laser-carmel-x-ficha-tecnica.md`.
 
 **8. ¿Qué le pasa al pulso entre la salida del láser y el autocorrelador?** [A1, A3, E4]
 - Fase espectral en serie de Taylor: φ(ω) = φ₀ + φ₁(ω−ω₀) + ½φ₂(ω−ω₀)² + ⅙φ₃(ω−ω₀)³ + …
@@ -273,7 +277,8 @@ especificación del fabricante: fundamentos físicos". Nombres, materia, fecha.
 - Es factible con los recursos y el tiempo del semestre; el estudio de factores se apoya en ella.
 
 **22. ¿Qué se compara exactamente?** ⚠
-- **Patrón:** ancho de pulso del fabricante (y, si los da, ancho espectral y tasa de repetición).
+- **Patrón:** ancho de pulso máximo del fabricante, < 90 fs con sech² y factor 0,65 [K1]; ancho
+  espectral 8–10 nm y tasa de repetición 50 u 80 MHz según el modelo.
 - **Técnica:** ancho de pulso τₚ medido con el autocorrelador de intensidad, con la misma forma
   supuesta y en las condiciones fijadas en la diapositiva 20.
 - **Variable respuesta:** τₚ en fs. Respuesta secundaria: Δλ medido con espectrómetro, si hay
@@ -283,10 +288,12 @@ especificación del fabricante: fundamentos físicos". Nombres, materia, fecha.
 
 **23. ¿Cuál es la hipótesis del experimento?** [Montgomery cap. 2, sec. 2-4.6]
 - Diseño de comparación simple: una media frente a un valor especificado.
-  - H0: μ_τ = τ_fabricante (la técnica reproduce el patrón: láser e instrumento en especificación)
-  - HA: μ_τ ≠ τ_fabricante
+  - H0: μ_τ = 90 fs (el ancho medido está en el límite garantizado: láser e instrumento en
+    especificación)
+  - HA: μ_τ > 90 fs (el pulso es más largo que lo que garantiza el fabricante)
 - Montgomery menciona las especificaciones como origen válido del valor de referencia.
-- Si el fabricante da un máximo ("< X fs"), la hipótesis es de una cola: HA: μ_τ > τ_fabricante.
+- Es de una cola porque la hoja de datos da un máximo ("< 90 fs"), no un valor nominal [K1]: un
+  pulso más corto no contradice al fabricante. Se rechaza H0 si t0 > t_{α, n−1}.
 - Si el laboratorio tiene otro instrumento de referencia (un autocorrelador comercial), la
   comparación pasa a ser de dos tratamientos o pareada (Montgomery secs. 2-4 y 2-5). Pregunta
   para la asesoría.
@@ -331,9 +338,9 @@ especificación del fabricante: fundamentos físicos". Nombres, materia, fecha.
 
 ## Datos que faltan (⚠)
 
-1. **Ficha técnica del láser** (diapositiva 7): ancho de pulso nominal y si es típico, máximo o
-   medido en ese equipo; técnica y forma supuesta por el fabricante; λ central, Δλ, tasa de
-   repetición, potencia; fecha de la medición de fábrica y uso del equipo desde entonces.
+1. **Láser** (diapositiva 7): la hoja de datos del Carmel X-780 ya está [K1]. Falta confirmar en
+   la etiqueta del controlador el modelo exacto (CFL-04/-10/-15RFF, o la variante de 1550 nm), la
+   tasa de repetición, si vino con hoja de pruebas de fábrica (con fecha) y las horas de uso.
 2. Detector y proceso no lineal: cristal (tipo, espesor) o fotodiodo por absorción de dos fotones.
 3. Geometría: colineal o no colineal; ángulo de cruce si es no colineal.
 4. Barrido del retardo: motor o piezoeléctrico, paso mínimo, recorrido total.

@@ -7,4 +7,5 @@ PY=../../.venv/bin/python; [ -x "$PY" ] || PY=python3
 OUT=../../trabajo-practico/exposicion-17-oct
 mkdir -p "$OUT/figuras"
 $PY figuras.py "$OUT/figuras"
+$PY ficha_laser.py "$OUT/figuras"   # traza y espectro de la hoja de datos (si está el PDF)
 $PY render_pptx.py "$OUT/Autocorrelador_Fundamentos_y_Calibracion.pptx" "$OUT/figuras"
