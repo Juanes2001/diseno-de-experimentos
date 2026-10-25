@@ -3,6 +3,55 @@
 Registro de cada sesión de trabajo en el repositorio: qué se hizo, qué decisiones se tomaron y
 qué queda pendiente. La entrada más reciente va arriba.
 
+## 2026-10-25 (domingo) — Presentación del protocolo: verificación por nivel
+
+### Hecho
+- `git pull`: llegó el commit de Sebastián con el piloto del 24 oct (libro, análisis, informe PDF).
+- Se revisó el cálculo del eje de retardo del piloto a pedido de Juan Esteban: τ = 2Δx/c (6,67 fs/µm)
+  está bien; el análisis no necesita el cero absoluto (el FWHM es una diferencia de cruces y el ajuste
+  tiene el centro libre); el Excel centra en el punto medio de los cruces a 0,5, que coincide con el pico
+  teórico en trazas simétricas. R08–R15 son simétricas (semianchos iguales dentro de pocos fs); R01 no.
+  Con paso de 10 µm (66,7 fs) el máximo leído puede caer hasta 33 fs lejos del pico real; por eso el
+  centro ajustado es mejor que la lectura máxima.
+- Juan Esteban planteó que el experimento es una **verificación por nivel**, no un diseño de un solo
+  factor: cada corriente tiene su patrón (107/76/54 fs) y su propia hipótesis, y las réplicas se cuentan
+  por hipótesis. Se le dio la razón con una salvedad: el sorteo del orden y el balance por día se
+  conservan (las tres muestras comparten instrumento y deriva; agrupar las réplicas de una corriente
+  sesga esa misma prueba). La igualdad de varianzas no es supuesto de la prueba por nivel (solo para
+  una S combinada opcional); tres pruebas → Bonferroni solo para la afirmación global; la comparación
+  entre niveles queda como diagnóstico descriptivo (razón media/τ0 crece con la corriente).
+- Presentación nueva `trabajo-practico/protocolo/Protocolo_Experimentacion_Por_Nivel.pptx` (24
+  diapositivas; luego reducida a **15** a pedido de Juan Esteban: sin la comparación con el diseño de un solo
+  factor, sin Bonferroni ni mapa del informe; modelo + hipótesis, réplica + lo fijo y análisis + supuestos fusionados;
+  luego **18** con tres diapositivas pedidas por Juan Esteban: base de δ = 10 fs y potencia 0,90 (regla de
+  precedencia, error de la forma supuesta 8,8 %, costo de subir la potencia; figura potencia contra δ), esquema de
+  los nueve casos con el caso 2 resaltado, y por qué se mezclan las corrientes dentro del día (deriva, independencia);
+  después **19**: en la de δ se añadió el margen del fabricante (tabla 4 a 7 A: límite < 80 fs, resultado 70 fs →
+  regla 2, δ = 10 fs) y la potencia real del plan (0,96 con n = 9), y una diapositiva nueva con la base de α y la
+  potencia (consecuencias de cada error, tabla de n por α × potencia, límites: β nunca cero, β depende de δ, n no
+  quita el sesgo). Aclarado a Juan Esteban: lo que debe ser pequeño es β; la potencia, cuanto mayor, mejor;
+  finalmente reducida a **12** con texto mínimo en pantalla y el detalle en las notas del orador: modelo +
+  hipótesis + nueve casos en una; réplicas + δ + α y potencia en una; orden sorteado + por qué se mezclan en una;
+  análisis + supuestos + decisión en una; Minitab + calendario en una;
+  por decisión de Juan Esteban se quitó de cada réplica el bloqueo del haz y la búsqueda del pico (hay señal y el
+  autocorrelador no se desalinea): la réplica es corriente fijada de nuevo + barrido nuevo desde más allá del extremo,
+  siempre en el mismo sentido; el láser no se apaga entre réplicas (el encendido entra a nivel de día); mismo estilo de la exposición del 17 oct, títulos en pregunta, H0/HA, supuestos gráficos
+  y analíticos, rutas de Minitab) y su PDF. Generador `scripts/trabajo-practico/render_protocolo_pptx.py`
+  + `figuras_protocolo.py` + `build_protocolo_pptx.sh`; figuras del piloto en `protocolo/figuras/`.
+  Cifras del JSON del piloto: σ = 7,13 fs, δ = 10 fs, n = 8 por corriente (plan 9: 3 días × 3), δ_det 8,8 fs.
+- Revisión visual: exportada a PDF con PowerPoint de Windows vía PowerShell (COM) y renderizada con
+  pymupdf; corregidos un subíndice anidado, encabezados partidos, un título largo y rótulos de figura.
+- Se instaló `openpyxl` en `.venv` (lo requiere `analiza_piloto.py`).
+
+### Pendiente
+- [ ] Mostrar la presentación a Sebastián y acordar si reemplaza al protocolo PDF del 23 oct (que aún
+      dice barrido ±500 fs, paso ≤ 5 fs e hipótesis «por definir») o si se actualiza también el PDF.
+- [x] Resolución del micrómetro: **10 µm**, confirmada por Juan Esteban el 25 oct. El paso no se afina:
+      4–5 lecturas en el FWHM (piloto). El ajuste sech² de toda la traza queda como estimador principal
+      (EE del ajuste 1–5 fs por traza, R² > 0,99). Al llenar Configuración del libro, poner `resol` = 10.
+- [ ] Confirmar en el laboratorio el brazo de 2 pasos (diapositiva 14).
+- [x] Commit y push de la presentación y los scripts.
+
 ## 2026-10-24 (sábado) — Excel del piloto y del cálculo de réplicas
 
 ### Hecho
