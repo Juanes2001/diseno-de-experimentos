@@ -151,6 +151,53 @@ un factor para el experimento.
 - Protocolo del experimento en `trabajo-practico/protocolo/` (se regenera con
   `scripts/trabajo-practico/build_protocolo.sh`).
 
+## Hoja de pruebas de fábrica del equipo (fotos del 24 oct 2026)
+
+Fotos en `notas/WhatsApp Image 2026-10-24 at 4.45.12 PM.jpeg` y `… 5.25.36 PM.jpeg` (sección 4,
+«Output Characterization», pág. 11 del documento del equipo).
+
+**Tabla 4. Test result summary** (resultado con seed normalized current 4,04 y AMP pump current 7,0 A):
+
+| Parámetro | Especificación | Resultado |
+|---|---|---|
+| Longitud de onda central (nm) | 780 | 779,2 |
+| Ancho de pulso (fs) | < 80 | 70 |
+| Tasa de repetición (MHz) | 50 | 50 |
+| Potencia media (mW) | ≥ 500 | 587 |
+| Energía por pulso (nJ) | > 10 | 11,7 |
+| Ancho espectral (nm) | ~ 10 | 8,5 |
+| Extinción de polarización (dB) | > 25 | 25,2 |
+| Calidad del haz | M² ≤ 1,2 | M²x = M²y = 1,08 |
+| Diámetro del haz a la salida (mm) | 0,7 (típico) | 0,66 (a 10 cm) |
+| Circularidad (%) | ≥ 90 | 98 |
+| Estabilidad de potencia en 8 h (%) | < 1 | 0,45 (RMS) |
+| Salida | Espacio libre, haz colimado | Cumple |
+
+**Tabla 5. Laser Output Characterization** (seed normalized current 4,04):
+
+| AMP pump current (A) | Potencia (mW) | Ancho de pulso (fs) | Energía (nJ) |
+|---|---|---|---|
+| 3 | 44 | 248 | 0,9 |
+| 4 | 114 | 170 | 2,3 |
+| 5 | 218 | 107 | 4,4 |
+| 6 | 378 | 76 | 7,6 |
+| 7 | 579 | 54 | 11,6 |
+| 7,23 | 607 | 51 | 12,1 |
+
+Texto: potencia media 601 mW, estabilidad RMS 0,40 % y energía media 12,1 nJ a 7,23 A, después de
+10 min de encendido. Las anotaciones a mano de la hoja (columnas de energía y «P₀») no son del
+fabricante y no se usan.
+
+Consecuencias para el diseño:
+- **No hay tolerancia, banda de aceptación, estabilidad del ancho ni incertidumbre** del ancho de pulso:
+  el patrón es un valor puntual sin varianza conocida → prueba t de una muestra (caso 2) por corriente,
+  con δ por la regla 5 (10 fs) salvo en 7 A, donde τmáx − τ0 = 80 − 54 = 26 fs.
+- **Niveles elegidos (24 oct 2026): 5, 6 y 7 A** (τ0 = 107, 76 y 54 fs). Son las corrientes altas, donde
+  la señal de segundo armónico es mayor; 7,23 A supera el máximo de 7,12 A del controlador.
+- **Discrepancia**: a 7,0 A la tabla 4 dice 70 fs y la tabla 5 dice 54 fs. Se usa la tabla 5 (mismo
+  método para las tres corrientes); hay que mencionarlo en el informe.
+- La especificación del equipo (< 80 fs) es más estricta que la de las hojas públicas (< 90 fs).
+
 ## Qué falta averiguar en el laboratorio
 
 1. Modelo exacto en la etiqueta del controlador o del cabezal (CFL-04RFF, -10RFF, -15RFF; o si

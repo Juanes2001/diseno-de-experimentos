@@ -26,3 +26,8 @@ bibliografia/**/*.pdf
 
 # Fotos de clase (material de la profesora, con compañeros visibles; solo local)
 notas/**/WhatsApp*/
+
+# Fotos recibidas por WhatsApp (archivos sueltos), metadatos de Windows y bloqueos de Excel
+notas/**/WhatsApp*
+*:Zone.Identifier
+~$*.xlsx

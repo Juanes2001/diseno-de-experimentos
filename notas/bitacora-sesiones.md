@@ -3,6 +3,86 @@
 Registro de cada sesión de trabajo en el repositorio: qué se hizo, qué decisiones se tomaron y
 qué queda pendiente. La entrada más reciente va arriba.
 
+## 2026-10-24 (sábado) — Excel del piloto y del cálculo de réplicas
+
+### Hecho
+- `git pull`: llegó el commit de Sebastián con el protocolo, la teoría y la ficha del cap. 2 de
+  Gutiérrez–De la Vara. Conflicto en esta bitácora resuelto conservando ambas entradas.
+- Libro `trabajo-practico/piloto/Piloto_Replicas_Autocorrelador.xlsx`, generado por
+  `scripts/trabajo-practico/build_piloto_xlsx.py` (xlsxwriter). Hojas:
+  - Configuración: unidad del desplazamiento (µm por defecto), pasos (τ = 2Δx/c), factor 0,65,
+    fondo, suavizado, corrientes, α, potencia, colas, datos del fabricante para δ, horas por día.
+  - Registro piloto: orden sorteado de las 15 trazas (semilla 20261024), horas, potencia, validez.
+  - R01–R15: se pegan desplazamiento y potencia óptica (hasta 4000 puntos). Calcula el retardo, la
+    traza sin fondo y normalizada, los cruces a media altura con interpolación lineal, Δτ_AC, τp y
+    el estado; dos gráficas (cruda y normalizada con el FWHM).
+  - Resumen piloto: n, media, S y CV por corriente; diagrama de puntos y τp contra el orden.
+  - Réplicas: σ = √[(n−1)/χ²] · S mayor; δ por la regla de precedencia; n por la curva OC numérica
+    (aproximación normal de la t no central); reparto en 3 o 4 días, capacidad y δ detectable.
+  - Plan semana: orden sorteado por día según el n calculado. Ejemplo: traza simulada de 85 fs.
+- Verificación: recalculado con LibreOffice 24.2 (AppImage en `~/apps`, librerías de Debian
+  bookworm extraídas sin sudo; lanzador `~/.local/bin/soffice`). Con 15 trazas sintéticas, τp, S,
+  factor (1,5576), σ, n y δ_det coinciden con Python/scipy (n exacto = n del libro en 147 de 148
+  casos de d). Solo quedan #N/A intencionales en columnas de gráficas.
+- El FWHM directo no tiene sesgo sin ruido; con 1 % de ruido, −0,5 fs en promedio. El suavizado
+  ensancha la traza: dejar la ventana en 1 y no cambiarla.
+
+- Juan Esteban fotografió la hoja de pruebas de fábrica (fotos en `notas/`; transcritas en
+  `notas/laser-carmel-x-ficha-tecnica.md`). Tabla 5: ancho por corriente de bombeo; no hay tolerancias
+  → patrón sin varianza conocida (t de una muestra). **Niveles: 5, 6 y 7 A, τ0 = 107, 76 y 54 fs**
+  (7,23 A queda fuera: el controlador llega a 7,12 A). Discrepancia a 7 A: tabla 4 = 70 fs, tabla 5 = 54 fs.
+- El Excel quedó con esos valores: corrientes y τ0 precargados, τmáx = 80 fs solo en 7 A (regla 2 con
+  guarda τmáx > τ0; antes τmáx = 90 en las tres daba δ negativo en 5 A), potencia de fábrica como
+  referencia, τ0 y media − τ0 en el Resumen con marca roja en el diagrama de puntos.
+- **Toma manual con micrómetro** (Juan Esteban): 300 filas por traza, lecturas en mm, fondo con 3 lecturas
+  por ala, guía de muestreo por corriente en Configuración (Δτ_AC en el micrómetro: 24,7 / 17,6 / 12,5 µm;
+  paso fino ≈ Δτ_AC/6, grueso 3×, barrido ±3 Δτ_AC, ≈ 22–30 lecturas), criterios nuevos (≥ 5 lecturas dentro
+  del FWHM, recorrido ≥ 1,5 Δτ_AC por lado) y revisión de que las posiciones vayan en un solo sentido. En
+  simulación con ese muestreo el sesgo del FWHM interpolado es < 0,6 fs (dispersión 1–2 fs). Archivo de
+  0,76 MB (antes 7,3 MB).
+- Juan Esteban: con el montaje solo caben **16–17 lecturas en la zona de solapamiento**; se toman 20 en total
+  con algunas en las colas. La guía se rehízo así: 16 lecturas con paso uniforme en ±1,5 Δτ_AC (paso de
+  4 / 3 / 2 µm en 5 / 6 / 7 A, ≈ 5–6 lecturas dentro del FWHM) más 2 por ala, a ±2 y ±3 Δτ_AC (49/74,
+  35/53 y 25/37 µm). Fondo = 2 lecturas por ala; recorrido mínimo 2 Δτ_AC. Simulación: si las colas quedan
+  a 1 Δτ_AC el fondo sale alto y τp sale ≈ −1,5 fs; con ±2–3 Δτ_AC el sesgo es +0,4 a +0,9 fs y la
+  dispersión 0,7–1,6 fs. Excel = Python en las 15 trazas de prueba (diferencia < 10⁻⁹ fs).
+- Unidades fijas a pedido de Juan Esteban: posición del micrómetro en **µm** (6,6713 fs/µm) y potencia
+  óptica de la traza en **µW** (la potencia media del láser en el Registro sigue en mW).
+- **Piloto medido** (tarde-noche): 15 trazas con paso de 10 µm (66,7 fs; no se pudo afinar), 17–22
+  lecturas, 4–5 dentro del FWHM. El equipo descarta R02–R07 (error de medición) y conserva R01 y R08–R15.
+  Libro usado guardado como `trabajo-practico/piloto/Piloto_Replicas_Autocorrelador.xlsx` (no se toca);
+  copia revisada `Piloto_Replicas_Autocorrelador_analisis.xlsx` generada con
+  `build_piloto_xlsx.py --desde … --analisis … --descartar R02..R07 --excluir R01`.
+- Revisión del libro (celdas con fórmula): R02–R07 seguían «Sí» → marcadas «No»; la duración media usaba
+  las 15 trazas → ahora solo pares válidos consecutivos (6,1 min, antes 7,5); el fondo usaba el conteo de
+  la columna A → `#DIV/0!` en R07, ahora usa el de B; `R14!D5` editada por accidente (sin efecto),
+  restaurada; formato científico para fondo/máximo (potencias leídas ≈ 1e-5, parecen W). Hoja nueva
+  **Ajustes** (FWHM y ajuste por mínimos cuadrados, sech² y gaussiano, por traza; valores de scipy) y
+  selector «Estimador de τp» en Configuración que alimenta Resumen/Réplicas/Plan.
+- **R01 no muestra la autocorrelación** (pico 10× menor, R² = 0,22, τp del ajuste 19 ± 43 000 fs). Con ella
+  la S de I2 sube a 60–90 fs y n > 3000. Juan Esteban decidió **excluirla del todo**: en la copia está «No»
+  («Excluida: sin señal de autocorrelación») y el informe solo la lista entre las 15 trazas. Las potencias
+  se leyeron en **W** (no µW): no afecta ningún cálculo (traza normalizada, ajuste con A y B libres); libro
+  e informe etiquetados en W.
+- Resultados (sin R01, ajuste sech²): I1 198,4 fs (S 4,58, n 5), I2 144,1 (1 traza), I3 148,8 (S 2,46, n 2);
+  gaussiano ≈ +11 %. Fábrica: 107/76/54 → razón 1,85–2,76, creciente con la corriente (pista: dispersión en
+  el vidrio del montaje; verificar también el factor 2 de τ = 2Δx/c y el chirp del láser).
+- **Réplicas**: σ = 1,558 × 4,58 = 7,13 fs, d = 1,40, **n = 8** por corriente (t no central exacta = libro);
+  FWHM da 5–6. 6,1 min/traza → 48/día. Plan: 3 días × 3 réplicas por corriente y día = 27 trazas (≈ 55 min/día),
+  δ_det = 8,8 fs; jueves de reserva. Informe en `trabajo-practico/piloto/Informe_Piloto_Replicas.pdf`
+  (`analiza_piloto.py` + `render_informe_piloto.py` + `build_informe_piloto.sh`, Chrome).
+
+### Pendiente
+- [ ] Confirmar la resolución de lectura del micrómetro (celda «resol» de Configuración): con divisiones de
+      10 µm no se resuelve la traza de 7 A (Δτ_AC = 12,5 µm); hace falta leer a 1–2 µm.
+- [ ] El protocolo (PDF) aún dice barrido ±500 fs con paso ≤ 5 fs, «tres corrientes por definir» e
+      hipótesis «por definir»: actualizarlo con 5/6/7 A, τ0, toma manual y la t de una muestra.
+- [ ] Confirmar en el laboratorio que el brazo es de un retrorreflector (2 pasos).
+- [ ] Esta noche: llenar Configuración (corrientes, datos del fabricante), leer n en Réplicas,
+      confirmarlo en Minitab y copiar el Plan semana como valores.
+- [ ] Los pendientes del 23 oct que hablan de calibrar el eje de retardo y de 13 trazas/día quedaron
+      obsoletos (el protocolo final no los incluye).
+
 ## 2026-10-23 (viernes) — Protocolo del diseño de comparación simple para la asesoría del 24 oct
 
 ### Hecho
@@ -141,6 +221,29 @@ qué queda pendiente. La entrada más reciente va arriba.
       cuántas horas de uso lleva.
 - [ ] Revisar la diapositiva 7 abriendo el pptx en PowerPoint (aquí no hay LibreOffice para
       renderizar). El esquema real del montaje (diapositiva 10) sigue sin confirmarse.
+
+## 2026-10-21 (miércoles) — Parte 0 de la guía del tema 6: repaso del diseño 2^k
+
+### Hecho
+- A pedido de Juan Esteban, la guía en PDF del tema 6 tiene ahora una **Parte 0, «Antes de
+  empezar: el diseño 2^k»** (págs. 3–14, antes de la presentación; la guía pasa a 61 págs.).
+  No se proyecta: las diapositivas no cambiaron (siguen siendo 67).
+- Apartados: qué es un 2^k y supuestos; variables codificadas ±1 y el cubo; notación
+  (mayúsculas, minúsculas, (1), orden estándar, notación binaria); efecto principal e
+  interacción con el 2² del proceso químico (sec. 6-2) y su gráfica de interacción;
+  construcción de la tabla de signos del 2³; sus cuatro propiedades (balance, ortogonalidad,
+  identidad, producto módulo 2) con ejemplos de productos de palabras; contraste → efecto → SS →
+  coeficiente con el ej. 6-1 y el atajo (a ± 1)(b ± 1)(c ± 1); conteo de efectos, escasez de
+  efectos y jerarquía; una réplica: gráfica normal y Lenth con el ej. 6-2; proyección (tabla
+  6-13); tabla puente 2^k → 2^(k−p) (generador, relación de definición, alias, cadenas,
+  resolución); autoevaluación de 7 preguntas con respuestas.
+- Los datos de los ejemplos 6-1 y 6-2 se recalcularon en Python y reproducen las tablas 6-5 y
+  6-12 de Montgomery. El contenido está en `PREVIO` de `scripts/tema-06/contenido.py`.
+- Se regeneró el PDF con `build.sh` y se revisaron las páginas nuevas como imagen.
+
+### Pendiente
+- [ ] Que Juan Esteban lea la Parte 0 y diga si falta algo (p. ej. el algoritmo de Yates, que
+      Montgomery solo menciona, o puntos centrales).
 
 ## 2026-10-15 (jueves) — Trabajo práctico: referencias y estructura de la exposición del 17 oct
 
