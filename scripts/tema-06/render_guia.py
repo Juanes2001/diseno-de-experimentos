@@ -2,7 +2,7 @@
 import html
 import sys
 
-from contenido import SLIDES, M
+from contenido import SLIDES, PREVIO, M
 from render_pptx import parse, plain, CUBE
 
 CSS = """
@@ -262,6 +262,29 @@ def block(b):
     raise ValueError(t)
 
 
+def apartado(s, etiqueta):
+    """Un apartado de la guía: explicación y bloques de una diapositiva."""
+    o = []
+    tag = f' <span style="font:9pt Calibri;color:#5b6b73">· {etiqueta}</span>' if etiqueta else ""
+    o.append(f'<section class="d"><h3>{rich(s["title"])}{tag}</h3>')
+    for par in s["explica"].split("\n\n"):
+        o.append(f"<p>{rich(par.strip())}</p>")
+    o.append('<div class="bloques">')
+    if s.get("body"):
+        o.append("".join(block(b) for b in s["body"]))
+    elif not (s["left"] or s["right"]):
+        pass
+    elif any(b["t"] == "mono" for b in s["left"] + s["right"]):
+        # Una salida de texto fijo no cabe en media página: se apila a todo el ancho.
+        o.append("".join(block(b) for b in s["left"] + s["right"]))
+    else:
+        r = s["ratio"]
+        o.append(f'<div class="cols"><div style="flex:{r}">{"".join(block(b) for b in s["left"])}</div>'
+                 f'<div style="flex:{1 - r}">{"".join(block(b) for b in s["right"])}</div></div>')
+    o.append("</div></section>")
+    return "".join(o)
+
+
 def build(out):
     o = ['<!doctype html><html lang="es"><head><meta charset="utf-8">',
          "<title>Guía de estudio · Diseños factoriales fraccionados</title>", f"<style>{CSS}</style></head><body>"]
@@ -271,12 +294,21 @@ def build(out):
              'Juan Esteban Rodríguez Ochoa · Sebastián Zapata Henao<br>Exposición: 31 de octubre de 2026</p>'
              '<div class="como"><b>Cómo usar esta guía.</b> Sigue el mismo orden de la presentación. Cada apartado '
              'corresponde a una diapositiva: primero la explicación que el expositor debe dominar y después el '
-             'contenido que aparece proyectado (tablas, fórmulas y gráficas).</div></div>')
+             'contenido que aparece proyectado (tablas, fórmulas y gráficas). Antes de la presentación va la '
+             '<b>Parte 0</b>, que no se proyecta: repasa el diseño 2<sup>k</sup> (notación, tabla de signos, '
+             'contrastes) del que sale toda la terminología de los fraccionados.</div></div>')
     secs = [s for s in SLIDES if s["kind"] == "section"]
-    o.append('<div class="indice"><h2 style="page-break-before:auto">Contenido</h2><ol>')
+    o.append('<div class="indice"><h2 style="page-break-before:auto">Contenido</h2><ol start="0">')
+    o.append('<li><b>Antes de empezar: el diseño 2<sup>k</sup></b> — lo que hay que saber para entender '
+             'la terminología de los fraccionados (no se proyecta)</li>')
     for s in secs:
         o.append(f'<li><b>{html.escape(s["title"])}</b> — {html.escape(s["sub"])}</li>')
     o.append("</ol></div>")
+    o.append('<h2><span class="n">0</span>Antes de empezar: el diseño 2<sup>k</sup></h2>'
+             '<p class="secsub">Lo que hay que saber del factorial completo para entender los fraccionados. '
+             'Esta parte no se proyecta; es la base para leer el resto de la guía.</p>')
+    for s in PREVIO:
+        o.append(apartado(s, ""))
     first = True
     n = 0
     for s in SLIDES:
@@ -288,22 +320,9 @@ def build(out):
             first = False
             continue
         if first:
-            o.append('<h2 style="page-break-before:auto">Presentación</h2>')
+            o.append('<h2>Presentación</h2>')
             first = False
-        o.append(f'<section class="d"><h3>{rich(s["title"])} <span style="font:9pt Calibri;color:#5b6b73">· diapositiva {n}</span></h3>')
-        for par in s["explica"].split("\n\n"):
-            o.append(f"<p>{rich(par.strip())}</p>")
-        o.append('<div class="bloques">')
-        if s.get("body"):
-            o.append("".join(block(b) for b in s["body"]))
-        elif any(b["t"] == "mono" for b in s["left"] + s["right"]):
-            # Una salida de texto fijo no cabe en media página: se apila a todo el ancho.
-            o.append("".join(block(b) for b in s["left"] + s["right"]))
-        else:
-            r = s["ratio"]
-            o.append(f'<div class="cols"><div style="flex:{r}">{"".join(block(b) for b in s["left"])}</div>'
-                     f'<div style="flex:{1 - r}">{"".join(block(b) for b in s["right"])}</div></div>')
-        o.append("</div></section>")
+        o.append(apartado(s, f"diapositiva {n}"))
     o.append("</body></html>")
     open(out, "w", encoding="utf-8").write("".join(o))
     print("guía:", out)

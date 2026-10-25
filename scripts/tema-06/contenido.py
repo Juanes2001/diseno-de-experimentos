@@ -1084,3 +1084,268 @@ S("Referencias",
 
 SLIDES.append({"kind": "closing", "title": "¿Preguntas?",
                "sub": "Diseños factoriales fraccionados 2^{k−p}", "sec": "", "explica": ""})
+
+
+# ================================================================ parte 0 (solo guía)
+# Repaso del 2^k que la exposición da por conocido. No genera diapositivas: render_guia.py
+# lo imprime antes de la presentación. Fuente: Montgomery, cap. 6 (ficha en notas/montgomery).
+PREVIO = []
+
+
+def P(title, explica, body=None, left=None, right=None, ratio=0.5):
+    PREVIO.append({"kind": "content", "title": title, "explica": explica.strip(),
+                   "body": body, "left": left, "right": right, "ratio": ratio, "sec": "previo"})
+
+
+# 2^2 del proceso químico (Montgomery, sec. 6-2): totales con n = 3
+q = {"(1)": 80, "a": 100, "b": 60, "ab": 90}
+qA = (q["ab"] + q["a"] - q["b"] - q["(1)"]) / 6
+qB = (q["ab"] + q["b"] - q["a"] - q["(1)"]) / 6
+qAB = (q["ab"] + q["(1)"] - q["a"] - q["b"]) / 6
+# Ejemplo 6-1, altura de llenado: 2^3 con n = 2, totales en orden estándar
+r61 = basic(3)
+t61 = [-4, 1, -1, 5, -1, 3, 2, 11]
+w61 = ["A", "B", "C", "AB", "AC", "BC", "ABC"]
+c61 = {w: effect(r61, t61, w)[0] for w in w61}
+# Ejemplo 6-2, índice de filtración: 2^4 no replicado
+r62 = basic(4)
+y62 = [45, 71, 48, 65, 68, 60, 80, 65, 43, 100, 45, 104, 75, 86, 70, 96]
+w62 = ["A", "B", "C", "D", "AB", "AC", "AD", "BC", "BD", "CD", "ABC", "ABD", "ACD", "BCD", "ABCD"]
+e62 = {w: effect(r62, y62, w)[1] for w in w62}
+pse62 = lenth(list(e62.values())); me62 = t_ppf(0.05, 15 / 3) * pse62
+
+_n3 = ["(1)", "a", "b", "ab", "c", "ac", "bc", "abc"]
+
+P("¿Qué es un diseño 2^{k} y por qué hay que dominarlo primero?",
+  """Un diseño factorial 2^{k} estudia k factores, cada uno en solo dos niveles, que se llaman «bajo» y «alto». Los factores pueden ser cuantitativos (dos temperaturas) o cualitativos (dos máquinas, presencia o ausencia de un aditivo). Una réplica completa corre todas las combinaciones posibles: 2 × 2 × ⋯ × 2 = 2^{k} corridas. Con n réplicas el total es N = n·2^{k}.
+
+Se supone que los factores son fijos, que las corridas se hacen en orden aleatorio, que los errores son normales e independientes con varianza constante y que, como solo hay dos niveles, la respuesta es aproximadamente lineal en el rango estudiado.
+
+Un factorial fraccionado 2^{k−p} no es un diseño nuevo: es un subconjunto de las filas de un 2^{k}. Todo lo que se dice en el tema 6 (generador, relación de definición, alias, resolución, proyección) está escrito en el lenguaje del 2^{k}: tabla de signos, producto de columnas y contrastes. Si ese lenguaje está claro, el tema 6 se reduce a una sola idea nueva: qué pasa cuando no se corren todas las filas.""",
+  left=[bul("**k** factores, **dos niveles** cada uno",
+            "Una réplica = **2^{k}** corridas; con n réplicas, **N = n·2^{k}**",
+            "Factores fijos, orden aleatorio, errores NID(0, σ^{2})",
+            "Respuesta aproximadamente **lineal** entre los dos niveles",
+            "Uso típico: **tamizado** de factores en etapas tempranas", size=16)],
+  right=[note("Un 2^{k−p} es un **pedazo** de la tabla del 2^{k}. Por eso esta parte va primero.", size=15),
+         txt("Fuente: Montgomery, cap. 6, sec. 6-1.", size=12)], ratio=0.58)
+
+P("Variables codificadas: por qué todo se escribe con −1 y +1",
+  """En lugar de trabajar con las unidades de cada factor (°C, psi, minutos) se usa una variable codificada x que vale −1 en el nivel bajo y +1 en el nivel alto. La transformación es lineal: se resta el punto medio y se divide entre la mitad del rango. Por ejemplo, si la concentración va de 15 % a 25 %, x = (Conc − 20)/5.
+
+La codificación tiene tres ventajas. Pone todos los factores en la misma escala, así que los efectos se pueden comparar directamente. Convierte la tabla del diseño en una tabla de signos, donde «−» significa −1 y «+» significa +1. Y hace que las columnas sean ortogonales, propiedad de la que depende todo el análisis.
+
+Geométricamente, un 2^{2} es un cuadrado y un 2^{3} es un cubo: cada corrida es un vértice. El nivel alto de A es la cara derecha del cubo; el nivel bajo, la cara izquierda.""",
+  left=[form("x = (valor − centro) / semirrango", "centro = (bajo + alto)/2", "semirrango = (alto − bajo)/2", size=16),
+        bul("Nivel bajo → **x = −1**  (se escribe «−»)",
+            "Nivel alto → **x = +1**  (se escribe «+»)",
+            "Todos los factores quedan en la **misma escala**",
+            "El 2^{3} es un **cubo**; cada corrida es un **vértice**", size=16)],
+  right=[cube(["a", "ab", "ac", "abc"], caption="Vértices rellenos: la cara A = + (A en nivel alto)"),
+         txt("Fuente: Montgomery, sec. 6-2 (modelo de regresión) y fig. 6-4.", size=12)], ratio=0.55)
+
+_sig = ["ninguno", "A", "B", "A y B", "C", "A y C", "B y C", "A, B y C"]
+_rows = [[str(i + 1), sg(r["A"]), sg(r["B"]), sg(r["C"]), nm,
+          f"{(r['A'] + 1) // 2} {(r['B'] + 1) // 2} {(r['C'] + 1) // 2}", s_]
+         for i, (r, nm, s_) in enumerate(zip(r61, _n3, _sig))]
+P("La notación: mayúsculas, minúsculas y orden estándar",
+  """La tabla de un 2^{k} usa dos alfabetos y conviene no confundirlos.
+
+Las letras mayúsculas (A, B, C, AB, ABC…) nombran factores y efectos. Encabezan columnas.
+
+Las letras minúsculas nombran corridas, es decir, combinaciones de tratamientos. Encabezan filas. La regla es: la letra aparece si el factor está en su nivel alto y no aparece si está en su nivel bajo. Así, ac es la corrida con A y C en alto y B en bajo; (1) es la corrida con todo en bajo. En un 2^{5}, abd significa A, B y D altos y C, E bajos. Montgomery usa además la misma minúscula para el total de las n respuestas observadas en esa corrida, de modo que una expresión como ab + a − b − (1) es una cuenta con datos.
+
+Las filas se escriben en orden estándar (u orden de Yates): se introduce un factor a la vez y se combina con todo lo anterior. Se parte de (1); se agrega a; se agrega b y se multiplica por lo que había: b, ab; se agrega c: c, ac, bc, abc; y así sucesivamente. En ese orden la columna A alterna de uno en uno, la B de dos en dos, la C de cuatro en cuatro y, en general, el factor j-ésimo cambia cada 2^{j−1} filas.
+
+Hay tres notaciones equivalentes para la misma corrida: signos (+ − +), letras (ac) y binaria (1 0 1). La I queda reservada para la identidad; por eso, después de H, el siguiente factor se llama J.""",
+  body=[tab(["Corrida", "A", "B", "C", "Etiqueta", "Binaria", "Factores en nivel alto"], _rows, size=14,
+            colw=[0.11, 0.08, 0.08, 0.08, 0.13, 0.14, 0.38], first_left=False),
+        form("2^{4}:  (1), a, b, ab, c, ac, bc, abc, d, ad, bd, abd, cd, acd, bcd, abcd", size=16),
+        txt("Fuente: Montgomery, secs. 6-2 a 6-4 (tablas de notación y orden estándar).", size=12)])
+
+P("¿Qué es un efecto principal?",
+  f"""El efecto principal de un factor es el cambio promedio en la respuesta al pasar ese factor de su nivel bajo a su nivel alto. Se calcula como el promedio de las corridas con el factor en «+» menos el promedio de las corridas con el factor en «−». En el cubo es la cara derecha menos la cara izquierda.
+
+Ejemplo del proceso químico de Montgomery (sec. 6-2): un 2^{{2}} con n = 3, A = concentración del reactivo (15 % y 25 %), B = cantidad de catalizador (1 y 2 lb), respuesta = rendimiento. Los totales de las tres réplicas son (1) = 80, a = 100, b = 60 y ab = 90.
+
+El efecto de A combina dos comparaciones: con B bajo, a − (1); con B alto, ab − b. Se suman y se dividen entre 2n porque cada total tiene n observaciones y hay dos comparaciones: A = [ab + a − b − (1)]/(2n) = (90 + 100 − 60 − 80)/6 = {f(qA)}. Del mismo modo B = [ab + b − a − (1)]/(2n) = {f(qB)}. Subir la concentración aumenta el rendimiento en unos 8.3 puntos; subir el catalizador lo reduce en 5.
+
+La expresión entre corchetes, ab + a − b − (1), se llama contraste. Sus coeficientes son siempre +1 o −1, y son justamente los signos de la columna A de la tabla.""",
+  left=[form("Efecto de A = ȳ_{A+} − ȳ_{A−}", "A = [ab + a − b − (1)] / (2n)", size=18),
+        tab(["Corrida", "A", "B", "Total (n = 3)"],
+            [["(1)", M, M, "80"], ["a", "+", M, "100"], ["b", M, "+", "60"], ["ab", "+", "+", "90"]],
+            size=15, first_left=False)],
+  right=[tab(["Efecto", "Contraste", "Valor"],
+             [["A", "ab + a − b − (1) = 50", f(qA)], ["B", "ab + b − a − (1) = −30", f(qB)],
+              ["AB", "ab + (1) − a − b = 10", f(qAB)]], size=15, first_left=False),
+         note("El contraste de A usa los **signos de la columna A**: + en a y ab, − en (1) y b", size=14),
+         txt("Fuente: Montgomery, sec. 6-2, ecs. 6-1 a 6-4.", size=12)], ratio=0.5)
+
+P("¿Qué es una interacción?",
+  f"""Hay interacción entre A y B cuando el efecto de A depende del nivel de B. En el ejemplo, con B bajo el efecto de A es [a − (1)]/n = (100 − 80)/3 = 6.67, y con B alto es (ab − b)/n = (90 − 60)/3 = 10. El efecto de interacción AB es la mitad de esa diferencia: AB = (10 − 6.67)/2 = {f(qAB)}.
+
+Al desarrollar la cuenta queda AB = [ab + (1) − a − b]/(2n). Los signos +, −, −, + de ese contraste son los de una columna nueva que no se fijó al diseñar el experimento: resulta de multiplicar, fila por fila, los signos de A y de B. Esta es la idea que se repite en todo el tema 6: la columna de una interacción es el producto de las columnas de sus factores.
+
+En la gráfica de interacción las líneas casi paralelas indican poca interacción; si se cruzan o se separan mucho, la interacción es fuerte. Cuando una interacción es importante, el efecto principal de sus factores pierde sentido por sí solo y hay que interpretar los dos factores juntos.""",
+  left=[form("AB = ½ [ A_{con B alto} − A_{con B bajo} ]",
+             "AB = [ab + (1) − a − b] / (2n)", size=16),
+        note("Columna AB = **(signo de A) × (signo de B)**, fila por fila", size=15)],
+  right=[lines(["A bajo (15 %)", "A alto (25 %)"],
+               [("B bajo (1 lb)", [80 / 3, 100 / 3]), ("B alto (2 lb)", [60 / 3, 90 / 3])],
+               "Rendimiento promedio", title="Gráfica de interacción A × B"),
+         txt("Fuente: Montgomery, sec. 6-2, ec. 6-3.", size=12)], ratio=0.5)
+
+_rows = []
+for nm, r in zip(_n3, r61):
+    _rows.append([nm, "+", sg(r["A"]), sg(r["B"]), sg(r["A"] * r["B"]), sg(r["C"]),
+                  sg(r["A"] * r["C"]), sg(r["B"] * r["C"]), sg(r["A"] * r["B"] * r["C"])])
+P("¿Cómo se construye la tabla de signos?",
+  """La tabla de signos tiene una fila por corrida y una columna por cada efecto que el diseño puede estimar. Se arma en cuatro pasos:
+
+1) Escribir las corridas en orden estándar. 2) Llenar las columnas de los factores: + si la letra minúscula de ese factor está en la etiqueta, − si no está. 3) Llenar cada columna de interacción multiplicando, fila por fila, los signos de las columnas de los factores que la forman. En la fila ac: A = +, B = −, C = +; entonces AB = (+)(−) = −, AC = (+)(+) = +, BC = (−)(+) = − y ABC = (+)(−)(+) = −. 4) Agregar la columna I, toda de signos +, que corresponde al promedio general.
+
+Un 2^{3} tiene 8 filas y 8 columnas: I más 7 efectos (A, B, C, AB, AC, BC, ABC). En general, un 2^{k} tiene 2^{k} − 1 columnas de efectos, una por cada grado de libertad entre las 2^{k} corridas.
+
+Esta tabla es la que se recorta en el tema 6. La fracción un medio del 2^{3} con I = ABC son las cuatro filas en que la columna ABC tiene signo +: a, b, c y abc.""",
+  left=[tab(["Trat.", "I", "A", "B", "AB", "C", "AC", "BC", "ABC"], _rows, size=14, hl=[1, 2, 4, 7])],
+  right=[num("Corridas en **orden estándar**",
+             "Columnas de factores: **+ si la letra está**, − si no",
+             "Columnas de interacción: **producto de signos**",
+             "Columna **I**: todo +", size=15),
+         note("Filas resaltadas: **ABC = +**. Son la fracción un medio con I = ABC del tema 6", size=14),
+         txt("Fuente: Montgomery, sec. 6-3, tabla 6-3.", size=12)], ratio=0.58)
+
+P("Las cuatro propiedades de la tabla de signos",
+  """De la construcción salen cuatro propiedades. Son la base algebraica de todo el tema 6.
+
+1) Balance: salvo I, cada columna tiene tantos signos + como −. Cada efecto compara la mitad de las corridas contra la otra mitad.
+
+2) Ortogonalidad: si se multiplican dos columnas distintas fila por fila y se suman los productos, el resultado es cero. Por ejemplo, A·B en el 2^{3} da (+)+(−)+(−)+(+)+(+)+(−)+(−)+(+) = 0. Por eso cada efecto se estima con su propio contraste, sin que los demás lo contaminen.
+
+3) Identidad: I × X = X para cualquier columna X, porque multiplicar por una columna de puros + no cambia nada.
+
+4) Cerradura con aritmética módulo 2: el producto de dos columnas es otra columna de la tabla. Como cada signo es ±1, su cuadrado es +1; por lo tanto, cualquier letra al cuadrado es I y desaparece. En la práctica, para multiplicar dos palabras se juntan las letras y se tachan las que aparecen dos veces: AB × BC = AB^{2}C = AC.
+
+La propiedad 4 es la regla que el tema 6 usa para obtener alias: A × ABC = A^{2}BC = BC. La diferencia es que en el 2^{k} completo dos columnas distintas nunca coinciden; en una fracción sí pueden coincidir, y eso es un alias.""",
+  left=[cards(("1 · Balance", "Cada columna de efecto tiene N/2 signos + y N/2 signos −"),
+              ("2 · Ortogonalidad", "Σ (columna X × columna Y) = 0 si X ≠ Y"),
+              ("3 · Identidad", "I × X = X"),
+              ("4 · Cerradura (módulo 2)", "X × Y es otra columna; X × X = I"), size=14, cols=1)],
+  right=[tab(["Producto", "Cuenta", "Resultado"],
+             [["A × B", "—", "AB"], ["A × AB", "A^{2}B", "B"], ["AB × BC", "AB^{2}C", "AC"],
+              ["AB × AB", "A^{2}B^{2}", "I"], ["A × ABC", "A^{2}BC", "BC"],
+              ["ABCD × AB", "A^{2}B^{2}CD", "CD"]], size=15, first_left=False),
+         note("Regla práctica: juntar letras y **tachar las repetidas**", size=14),
+         txt("Fuente: Montgomery, sec. 6-3, propiedades de la tabla 6-3.", size=12)], ratio=0.5)
+
+_rows = [[w, f"{c61[w]:d}".replace("-", M), f(c61[w] / 8), f(c61[w] ** 2 / 16),
+          f(100 * c61[w] ** 2 / 16 / 78, 2) + " %"] for w in w61]
+P("Del contraste al efecto, a la suma de cuadrados y al coeficiente",
+  """Una vez armada la tabla, todos los cálculos de un 2^{k} salen de los contrastes:
+
+Contraste de X = Σ (signo de la columna X) × (total de la corrida).
+Efecto de X = Contraste / (n·2^{k−1}).
+SS_{X} = Contraste^{2} / (n·2^{k}), con 1 grado de libertad.
+Coeficiente de regresión β̂_{X} = Efecto / 2; el intercepto β̂_{0} es el promedio general.
+
+El coeficiente es la mitad del efecto porque el efecto mide el cambio al pasar de x = −1 a x = +1 (dos unidades), y el coeficiente mide el cambio por unidad de x.
+
+Ejemplo 6-1 de Montgomery (altura de llenado, 2^{3} con n = 2). Los totales en orden estándar son (1) = −4, a = 1, b = −1, ab = 5, c = −1, ac = 3, bc = 2 y abc = 11. Con los signos de la columna A: −(−4) + 1 − (−1) + 5 − (−1) + 3 − 2 + 11 = 24. Entonces A = 24/8 = 3.00 y SS_{A} = 24^{2}/16 = 36.00. La SS total es 78, así que A explica el 46 % de la variabilidad.
+
+Atajo para escribir cualquier contraste sin la tabla: (a ± 1)(b ± 1)(c ± 1), con signo − en el paréntesis si el factor está en el efecto y + si no está. Por ejemplo, AB = (a − 1)(b − 1)(c + 1) = abc + ab + c + (1) − ac − bc − a − b.""",
+  left=[form("Efecto = Contraste / (n·2^{k−1})", "SS = Contraste^{2} / (n·2^{k})",
+             "β̂ = Efecto / 2,   β̂_{0} = ȳ", size=17),
+        form("Contraste_{AB} = (a − 1)(b − 1)(c + 1)", size=16)],
+  right=[tab(["Término", "Contraste", "Efecto", "SS", "% de SS_{T}"], _rows, size=14, first_left=False),
+         txt("SS_{T} = 78.00; error puro = 5.00 con 8 g.l. Fuente: Montgomery, ej. 6-1, tabla 6-5, ecs. 6-18, 6-21 a 6-23.", size=12)],
+  ratio=0.46)
+
+_rows = []
+for k in range(2, 8):
+    from math import comb
+    _rows.append([str(k), str(2 ** k), str(2 ** k - 1), str(k), str(comb(k, 2)), str(comb(k, 3)),
+                  str(2 ** k - 1 - k - comb(k, 2) - comb(k, 3))])
+P("¿Cuántos efectos estima un 2^{k} y cuáles importan?",
+  """Un 2^{k} tiene 2^{k} − 1 grados de libertad entre sus corridas y estima exactamente 2^{k} − 1 efectos, cada uno con 1 grado de libertad: k efectos principales, C(k, 2) interacciones de dos factores, C(k, 3) de tres factores, y así hasta una interacción de los k factores.
+
+La tabla muestra que el número de interacciones de orden alto crece mucho más rápido que el de efectos principales. Dos principios empíricos permiten no preocuparse por ellas:
+
+Escasez (o esparcimiento) de efectos: un sistema suele estar dominado por unos pocos efectos principales e interacciones de orden bajo; las interacciones de tres o más factores casi siempre son despreciables.
+
+Jerarquía: si una interacción entra al modelo, se incluyen también sus efectos principales, aunque no sean significativos.
+
+El tema 6 se apoya justamente en la escasez de efectos: si casi todos los grados de libertad se gastan en interacciones que son prácticamente cero, se puede correr una fracción del diseño y aceptar que esas interacciones queden mezcladas (aliadas) con los efectos que sí interesan.""",
+  body=[tab(["k", "Corridas 2^{k}", "Efectos 2^{k} − 1", "Principales", "Dobles", "Triples", "4 o más"],
+            _rows, size=15, first_left=False),
+        note("En un 2^{7} solo **28 de los 127 efectos** son principales o dobles: los otros 99 suelen ser ruido", size=15),
+        txt("Fuente: Montgomery, sec. 6-4 (tabla 6-9) y sec. 6-5 (principio de efectos esparcidos); jerarquía en «Reglas y advertencias», cap. 6.", size=12)])
+
+_v = [e62[w] for w in w62]
+_z = normal_scores(_v)
+_srt = sorted(range(15), key=lambda i: _v[i])
+P("Una sola réplica: la gráfica normal de efectos",
+  f"""Con k moderado muchas veces solo se puede correr una réplica (n = 1). Entonces no hay error puro: cada uno de los 2^{{k}} − 1 grados de libertad se gasta en un efecto y no sobra ninguno para estimar σ^{{2}}. Esta es exactamente la situación de casi todos los factoriales fraccionados.
+
+La salida es la gráfica de probabilidad normal de los efectos (Daniel). Si un efecto es nulo, su estimación es solo ruido: una variable normal de media cero. Los efectos nulos caen entonces sobre una recta que pasa cerca del cero, y los efectos activos se apartan de ella. Los efectos que se apartan forman el modelo; el resto se combina como estimación del error.
+
+En el ejemplo 6-2 de Montgomery (índice de filtración, 2^{{4}} no replicado) se apartan A = {f(e62['A'], 3)}, AC = {f(e62['AC'], 3)}, AD = {f(e62['AD'], 3)}, D = {f(e62['D'], 3)} y C = {f(e62['C'], 3)}. El método de Lenth hace lo mismo de forma numérica: estima un pseudo error estándar PSE con la mediana de los efectos pequeños y declara activos los que superan el margen de error ME = t·PSE. Aquí PSE = {f(pse62, 3)} y ME = {f(me62)}.
+
+La gráfica normal, Lenth y la gráfica seminormal (valores absolutos) se usan sin cambios en el tema 6.""",
+  left=[scatter([(_v[i], _z[i]) for i in _srt], "Efecto", "Puntuación normal",
+                labels={k: w62[i] for k, i in enumerate(_srt) if w62[i] in ("A", "C", "D", "AC", "AD")},
+                title="Gráfica normal de efectos · ejemplo 6-2")],
+  right=[bul("n = 1 → **no hay error puro**",
+             "Efectos nulos ≈ normal(0, σ^{2}) → caen **sobre una recta**",
+             "Efectos activos → **se apartan** de la recta",
+             f"Lenth: PSE = {f(pse62, 3)}, ME = {f(me62)}", size=15),
+         txt("Fuente: Montgomery, sec. 6-5, ej. 6-2, tabla 6-12 y fig. 6-11; Lenth en la misma sección.", size=12)],
+  ratio=0.52)
+
+P("Proyección: quitar un factor duplica las réplicas",
+  """Si en un 2^{k} con una réplica un factor y todas sus interacciones resultan despreciables, ese factor se puede eliminar del análisis. Lo que queda es un factorial completo en los k − 1 factores restantes, con dos réplicas. En general, quitar h factores convierte un 2^{k} no replicado en un 2^{k−h} completo con 2^{h} réplicas.
+
+En el ejemplo 6-2, B y todas sus interacciones son pequeñas. Al eliminar B, el 2^{4} se proyecta en un 2^{3} en A, C y D con dos réplicas (las corridas que solo difieren en b, como (1) y b, pasan a ser réplicas). Ahora sí hay error con 8 grados de libertad y se puede hacer un ANOVA formal.
+
+En el tema 6 la proyección reaparece con más fuerza: una fracción de resolución R se proyecta en un factorial completo en cualquier subconjunto de R − 1 factores. Por eso un diseño de tamizado no se desperdicia aunque solo unos pocos factores resulten activos.""",
+  left=[form("2^{k} con n = 1, sin h factores", "→  2^{k−h} con 2^{h} réplicas", size=17),
+        tab(["Fuente", "SS", "g.l.", "MS", "F_{0}"],
+            [["A", "1870.56", "1", "1870.56", "83.36"], ["C", "390.06", "1", "390.06", "17.38"],
+             ["D", "855.56", "1", "855.56", "38.13"], ["AC", "1314.06", "1", "1314.06", "58.56"],
+             ["AD", "1105.56", "1", "1105.56", "49.27"], ["CD", "5.06", "1", "5.06", "< 1"],
+             ["ACD", "10.56", "1", "10.56", "< 1"], ["Error", "179.52", "8", "22.44", ""],
+             ["Total", "5730.94", "15", "", ""]], size=13, first_left=True)],
+  right=[note("Al quitar B, el 2^{4} se vuelve un **2^{3} en A, C, D con 2 réplicas**", size=15),
+         tab(["Corrida del 2^{3} (A, C, D)", "Corridas del 2^{4} que reúne"],
+             [["(1)", "(1), b"], ["a", "a, ab"], ["c", "c, bc"], ["ac", "ac, abc"],
+              ["d", "d, bd"], ["ad", "ad, abd"], ["cd", "cd, bcd"], ["acd", "acd, abcd"]],
+             size=13, first_left=False),
+         txt("Fuente: Montgomery, sec. 6-5, ej. 6-2, tabla 6-13.", size=12)], ratio=0.55)
+
+P("Puente: del 2^{k} al 2^{k−p}",
+  """Esta tabla traduce cada idea del 2^{k} a la forma en que aparece en el tema 6. Conviene tenerla a mano durante toda la exposición.""",
+  body=[tab(["En el 2^{k} completo", "En el factorial fraccionado 2^{k−p}"],
+            [["Tabla de signos con 2^{k} filas", "Se corre solo una parte: 2^{k−p} filas"],
+             ["Columna de interacción = producto de columnas", "**Generador**: un factor nuevo se define con la columna de una interacción (D = ABC)"],
+             ["Columna I, todo +", "**Relación de definición**: las palabras cuya columna es toda + en la fracción (I = ABCD)"],
+             ["Letra^{2} = I (módulo 2)", "**Alias**: efecto × palabra (A × ABCD = BCD)"],
+             ["Columnas distintas son ortogonales", "Dentro de la fracción, dos columnas pueden ser **idénticas**: son alias"],
+             ["Contraste → efecto", "El contraste estima la **suma** de los efectos aliados (ℓ_{A} → A + BCD)"],
+             ["2^{k} − 1 efectos, 1 g.l. cada uno", "2^{k−p} − 1 **cadenas de alias**, 1 g.l. cada una"],
+             ["Escasez de efectos", "Justifica suponer nulas las interacciones de orden alto aliadas"],
+             ["Una réplica: gráfica normal y Lenth", "Mismo análisis: casi todas las fracciones son no replicadas"],
+             ["Proyección: quitar factores da réplicas", "Una fracción de resolución R es un factorial completo en R − 1 factores"]],
+            size=14, colw=[0.4, 0.6])])
+
+P("Autoevaluación antes de pasar al tema 6",
+  """Si estas preguntas salen sin dudar, la notación del tema 6 no va a ser un obstáculo. Conviene responderlas antes de leer las respuestas.""",
+  body=[num("En un 2^{4}, ¿qué factores están en nivel alto en la corrida bd?",
+            "¿Qué lugar ocupa abc en el orden estándar del 2^{4}?",
+            "En la fila ab de un 2^{3}, ¿cuál es el signo de la columna ABC?",
+            "Simplifique ABD × BCD.",
+            "¿Cuántas interacciones de dos factores tiene un 2^{6}?",
+            "En un 2^{3} con n = 2 el contraste de un efecto vale 14. ¿Cuánto valen el efecto, su suma de cuadrados y su coeficiente de regresión?",
+            "¿Por qué en la fracción un medio con I = ABC no se puede distinguir A de BC?", size=15),
+        note("**Respuestas.** 1) B y D (A y C en bajo). 2) Es la octava corrida. 3) A = +, B = +, C = −, "
+             "así que ABC = −. 4) ABD × BCD = AB^{2}CD^{2} = AC. 5) C(6, 2) = 15. 6) Efecto = 14/(2·4) = 1.75; "
+             "SS = 14^{2}/16 = 12.25; β̂ = 0.875 (es el factor C del ejemplo 6-1). 7) Porque en las cuatro "
+             "corridas con ABC = + las columnas A y BC son idénticas (A × ABC = BC): su contraste estima A + BC.", size=14)])
