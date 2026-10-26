@@ -3,6 +3,61 @@
 Registro de cada sesión de trabajo en el repositorio: qué se hizo, qué decisiones se tomaron y
 qué queda pendiente. La entrada más reciente va arriba.
 
+## 2026-10-25 (domingo, tarde) — Reestructura de la exposición del tema 6
+
+### Hecho
+- Se releyó completo el capítulo 8 de Montgomery (págs. 303–350) sobre el escaneo.
+- A pedido de Juan Esteban la exposición se reorganizó en el orden del capítulo: 1 propósito, vocabulario y
+  tabla del 2^k; 2 resolución (definición formal, regla de la palabra más corta, supuestos que exige cada
+  una, sin adelantar 8-5 y 8-6); 3 fracción un medio (familia, construcción, proyección, ejemplos 8-1 y 8-2);
+  4 secuencias (fig. 8-11, fracción alterna del 8-3, confirmación); 5 fracción un cuarto (definición,
+  construcción tabla 8-9, alternas, proyección, ejemplo 8-4 con dispersión y cubo); 6 caso general (elección,
+  ejemplo 8-5, protocolo, modelo, hipótesis, ANOVA, Lenth, supuestos, proyección y asignación de factores,
+  bloques fig. 8-18, ejemplo 8-6 CNC); 7 resolución III (saturados, relación de definición del 2^(7−4),
+  eliminar columnas, doblez de un factor y completo, ejemplo 8-7, relación de definición del doblez,
+  Plackett-Burman: construcción, alias parciales, proyectividad, ejemplo 8-8); 8 resolución IV y V (diseños
+  mínimos, obtención por doblado, doblez de un IV, resolución V, fracciones irregulares, doblez parcial).
+  Minitab y cierre quedaron como secciones 9 y 10 (98 diapositivas). Después, a pedido de Juan Esteban,
+  se quitó la sección de Minitab y toda mención a Minitab en la teoría: la exposición es solo teoría,
+  90 diapositivas, cierre como sección 9. La versión con Minitab no llegó a commit.
+- Tema 6: cada ejemplo (1 a 6 y la fracción alterna del 1) abre con una diapositiva de enunciado
+  completo: situación, factores, restricciones, objetivo y lo que se pide. Quedan 97 diapositivas y
+  una guía de 91 páginas.
+- Tema 6: las gráficas normal y seminormal de efectos (ejemplos 1, 2 y repaso 6-2) llevan la recta de
+  Daniel, ajustada solo con los efectos inactivos, y los activos resaltados: lejos de la recta → modelo,
+  sobre la recta → error (primera clasificación para el ANOVA).
+- Tema 6: la proyección del 2^{6−2} se explica en tres pasos: «¿Qué significa proyectar?» (contar
+  combinaciones; A, B, C → dos réplicas de un 2^3, 8 g.l. de error puro), «¿Por qué importa si forman
+  una palabra?» (ABCD y ABEF dan 2^4 completo; ABCE da 8 × 2) y el resumen. Quedan 99 diapositivas y
+  una guía de 94 páginas.
+- Tema 6: antes de la proyección del 2^{6−2} se agregaron «¿Cómo se sabe qué factores importan antes de
+  correr?» (supuestos → fracción → Daniel → proyección; doblez si los activos forman palabra) y un ejemplo
+  didáctico del café, 2^{3−1} con I = ABC y datos inventados sin error: notación, caso 1 (C inactivo,
+  proyección en 2^2) y caso 2 (ℓ_C = 8 ambiguo entre C y AB; la fracción alterna da C = 0, AB = 8).
+  Quedan 104 diapositivas y una guía de 99 páginas. Luego se le agregó al ejemplo del café su diapositiva
+  de enunciado (presupuesto de 4 corridas, los dos casos, objetivo y lo que se pide): 105 diapositivas,
+  guía de 100 páginas.
+- Tema 6: cada diapositiva de contenido lleva arriba una etiqueta naranja «Tema N · sección» (la ruta
+  dice «Introducción») para repartir la exposición; en la guía, «diapositiva N · tema N».
+- Tema 6, ejemplo 3: la diapositiva de efectos se dividió en «¿Qué efectos son activos?» (gráfica normal
+  de la fig. 8-12 con recta de Daniel, Pareto, herencia para AB + CE, zona gris AD + EF y ABF con Lenth
+  ME = 2.41, SME = 4.89) y «Modelo y ANOVA». 106 diapositivas, guía de 101 páginas. La tabla de
+  efectos de «Modelo y ANOVA» muestra las 15 cadenas, como la tabla 8-11 (antes solo las 8 mayores y C no salía).
+- Tema 6: se quitó el análisis de dispersión del ejemplo 3 (residuos contra C, F* de Box y Meyer, Bartlett,
+  cubo de rangos) por no ser teoría de fraccionados. Las tres diapositivas quedaron en una: «Proyección en A y
+  B e interacción» (cuatro réplicas de un 2^2, 12 g.l. de error puro = error del ANOVA; fig. 8-13). 104
+  diapositivas, guía de 98 páginas.
+- Numeración de ejemplos: 1 filtración (8-1/8-3), 2 circuito (8-2), 3 moldeo (8-4), 4 CNC (8-6), 5 ojo
+  (8-7), 6 Plackett-Burman (8-8). Cálculos nuevos verificados contra el libro: efectos del PB (C = 13.667,
+  errata confirmada), cubo del 8-4 (rango 10, errata), relaciones de definición, 28 de 35 subconjuntos del
+  2^(7−3), bloques del 2^(6−2) (adef, errata de la fig. 8-18).
+- Se regeneraron la presentación y la guía (`scripts/tema-06/build.sh`) y se revisaron las diapositivas
+  nuevas exportadas con PowerPoint.
+
+### Pendiente
+- [ ] Revisar con Sebastián la nueva estructura y la duración (98 diapositivas para la exposición del 31 oct).
+- [ ] Los pendientes anteriores del tema 6 siguen: Minitab real, paper del caso (28 oct), envío el 30 oct.
+
 ## 2026-10-25 (domingo) — Presentación del protocolo: verificación por nivel
 
 ### Hecho

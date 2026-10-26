@@ -375,6 +375,10 @@ def draw_chart(slide, b, x, y, w, h):
         s = cd.add_series("Datos")
         for px, py in b["points"]:
             s.add_data_point(px, py)
+        if isinstance(b.get("line"), (list, tuple)):
+            s2 = cd.add_series("Recta")
+            for px, py in b["line"]:
+                s2.add_data_point(px, py)
         if b.get("line") == "fit":
             xs = [p[0] for p in b["points"]]
             ys = [p[1] for p in b["points"]]
@@ -395,6 +399,13 @@ def draw_chart(slide, b, x, y, w, h):
         ser.marker.format.fill.solid()
         ser.marker.format.fill.fore_color.rgb = PRIM
         ser.marker.format.line.color.rgb = WHITE
+        for idx in b.get("hi", ()):
+            mk = ser.points[idx].marker
+            mk.style = XL_MARKER_STYLE.CIRCLE
+            mk.size = 10
+            mk.format.fill.solid()
+            mk.format.fill.fore_color.rgb = ACC
+            mk.format.line.color.rgb = WHITE
         for idx, lab in b["labels"].items():
             dl = ser.points[idx].data_label
             dl.has_text_frame = True
@@ -404,7 +415,7 @@ def draw_chart(slide, b, x, y, w, h):
             rr.font.size = Pt(13)
             rr.font.bold = True
             rr.font.color.rgb = ACC
-        if b.get("line") == "fit":
+        if b.get("line"):
             s2 = chart.plots[0].series[1]
             s2.marker.style = XL_MARKER_STYLE.NONE
             s2.format.line.color.rgb = ACC
@@ -457,6 +468,18 @@ def draw_chart(slide, b, x, y, w, h):
         chart.category_axis.tick_label_position = XL_TICK_LABEL_POSITION.LOW
         chart.value_axis.tick_labels.number_format = "0"
         chart.value_axis.tick_labels.number_format_is_linked = False
+        # Mostrar el nombre de todas las barras (PowerPoint salta etiquetas cuando el gráfico es bajo).
+        from pptx.oxml.ns import qn
+        from lxml import etree
+        ax = chart.category_axis._element
+        skip = etree.SubElement(ax, qn("c:tickLblSkip"))
+        skip.set("val", "1")
+        ax.remove(skip)
+        anchor = ax.find(qn("c:noMultiLvlLbl"))
+        if anchor is not None:
+            anchor.addprevious(skip)
+        else:
+            ax.append(skip)
     elif kind == "line":
         cd = CategoryChartData()
         cd.categories = b["cats"]
@@ -561,6 +584,24 @@ def footer(slide, sec, n):
     add_runs(tf.paragraphs[0], str(n), 10, color=MUTED)
 
 
+def tema_tag(slide, s):
+    """Etiqueta del tema (sección) arriba de cada diapositiva de contenido, para repartir la exposición."""
+    txt_ = f"Tema {s['secn']} · {s['sec']}" if s.get("secn") else "Introducción"
+    w = len(plain(txt_)) * 0.085 + 0.45
+    shp = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(MX), Inches(0.1), Inches(w), Inches(0.3))
+    shp.adjustments[0] = 0.5
+    shp.fill.solid()
+    shp.fill.fore_color.rgb = ACC
+    shp.line.fill.background()
+    shp.shadow.inherit = False
+    tf = shp.text_frame
+    tf.margin_left = tf.margin_right = Inches(0.1)
+    tf.margin_top = tf.margin_bottom = 0
+    tf.vertical_anchor = MSO_ANCHOR.MIDDLE
+    tf.paragraphs[0].alignment = PP_ALIGN.CENTER
+    add_runs(tf.paragraphs[0], txt_, 11, color=WHITE, bold=True)
+
+
 def set_title(slide, text, color=PRIM, size=30, y=0.42, h=1.0, anchor=MSO_ANCHOR.MIDDLE):
     t = slide.shapes.title
     t.left, t.top, t.width, t.height = Inches(MX), Inches(y), Inches(SW - 2 * MX), Inches(h)
@@ -629,6 +670,7 @@ def build(out):
                 column(slide, s["left"], MX, lw, s["title"])
                 column(slide, s["right"], MX + lw + g, W - g - lw, s["title"])
             footer(slide, s["sec"], n)
+            tema_tag(slide, s)
         if s.get("explica"):
             slide.notes_slide.notes_text_frame.text = plain(s["explica"])
     prs.save(out)

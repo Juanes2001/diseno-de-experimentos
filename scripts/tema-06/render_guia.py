@@ -93,8 +93,9 @@ def svg_scatter(b, W=420, H=300):
     pts = b["points"]
     xs, ys = [p[0] for p in pts], [p[1] for p in pts]
     px0, px1, py0, py1 = 52, W - 28, 16, H - 44
-    xlo, xhi = min(xs), max(xs)
-    ylo, yhi = min(ys), max(ys)
+    seg = b["line"] if isinstance(b.get("line"), (list, tuple)) else []
+    xlo, xhi = min(xs + [q[0] for q in seg]), max(xs + [q[0] for q in seg])
+    ylo, yhi = min(ys + [q[1] for q in seg]), max(ys + [q[1] for q in seg])
     if set(xs) <= {-1, 1}:
         xlo, xhi = -2, 2
     dx, dy = (xhi - xlo) * 0.08 or 1, (yhi - ylo) * 0.08 or 1
@@ -115,8 +116,12 @@ def svg_scatter(b, W=420, H=300):
         sl = sum((a - mx) * (c - my) for a, c in zip(xs, ys)) / sum((a - mx) ** 2 for a in xs)
         a0, a1 = min(xs), max(xs)
         o.append(f'<line x1="{X(a0):.1f}" y1="{Y(my + sl * (a0 - mx)):.1f}" x2="{X(a1):.1f}" y2="{Y(my + sl * (a1 - mx)):.1f}" stroke="#e36414" stroke-width="1.4"/>')
+    if seg:
+        (a0, b0), (a1, b1) = seg
+        o.append(f'<line x1="{X(a0):.1f}" y1="{Y(b0):.1f}" x2="{X(a1):.1f}" y2="{Y(b1):.1f}" stroke="#e36414" stroke-width="1.4"/>')
     for i, (x, y) in enumerate(pts):
-        o.append(f'<circle cx="{X(x):.1f}" cy="{Y(y):.1f}" r="4" fill="#0f4c5c" stroke="#fff" stroke-width="0.8"/>')
+        col = "#e36414" if i in b.get("hi", ()) else "#0f4c5c"
+        o.append(f'<circle cx="{X(x):.1f}" cy="{Y(y):.1f}" r="4" fill="{col}" stroke="#fff" stroke-width="0.8"/>')
         if i in b["labels"]:
             right = X(x) < px1 - 40
             o.append(f'<text x="{X(x) + (7 if right else -7):.1f}" y="{Y(y) + 4:.1f}" font-size="11" font-weight="700" '
@@ -322,7 +327,8 @@ def build(out):
         if first:
             o.append('<h2>Presentación</h2>')
             first = False
-        o.append(apartado(s, f"diapositiva {n}"))
+        tema = f"tema {s['secn']}" if s.get("secn") else "introducción"
+        o.append(apartado(s, f"diapositiva {n} · {tema}"))
     o.append("</body></html>")
     open(out, "w", encoding="utf-8").write("".join(o))
     print("guía:", out)
