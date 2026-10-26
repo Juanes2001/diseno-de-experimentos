@@ -11,7 +11,12 @@ from pptx.enum.shapes import MSO_CONNECTOR, MSO_SHAPE
 from pptx.enum.text import MSO_ANCHOR, PP_ALIGN
 from pptx.util import Emu, Inches, Pt
 
-from contenido import SLIDES, M
+import importlib
+import os
+
+_mod = importlib.import_module(os.environ.get("CONTENIDO", "contenido"))
+SLIDES, M = _mod.SLIDES, _mod.M
+META = getattr(_mod, "META", {"pie": "Diseños factoriales fraccionados"})
 
 # ------------------------------------------------------------------ estilo
 INK = RGBColor(0x14, 0x2B, 0x33)      # texto
@@ -121,6 +126,11 @@ def height(b, w):
         return 0.55
     if t == "mono":
         return (b["text"].count("\n") + 1) * b["size"] * 1.18 / 72 + 0.3
+    if t == "img":
+        from PIL import Image
+        iw, ih = Image.open(b["path"]).size
+        hh = min(b["h"], w * ih / iw)
+        return hh + (0.3 if b.get("caption") else 0.05)
     if t == "cards":
         cols = card_cols(b)
         n = len(b["items"])
@@ -187,6 +197,18 @@ def draw_bul(slide, b, x, y, w, h, numbered=False):
 def draw_txt(slide, b, x, y, w, h):
     _, tf = textbox(slide, x, y, w, h)
     add_runs(tf.paragraphs[0], b["text"], b["size"], color=INK if b["size"] >= 15 else MUTED)
+
+
+def draw_img(slide, b, x, y, w, h):
+    from PIL import Image
+    iw, ih = Image.open(b["path"]).size
+    hh = min(b["h"], w * ih / iw)
+    ww = hh * iw / ih
+    slide.shapes.add_picture(b["path"], Inches(x + (w - ww) / 2), Inches(y), Inches(ww), Inches(hh))
+    if b.get("caption"):
+        _, tf = textbox(slide, x, y + hh + 0.02, w, 0.28)
+        tf.paragraphs[0].alignment = PP_ALIGN.CENTER
+        add_runs(tf.paragraphs[0], b["caption"], 11, color=MUTED)
 
 
 def draw_note(slide, b, x, y, w, h):
@@ -504,6 +526,8 @@ def draw_chart(slide, b, x, y, w, h):
         axis_title(chart.value_axis, b["ylab"])
         grid(chart.value_axis, True)
         grid(chart.category_axis, False)
+        from pptx.enum.chart import XL_TICK_LABEL_POSITION
+        chart.category_axis.tick_label_position = XL_TICK_LABEL_POSITION.LOW
 
 
 CUBE = {"(1)": (0, 0, 0), "a": (1, 0, 0), "b": (0, 1, 0), "ab": (1, 1, 0),
@@ -552,7 +576,7 @@ def draw_cube(slide, b, x, y, w, h):
 
 DRAW = {"bul": draw_bul, "num": lambda s, b, x, y, w, h: draw_bul(s, b, x, y, w, h, numbered=True),
         "txt": draw_txt, "note": draw_note, "form": draw_form, "tab": draw_tab, "path": draw_path,
-        "mono": draw_mono, "cards": draw_cards, "chart": draw_chart, "cube": draw_cube}
+        "mono": draw_mono, "cards": draw_cards, "chart": draw_chart, "cube": draw_cube, "img": draw_img}
 
 WARN = []
 
@@ -577,7 +601,7 @@ def bg(slide, color):
 
 def footer(slide, sec, n):
     _, tf = textbox(slide, MX, 7.05, 8, 0.3)
-    add_runs(tf.paragraphs[0], f"Diseños factoriales fraccionados · {sec}" if sec else "Diseños factoriales fraccionados",
+    add_runs(tf.paragraphs[0], f"{META['pie']} · {sec}" if sec else META["pie"],
              10, color=MUTED)
     _, tf = textbox(slide, SW - MX - 1, 7.05, 1, 0.3)
     tf.paragraphs[0].alignment = PP_ALIGN.RIGHT

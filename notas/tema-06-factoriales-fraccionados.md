@@ -43,5 +43,10 @@ falta leer el texto completo.
 
 ## Ideas para la exposición
 Versión del 25 oct 2026 en `exposicion-tema-06/` (presentación de 104 diapositivas y guía, solo teoría, sin Minitab; cada ejemplo abre con una diapositiva de enunciado: situación, objetivo y lo que se pide), organizada en el orden del capítulo 8: propósito y vocabulario, resolución, fracción un medio, secuencias, fracción un cuarto, caso general (análisis, proyección, bloques), resolución III (doblez, Plackett-Burman), resolución IV y V y cierre. Sigue la
-estructura de la profesora registrada en `notas/clases/`. Falta:
+estructura de la profesora registrada en `notas/clases/`.
+
+Segunda parte (26 oct 2026): el tema también cubre los fraccionados 3^k, así que hay una presentación
+aparte del capítulo 9, `Tema6_Factoriales_3k.pptx` (69 diapositivas) con su guía, generada con
+`scripts/tema-06/build.sh 3k` desde `contenido_3k.py`; ficha del capítulo en
+`notas/montgomery/cap-09-factoriales-3k-niveles-mixtos.md`. Se unirán cuando ambas estén editadas. Falta:
 agregar el caso y contrastar con Gutiérrez–De la Vara.

@@ -3,6 +3,40 @@
 Registro de cada sesión de trabajo en el repositorio: qué se hizo, qué decisiones se tomaron y
 qué queda pendiente. La entrada más reciente va arriba.
 
+## 2026-10-26 (lunes) — Presentación aparte de los diseños 3^k (capítulo 9)
+
+### Hecho
+- Juan Esteban avisó que la exposición también debe cubrir los fraccionados 3^k, es decir todo el capítulo 9.
+  Se leyó completo el capítulo (págs. 363–391) sobre el escaneo y se construyó una **presentación aparte**,
+  `exposicion-tema-06/Tema6_Factoriales_3k.pptx` (69 diapositivas) con su guía
+  (`Guia_Tema6_Factoriales_3k.pdf`, 51 páginas), con la misma estructura y estilo de la de fraccionados:
+  1 propósito y vocabulario; 2 componentes de interacción (AB, AB², W, X, Y, Z, convención de exponentes,
+  regla L mod 3); 3 diseños 3² y 3³ (ejemplo 1: problema 9-6; ejemplo 2: ejemplo 9-1 del jarabe);
+  4 confusión en tres bloques (ejemplo 3: ejemplo 9-2; ejemplo 4: problema 9-3 réplica I en tres días con
+  AB²C, problema 9-9); 5 nueve y 3^p bloques; 6 fracción un tercio (alias por I e I², cuadrado latino,
+  diseño básico ec. 9-5, 3^{4−1}; ejemplo 5: problema 9-12, fracción I = ABC de las botellas comparada con la
+  réplica completa); 7 fracción general 3^{k−p} (3^{4−2}, tablas 9-7 y 9-8, juicio del libro); 8 niveles
+  mixtos (tablas 9-9 a 9-13; ejemplo 6 didáctico con datos inventados); 9 cierre. Cada ejemplo abre con
+  su enunciado y lleva la etiqueta del tema.
+- Infraestructura: los bloques comunes pasaron a `scripts/tema-06/bloques.py`; `render_pptx.py` y
+  `render_guia.py` leen el módulo que indique la variable `CONTENIDO` y un dict `META` (título, pie);
+  nuevo bloque `img` para figuras png; `doe3.py` (3^k: componentes por L mod 3, bloques, alias,
+  relación de definición, SS, contrastes L/Q, ajuste cuadrático) y `figuras_3k.py` (matplotlib →
+  `exposicion-tema-06/figuras-3k/`). `build.sh 3k` genera la segunda presentación.
+- Verificado contra el libro: ANOVA del ejemplo 9-1 (todas las SS y F), componentes W, X, Y, Z
+  (3804.11, 221.78, 584.11, 18.78), ejemplo 9-2 (SS_bloques = SS_AB² = 10.89), componentes del 5-5
+  (33.34 y 28.00), bloques del 3^4 (fig. 9-8), los 13 componentes del 3^7, alias del 3^{3−1} y del
+  3^{4−2} (tabla 9-8), tabla 9-6, modelo del problema 9-6 (inciso c). Erratas encontradas: los valores p
+  de AB, AC y BC de la tabla 9-2 no corresponden a sus F (son 0.016, 0.007 y 0.0003); el libro imprime
+  los nombres de Y y Z intercambiados (ordena los totales J de 2 a 0); el modelo de la boquilla 2 de la
+  tabla 9-3 no reproduce los datos de la tabla 9-1 (se reajustó); en la tabla 9-11 MS_B debe ser MS_X.
+- Se dejó fuera: la parte de problemas (9-5) salvo los usados como ejemplos.
+
+### Pendiente
+- [ ] Revisar la presentación de 3^k con Juan Esteban (dudas, recortes) igual que se hizo con la de fraccionados.
+- [ ] Cuando las dos estén listas, unirlas en una sola presentación y guía (pedido explícito: después).
+- [ ] Decidir con Sebastián el reparto y la duración: 104 + 69 diapositivas es demasiado para una sesión.
+
 ## 2026-10-25 (domingo, tarde) — Reestructura de la exposición del tema 6
 
 ### Hecho

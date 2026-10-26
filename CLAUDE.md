@@ -53,7 +53,10 @@ Todo se envía a doe_unal@yahoo.com. Retraso: −10 % por día, máximo 3 retras
   siguen esa estructura: títulos en forma de pregunta, hipótesis como H0/HA, tablas ANOVA con
   columnas SV, SS, DF, MS, F0, P-Value, supuestos con prueba gráfica y analítica, y Minitab.
 - **Exposición del tema 6**: presentación y guía de estudio en `exposicion-tema-06/`; se
-  regeneran desde `scripts/tema-06/` (el contenido de ambas está en `contenido.py`).
+  regeneran desde `scripts/tema-06/` con `./build.sh` (fraccionados 2^(k−p), contenido en
+  `contenido.py`) y `./build.sh 3k` (diseños 3^k y niveles mixtos, cap. 9, contenido en
+  `contenido_3k.py`). Los bloques comunes están en `bloques.py`; los cálculos en `doe.py` y `doe3.py`.
+  Son dos presentaciones separadas mientras se editan; se unirán cuando ambas estén listas.
 - Los informes siguen Normas ICONTEC y deben incluir siempre: planteamiento del problema,
   justificación del diseño, plan experimental, análisis e interpretación, validación de
   supuestos, conclusiones y recomendaciones.

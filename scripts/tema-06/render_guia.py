@@ -2,7 +2,12 @@
 import html
 import sys
 
-from contenido import SLIDES, PREVIO, M
+import base64
+import importlib
+import os
+
+_mod = importlib.import_module(os.environ.get("CONTENIDO", "contenido"))
+SLIDES, PREVIO, M, META = _mod.SLIDES, _mod.PREVIO, _mod.M, _mod.META
 from render_pptx import parse, plain, CUBE
 
 CSS = """
@@ -264,6 +269,10 @@ def block(b):
     if t == "cube":
         cap = f'<div class="txt s">{html.escape(b["caption"])}</div>' if b.get("caption") else ""
         return f"<figure>{svg_cube(b)}{cap}</figure>"
+    if t == "img":
+        data = base64.b64encode(open(b["path"], "rb").read()).decode()
+        cap = f"<figcaption>{html.escape(b['caption'])}</figcaption>" if b.get("caption") else ""
+        return f'<figure>{cap}<img src="data:image/png;base64,{data}" style="width:100%"></figure>'
     raise ValueError(t)
 
 
@@ -292,26 +301,24 @@ def apartado(s, etiqueta):
 
 def build(out):
     o = ['<!doctype html><html lang="es"><head><meta charset="utf-8">',
-         "<title>Guía de estudio · Diseños factoriales fraccionados</title>", f"<style>{CSS}</style></head><body>"]
-    o.append('<div class="portada"><h1>Diseños factoriales fraccionados 2<sup>k−p</sup></h1>'
+         f"<title>Guía de estudio · {html.escape(META['pie'])}</title>", f"<style>{CSS}</style></head><body>"]
+    o.append(f'<div class="portada"><h1>{META["titulo_html"]}</h1>'
              '<p class="sub">Guía de estudio para los expositores · Tema 6</p>'
              '<p class="meta">Diseño de Experimentos Avanzados (3008475)<br>Universidad Nacional de Colombia · 2026-II<br>'
              'Juan Esteban Rodríguez Ochoa · Sebastián Zapata Henao<br>Exposición: 31 de octubre de 2026</p>'
              '<div class="como"><b>Cómo usar esta guía.</b> Sigue el mismo orden de la presentación. Cada apartado '
              'corresponde a una diapositiva: primero la explicación que el expositor debe dominar y después el '
-             'contenido que aparece proyectado (tablas, fórmulas y gráficas). Antes de la presentación va la '
-             '<b>Parte 0</b>, que no se proyecta: repasa el diseño 2<sup>k</sup> (notación, tabla de signos, '
-             'contrastes) del que sale toda la terminología de los fraccionados.</div></div>')
+             'contenido que aparece proyectado (tablas, fórmulas y gráficas). '
+             + (META["previo"] if PREVIO else "") + '</div></div>')
     secs = [s for s in SLIDES if s["kind"] == "section"]
-    o.append('<div class="indice"><h2 style="page-break-before:auto">Contenido</h2><ol start="0">')
-    o.append('<li><b>Antes de empezar: el diseño 2<sup>k</sup></b> — lo que hay que saber para entender '
-             'la terminología de los fraccionados (no se proyecta)</li>')
+    o.append(f'<div class="indice"><h2 style="page-break-before:auto">Contenido</h2><ol start="{0 if PREVIO else 1}">')
+    if PREVIO:
+        o.append(f'<li><b>{META["previo_titulo"]}</b> — {META["previo_indice"]}</li>')
     for s in secs:
-        o.append(f'<li><b>{html.escape(s["title"])}</b> — {html.escape(s["sub"])}</li>')
+        o.append(f'<li><b>{rich(s["title"])}</b> — {rich(s["sub"])}</li>')
     o.append("</ol></div>")
-    o.append('<h2><span class="n">0</span>Antes de empezar: el diseño 2<sup>k</sup></h2>'
-             '<p class="secsub">Lo que hay que saber del factorial completo para entender los fraccionados. '
-             'Esta parte no se proyecta; es la base para leer el resto de la guía.</p>')
+    if PREVIO:
+        o.append(f'<h2><span class="n">0</span>{META["previo_titulo"]}</h2><p class="secsub">{META["previo_sub"]}</p>')
     for s in PREVIO:
         o.append(apartado(s, ""))
     first = True
@@ -321,7 +328,7 @@ def build(out):
         if s["kind"] in ("title", "closing"):
             continue
         if s["kind"] == "section":
-            o.append(f'<h2><span class="n">{s["n"]}</span>{rich(s["title"])}</h2><p class="secsub">{html.escape(s["sub"])}</p>')
+            o.append(f'<h2><span class="n">{s["n"]}</span>{rich(s["title"])}</h2><p class="secsub">{rich(s["sub"])}</p>')
             first = False
             continue
         if first:
