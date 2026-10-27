@@ -90,11 +90,33 @@ qué queda pendiente. La entrada más reciente va arriba.
   cuál es el procedimiento?» (definición + 7 pasos); la de eliminar G pasa a ser el ejemplo con esos 7 pasos; la
   tabla de factores eliminados lleva texto y tarjetas. Ahora **126** diapositivas.
 
+### Hecho (continuación, sesión de la noche)
+- Pregunta de Juan Esteban sobre la frase del ejemplo 8-6 «no puede correrse en cuatro bloques sin confundir cuatro
+  interacciones de dos factores con los bloques»: se explicó qué es «confundir» (misma columna de signos → el contraste
+  mide la suma; entre factores se llama alias, con el bloque se llama confundido con bloques) y se dejó en la
+  presentación, en la diapositiva del paso 3 de la CNC (ahora **78**): tarjeta «¿Qué es confundir?», tarjeta «¿Por qué
+  4 bloques cuestan 3 columnas?» y la cita textual de Montgomery; la guía lleva el razonamiento completo.
+- Barrido de la presentación de fraccionados para quitar información repetida o saturada (a pedido de Juan Esteban:
+  se estaba alargando). De **126 a 112** diapositivas, sin quitar ejemplos ni teoría; solo fusiones y recortes:
+  resolución + supuestos (13+15); alias + principal/alterna/familia (18+19); «¿por qué en secuencia?» absorbida por las
+  opciones de Box (31→32); fracción un cuarto + 2^{6−2} (38+39); «¿cómo se sabe qué importa antes de correr?» absorbida
+  por «¿qué significa proyectar?» (42→48); notación del café (44, repetía las diapositivas 10, 11 y 18) eliminada;
+  resumen de proyección del 2^{6−2} absorbido por «¿por qué importa si forman palabra?» (50→49); decisión por cadena +
+  «¿qué término produce el efecto?» (70+71, la tabla de separación ya estaba en la 35); proyección general absorbida
+  por la asignación de factores (80→81); procedimiento de bloques + «qué se pierde y conserva» (84+85); definición de
+  resolución III/saturados + tabla de saturados (96+103); doblez + «¿cómo se resuelven las dudas?» (104+116);
+  Plackett-Burman + alias parciales/proyectividad (111+113); resolución IV + obtención desde III (118+119). Recortes:
+  bullets de enunciado repetidos en 23 y 27, tarjetas escasez/jerarquía/herencia de Lenth (ya en la decisión por cadena).
+- Se revisaron las 15 diapositivas modificadas exportándolas desde PowerPoint (PNG). Dos avisos de desborde (+0.1 in)
+  en «relación de definición del 2^{7−4}» y «qué diseño queda según cuántos factores» ya existían antes del barrido.
+- PPTX y guía regenerados (`./build.sh`); numeración nueva: CNC 76–84, resolución III 85–104, IV y V 105–108.
+
 ### Pendiente
-- Seguir revisando la presentación de fraccionados desde la diapositiva 102 (doblez, Plackett-Burman, resolución IV y V).
+- Seguir revisando la presentación de fraccionados desde la diapositiva 93 (doblez, Plackett-Burman, resolución IV y V).
+- Hacer commit y push del barrido (contenido.py, pptx, guía) para que Sebastián lo vea.
 - Re-exportar desde PowerPoint el PDF del protocolo (el actual salió de LibreOffice) si se quiere el acabado anterior.
-- Unir las presentaciones de 2^{k−p} (126) y 3^k (69) y revisar con Sebastián la duración de la exposición (31 oct);
-  envío de la presentación el 30 oct y del paper del caso el 28 oct.
+- Unir las presentaciones de 2^{k−p} (112) y 3^k (69) y revisar con Sebastián la duración de la exposición (31 oct);
+  envío de la presentación el 30 oct y del paper del caso el 28 oct (cualquier hora de ese día; el reglamento no fija hora).
 
 ## 2026-10-26 (lunes) — Presentación aparte de los diseños 3^k (capítulo 9)
 

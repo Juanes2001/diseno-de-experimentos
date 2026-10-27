@@ -229,22 +229,25 @@ De esta tabla sale la fracción: elegir media fracción es quedarse con las fila
 
 section(2, "Resolución del diseño", "Qué tanto se mezclan los efectos")
 
-S("¿Qué es la resolución de un diseño?",
+S("¿Qué es la resolución de un diseño y qué supuestos exige?",
   """La resolución es una etiqueta que resume qué tan grave es la mezcla de efectos en un diseño fraccionado. Se escribe con número romano como subíndice: 2^{3−1}_{III} se lee «dos a la tres menos uno, resolución tres».
 
 Montgomery la define así: un diseño es de resolución R cuando ningún efecto de p factores es alias de otro efecto que contenga menos de R − p factores. Leída de forma más sencilla: si dos efectos son alias, entre los dos suman al menos R letras.
 
-Con esa lectura se entiende cada caso. En resolución III, un efecto principal (1 letra) no puede ser alias de otro principal (1 + 1 = 2 letras), pero sí de una interacción doble (1 + 2 = 3). En resolución IV, un principal solo puede ser alias de una interacción triple (1 + 3 = 4), y dos interacciones dobles sí pueden ser alias entre sí (2 + 2 = 4). En resolución V, un principal solo se mezcla con interacciones de cuatro factores y una doble con triples (2 + 3 = 5).""",
+Con esa lectura se entiende cada caso. En resolución III, un efecto principal (1 letra) no puede ser alias de otro principal (1 + 1 = 2 letras), pero sí de una interacción doble (1 + 2 = 3). En resolución IV, un principal solo puede ser alias de una interacción triple (1 + 3 = 4), y dos interacciones dobles sí pueden ser alias entre sí (2 + 2 = 4). En resolución V, un principal solo se mezcla con interacciones de cuatro factores y una doble con triples (2 + 3 = 5).
+
+La resolución dice también qué hay que suponer despreciable para leer los resultados sin ambigüedad. Con resolución III, para interpretar un efecto principal hay que suponer que las interacciones dobles no existen; sirve para tamizar muchos factores cuando se cree que casi no hay interacciones. Con resolución IV basta suponer nulas las triples: los principales se estiman limpios y las dobles quedan en cadenas entre sí, de modo que se ve que una cadena es grande pero no cuál de sus interacciones la causa. Con resolución V, si las triples son despreciables, todos los principales y todas las dobles se estiman de forma única. Montgomery recomienda usar la resolución más alta que permita el grado de fraccionamiento: entre más alta, menos restrictivos son los supuestos necesarios para una interpretación única.""",
   left=[form("Si dos efectos son alias, entre los dos suman al menos **R** letras", size=19),
         bul("Se escribe como subíndice romano: **2^{3−1}_{III}**",
             "Definición del libro: ningún efecto de **p** factores es alias de otro con menos de **R − p** factores",
             "Cuanto **mayor** R, menos se mezclan los efectos de orden bajo", size=16)],
-  right=[tab(["Resolución", "Un efecto principal es alias de…", "Una interacción doble es alias de…"],
-             [["III", "interacciones de **2** factores (1 + 2 = 3)", "principales u otras dobles"],
-              ["IV", "interacciones de **3** factores (1 + 3 = 4)", "otras **dobles** (2 + 2 = 4)"],
-              ["V", "interacciones de **4** factores (1 + 4 = 5)", "interacciones de **3** factores (2 + 3 = 5)"]],
-             size=15, colw=[0.18, 0.41, 0.41]),
-         note("En ninguna de las tres un efecto principal es alias de **otro principal**", size=15)], ratio=0.46)
+  right=[tab(["Resolución", "Un principal es alias de…", "Una doble es alias de…", "Para leer los principales se supone nula…"],
+             [["III", "dobles (1 + 2 = 3)", "principales u otras dobles", "la interacción **doble**: tamizar sin interacciones esperadas"],
+              ["IV", "triples (1 + 3 = 4)", "otras **dobles** (2 + 2 = 4)", "la **triple**: tamizar cuando puede haber interacciones"],
+              ["V", "de 4 factores (1 + 4 = 5)", "triples (2 + 3 = 5)", "la de **cuatro** factores: estimar principales y dobles"]],
+             size=14, colw=[0.15, 0.23, 0.24, 0.38]),
+         note("Ningún principal es alias de **otro principal**. Regla: la **resolución más alta** que permita el "
+              "presupuesto de corridas; a más resolución, menos supuestos", size=14)], ratio=0.42)
 
 S("¿Cómo se calcula la resolución?",
   """La regla práctica es directa: la resolución es igual al número de letras de la palabra más corta de la relación de definición. Por eso Montgomery llama a los diseños de resolución III, IV y V diseños «de tres, cuatro y cinco letras».
@@ -261,23 +264,6 @@ La resolución la decide quien elige los generadores. En una fracción un medio,
              ["2^{6−2}", "E = ABC,  F = ABCD", "I = ABCE = ABCDF = DEF", "3 letras", "III"]],
             size=15, colw=[0.12, 0.22, 0.32, 0.18, 0.16], hl=[4], first_left=False),
         note("Mismo número de corridas, distinta resolución: la elección de los generadores **importa**", size=15)])
-
-S("¿Qué supuestos exige cada resolución?",
-  """La resolución dice qué hay que suponer despreciable para leer los resultados sin ambigüedad.
-
-Con resolución III, cada efecto principal está mezclado con interacciones dobles: para interpretar un efecto principal hay que suponer que esas interacciones no existen. Sirve para tamizar muchos factores cuando se cree que casi no hay interacciones.
-
-Con resolución IV, los efectos principales solo están mezclados con interacciones triples, que casi siempre son despreciables, así que se estiman limpios. Las interacciones dobles quedan en cadenas entre sí: se ve que una cadena es grande, pero no cuál de sus interacciones la causa sin más información.
-
-Con resolución V, si las interacciones triples son despreciables, todos los efectos principales y todas las interacciones dobles se estiman de forma única.
-
-Montgomery recomienda usar la resolución más alta que permita el grado de fraccionamiento: entre más alta, menos restrictivos son los supuestos necesarios para una interpretación única.""",
-  body=[tab(["Resolución", "Para leer los principales hay que suponer despreciables…", "Las interacciones dobles…", "Uso típico"],
-            [["III", "las interacciones **dobles**", "no se pueden separar de los principales", "Tamizar muchos factores sin interacciones esperadas"],
-             ["IV", "las interacciones **triples**", "quedan en cadenas entre sí", "Tamizar cuando puede haber interacciones"],
-             ["V", "las de **cuatro** factores", "se estiman limpias si las triples son despreciables", "Estimar principales e interacciones dobles"]],
-            size=15, colw=[0.13, 0.31, 0.29, 0.27]),
-        note("Regla: la **resolución más alta** que permita el presupuesto de corridas. A más resolución, menos supuestos")])
 
 section(3, "La fracción un medio 2^{k−1}", "Alias, construcción, proyección y dos ejemplos")
 
@@ -301,7 +287,9 @@ S("¿Qué son los alias y cómo se obtienen?",
 
 Regla para obtenerlos: se multiplica el efecto por cada palabra de la relación de definición, recordando que cualquier letra al cuadrado es la identidad. Así A·ABC = A²BC = BC.
 
-En la fracción alterna (I = −ABC) los alias cambian de signo: se estima A − BC. Si se corren las dos fracciones, la semisuma y la semidiferencia de las dos estimaciones separan A de BC.""",
+En la fracción alterna (I = −ABC) los alias cambian de signo: se estima A − BC. Si se corren las dos fracciones, la semisuma y la semidiferencia de las dos estimaciones separan A de BC: ½(ℓ_{A} + ℓ′_{A}) = ½(A + BC + A − BC) = A y ½(ℓ_{A} − ℓ′_{A}) = BC.
+
+Las dos mitades del 2^{3} son igual de válidas. La fracción principal, I = +ABC, tiene las corridas a, b, c y abc; la alterna o complementaria, I = −ABC, tiene las otras cuatro: (1), ab, ac y bc. Montgomery señala que en la práctica no importa cuál de las dos se corra; ambas pertenecen a la misma familia. Si después de correr una se corre también la otra, se tienen las ocho corridas del 2^{3} completo, corrido en dos bloques de cuatro con ABC confundida con los bloques.""",
   left=[form("ℓ_{A} = ½ (a − b − c + abc) = ℓ_{BC}", size=20),
         bul("Dentro de la fracción, las columnas de **A** y de **BC** son idénticas",
             "No se estima A, sino **A + BC**",
@@ -310,22 +298,10 @@ En la fracción alterna (I = −ABC) los alias cambian de signo: se estima A −
   right=[tab(["", "Principal (I = ABC)", "Alterna (I = −ABC)"],
              [["ℓ_{A}", "A + BC", "A − BC"], ["ℓ_{B}", "B + AC", "B − AC"],
               ["ℓ_{C}", "C + AB", "C − AB"]], size=16, colw=[0.16, 0.42, 0.42], first_left=False),
-         note("Con las dos fracciones se separan el efecto principal y la interacción")],
+         form("½ (ℓ_{A} + ℓ′_{A}) → A,     ½ (ℓ_{A} − ℓ′_{A}) → BC", size=16),
+         note("Principal (a, b, c, abc) y alterna ((1), ab, ac, bc) son la misma **familia** y da igual cuál se corra; "
+              "juntas forman el 2^{3} completo en **dos bloques** con ABC confundida", size=14)],
   ratio=0.5)
-
-S("Fracción principal, fracción alterna y familia",
-  """Las dos mitades del 2^{3} son igual de válidas. La fracción principal, I = +ABC, tiene las corridas a, b, c y abc. La fracción alterna o complementaria, I = −ABC, tiene las otras cuatro: (1), ab, ac y bc. En la alterna los alias cambian de signo: ℓ′_{A} estima A − BC. Montgomery señala que en la práctica no importa cuál de las dos se corra; ambas pertenecen a la misma familia.
-
-Si después de correr una se corre también la otra, se tienen las ocho corridas del 2^{3} completo, corrido en dos bloques de cuatro con ABC confundida con los bloques. Los efectos se separan sumando y restando las estimaciones de las dos fracciones: la semisuma deja el efecto principal y la semidiferencia deja la interacción.""",
-  left=[cube(["(1)", "ab", "ac", "bc"], h=3.6, caption="Vértices rellenos: fracción alterna (I = −ABC)"),
-        bul("Principal **I = +ABC**: a, b, c, abc",
-            "Alterna **I = −ABC**: (1), ab, ac, bc",
-            "Las dos juntas forman el **2^{3} completo** en dos bloques", size=15)],
-  right=[form("½ (ℓ_{A} + ℓ′_{A}) = ½ (A + BC + A − BC) → A",
-              "½ (ℓ_{A} − ℓ′_{A}) = ½ (A + BC − A + BC) → BC", size=16),
-         tab(["i", "De ½ (ℓ_{i} + ℓ′_{i})", "De ½ (ℓ_{i} − ℓ′_{i})"],
-             [["A", "A", "BC"], ["B", "B", "AC"], ["C", "C", "AB"]], size=16, first_left=False),
-         note("En la práctica **no importa** cuál de las dos fracciones se corra", size=15)], ratio=0.44)
 
 _rows = [[str(i + 1), sg(r["A"]), sg(r["B"]), sg(r["C"]), sg(r["D"]), t]
          for i, (r, t) in enumerate(zip(r1, trat1))]
@@ -369,13 +345,11 @@ E(1, "índice de filtración", "Montgomery, ejemplos 6-2 y 8-1",
 _rows = [[str(i + 1), sg(r["A"]), sg(r["B"]), sg(r["C"]), sg(r["D"]), t, str(v)]
          for i, (r, t, v) in enumerate(zip(r1, trat1, y1))]
 S("Ejemplo 1 · Índice de filtración, 2^{4−1}_{IV}",
-  """Un producto químico se fabrica en un recipiente a presión y se quiere aumentar su índice de filtración. Se estudian cuatro factores a dos niveles: A temperatura, B presión, C concentración de formaldehído y D velocidad de agitación. El factorial completo exigiría 16 corridas; se corre la fracción un medio con D = ABC, es decir I = ABCD, en 8 corridas.
+  """Con el enunciado de la diapositiva anterior: el factorial completo exigiría 16 corridas y se corre la fracción un medio con D = ABC, es decir I = ABCD, en 8 corridas.
 
 Es un diseño de resolución IV: cada efecto principal es alias de una interacción triple, y las interacciones dobles son alias por pares (AB = CD, AC = BD, AD = BC). Fuente de los datos: Montgomery, ejemplo 8-1.""",
-  left=[bul("Respuesta: **índice de filtración** (se quiere aumentar)",
-            "A: temperatura · B: presión · C: concentración · D: velocidad de agitación",
-            "Fracción un medio con **D = ABC**  (I = ABCD), 8 corridas",
-            "Resolución IV: principales libres de interacciones dobles"),
+  left=[bul("Fracción un medio con **D = ABC**  (I = ABCD), 8 corridas",
+            "**Resolución IV**: principales libres de interacciones dobles; las dobles, aliadas por pares"),
         tab(["Alias de los principales", "Alias de las interacciones"],
             [["A = BCD", "AB = CD"], ["B = ACD", "AC = BD"], ["C = ABD", "AD = BC"],
              ["D = ABC", "—"]], size=15, first_left=False)],
@@ -430,11 +404,10 @@ E(2, "rendimiento de un circuito integrado", "Montgomery, ejemplo 8-2",
    "Ajustar el modelo reducido y validar los supuestos", "Recomendar las condiciones de operación"])
 
 S("Ejemplo 2 · Rendimiento de un circuito integrado",
-  """En la fabricación de un circuito integrado se quiere mejorar el rendimiento del proceso. Se estudian cinco factores: A ajuste de apertura, B tiempo de exposición, C tiempo de desarrollo, D tamaño de la máscara y E tiempo de grabado. El factorial completo tendría 32 corridas; se corre la fracción un medio con E = ABCD (I = ABCDE) en 16 corridas.
+  """Con el enunciado de la diapositiva anterior: el factorial completo tendría 32 corridas y se corre la fracción un medio con E = ABCD (I = ABCDE) en 16 corridas. La tabla de la izquierda da los niveles de cada factor.
 
 Es de resolución V: los efectos principales son alias de interacciones de cuatro factores y las interacciones dobles de interacciones triples. Si las interacciones de tres o más factores son despreciables, todos los efectos principales y todas las interacciones dobles se estiman limpios. Fuente: Montgomery, ejemplo 8-2.""",
-  left=[bul("Respuesta: **rendimiento** del proceso (se quiere aumentar)",
-            "Cinco factores, 16 corridas: **E = ABCD**  (I = ABCDE)",
+  left=[bul("Cinco factores, 16 corridas: **E = ABCD**  (I = ABCDE)",
             "**Resolución V**: principales e interacciones dobles libres entre sí"),
         tab(["Factor", "Nivel (−)", "Nivel (+)"],
             [["A  Apertura", "pequeña", "grande"], ["B  Tiempo de exposición", "−20 %", "+20 %"],
@@ -486,31 +459,20 @@ Como D y E no influyen, el diseño se proyecta en dos réplicas de un 2^{{3}} en
 
 section(4, "Secuencias de diseños fraccionados", "Correr una fracción, analizar y decidir el paso siguiente")
 
-S("¿Por qué experimentar en secuencia?",
-  """El uso de fraccionados lleva con frecuencia a una gran economía, sobre todo si las corridas se pueden hacer en etapas. Con cuatro factores, en lugar de correr las 16 corridas del 2^{4}, Montgomery recomienda casi siempre correr primero la fracción 2^{4−1}_{IV} de 8 corridas, analizarla y después decidir qué hacer.
-
-Si quedan ambigüedades, siempre se puede correr la fracción alterna y completar el 2^{4}. Cuando se completa así, las dos mitades funcionan como bloques del diseño completo, con la interacción de mayor orden (ABCD) confundida con los bloques. Lo único que se pierde por haber experimentado en dos etapas es la información de esa interacción, que de todos modos suele ser despreciable.
-
-La ventaja es que muchas veces la primera fracción da información suficiente para pasar a la etapa siguiente sin correr la segunda: agregar o quitar factores, cambiar la respuesta o mover los niveles a otros rangos.""",
-  left=[num("Correr la **primera fracción**: 2^{4−1}_{IV}, 8 corridas",
-            "**Analizar**: ¿los resultados son claros?",
-            "Si hay ambigüedad, correr la **fracción alterna**: 8 corridas más",
-            "Las 16 corridas forman el **2^{4} completo** en dos bloques", size=17)],
-  right=[cards(("Lo que se pierde", "Solo la interacción de mayor orden, **ABCD**, que queda confundida con los bloques"),
-               ("Lo que se gana", "Muchas veces la primera fracción **basta** para decidir el paso siguiente"),
-               size=16, cols=1)], ratio=0.52)
-
 S("¿Qué opciones hay después de la primera fracción?",
-  """La figura 8-11 del libro, adaptada de Box, resume las posibilidades de seguimiento después de un fraccionado inicial. Moverse a una nueva región para explorar una tendencia aparente de la respuesta. Agregar otra fracción para resolver las ambigüedades de la primera. Reescalar algunos factores, porque pudieron haberse variado en rangos inapropiados. Eliminar factores que resultaron insignificantes y agregar otros nuevos. Hacer réplicas para mejorar la precisión de las estimaciones o porque algunas corridas se hicieron mal. Y aumentar el diseño, por ejemplo con puntos centrales y axiales, para modelar una curvatura aparente.
+  """El uso de fraccionados lleva con frecuencia a una gran economía, sobre todo si las corridas se pueden hacer en etapas. Con cuatro factores, en lugar de correr las 16 corridas del 2^{4}, Montgomery recomienda casi siempre correr primero la fracción 2^{4−1}_{IV} de 8 corridas, analizarla y después decidir. Si quedan ambigüedades, se corre la fracción alterna y se completa el 2^{4}: las dos mitades funcionan como bloques del diseño completo, con la interacción de mayor orden (ABCD) confundida con los bloques, y eso es lo único que se pierde por haber experimentado en dos etapas. Muchas veces la primera fracción basta para pasar a la etapa siguiente sin correr la segunda.
+
+La figura 8-11 del libro, adaptada de Box (Sequential Experimentation and Sequential Assembly of Designs), resume las posibilidades de seguimiento después de un fraccionado inicial. Moverse a una nueva región para explorar una tendencia aparente de la respuesta. Agregar otra fracción para resolver las ambigüedades de la primera. Reescalar algunos factores, porque pudieron haberse variado en rangos inapropiados. Eliminar factores que resultaron insignificantes y agregar otros nuevos. Hacer réplicas para mejorar la precisión de las estimaciones o porque algunas corridas se hicieron mal. Y aumentar el diseño, por ejemplo con puntos centrales y axiales, para modelar una curvatura aparente.
 
 La idea de fondo es que el primer experimento casi nunca es el último: sirve para aprender y orientar el siguiente.""",
-  body=[cards(("a · Moverse", "A una nueva región, para explorar una **tendencia** aparente de la respuesta"),
+  body=[note("Correr primero **una fracción** (con 4 factores, el 2^{4−1} de 8 corridas), analizarla y decidir. Si queda "
+             "ambigüedad, la fracción alterna completa el 2^{4} y solo se pierde **ABCD**, confundida con los dos bloques", size=15),
+        cards(("a · Moverse", "A una nueva región, para explorar una **tendencia** aparente de la respuesta"),
               ("b · Agregar otra fracción", "Para resolver las **ambigüedades** de la primera"),
               ("c · Reescalar factores", "Si sus niveles se eligieron en **rangos inapropiados**"),
               ("d · Eliminar y agregar factores", "Quitar los que no influyen y **probar otros**"),
               ("e · Hacer réplicas", "Para mejorar las estimaciones o **repetir corridas** mal hechas"),
-              ("f · Aumentar el diseño", "Para modelar una **curvatura** aparente"), size=16, cols=3),
-        txt("Fuente: Montgomery, fig. 8-11, adaptada de Box (Sequential Experimentation and Sequential Assembly of Designs)", size=13)])
+              ("f · Aumentar el diseño", "Para modelar una **curvatura** aparente (Montgomery, fig. 8-11)"), size=15, cols=3)])
 
 E(1, "la fracción alterna (continuación)", "Montgomery, ejemplo 8-3",
   ["Con la primera fracción del índice de filtración quedaron dos cadenas grandes: AC + BD = −18.5 y AD + BC = 19.0. Se atribuyeron a AC y AD porque B no parecía influir, pero esa decisión se apoyó en el juicio del analista.",
@@ -564,30 +526,15 @@ En el ejemplo 1, el modelo con A, C, D, AC y AD predice 70.75 en el centro de la
 
 section(5, "La fracción un cuarto 2^{k−2}", "Dos generadores, fracciones alternas, proyección y un ejemplo")
 
-S("¿Qué es una fracción un cuarto?",
-  """Con un número moderadamente grande de factores suelen convenir fracciones más pequeñas. Una fracción un cuarto del 2^{k} tiene 2^{k−2} corridas y se llama diseño 2^{k−2}.
-
-Necesita dos generadores, P y Q. Las igualdades I = P e I = Q se llaman relaciones generadoras. Los signos de P y Q determinan cuál de las cuatro fracciones se obtiene; las cuatro forman una familia, y la que tiene P y Q positivos es la fracción principal.
-
-La relación de definición completa contiene todas las columnas iguales a la identidad: P, Q y su producto PQ, que se llama interacción generalizada. Así, I = P = Q = PQ, y cada efecto tiene tres alias: se obtienen multiplicando el efecto por cada una de las tres palabras. Hay que elegir los generadores de modo que los efectos que pueden ser importantes no queden aliados entre sí.""",
-  left=[form("I = P = Q = PQ", size=30),
-        bul("**2^{k−2}** corridas: la cuarta parte del 2^{k}",
-            "Dos generadores **P** y **Q**: relaciones generadoras I = P e I = Q",
-            "**PQ**: interacción generalizada (producto, letra² = I)",
-            "Cada efecto tiene **tres alias**", size=16)],
-  right=[tab(["Signos de los generadores", "Fracción"],
-             [["+P,  +Q", "Principal"], ["+P,  −Q", "Alterna"], ["−P,  +Q", "Alterna"], ["−P,  −Q", "Alterna"]],
-             size=16, colw=[0.55, 0.45], first_left=False),
-         note("Las cuatro fracciones forman una **familia**: juntas son el 2^{k} completo", size=15)], ratio=0.5)
-
-S("El 2^{6−2}_{IV}: relación de definición y alias",
-  """Para una fracción 1/4 se necesitan dos generadores, P y Q. Su producto PQ, la interacción generalizada, también pertenece a la relación de definición: I = P = Q = PQ. Cada efecto tiene entonces tres alias.
+S("¿Qué es una fracción un cuarto? El 2^{6−2}_{IV}",
+  """Con un número moderadamente grande de factores suelen convenir fracciones más pequeñas. Una fracción un cuarto del 2^{k} tiene 2^{k−2} corridas y necesita dos generadores, P y Q; las igualdades I = P e I = Q se llaman relaciones generadoras. Su producto PQ, la interacción generalizada, también pertenece a la relación de definición: I = P = Q = PQ, y cada efecto tiene tres alias, que se obtienen multiplicándolo por cada una de las tres palabras. Los signos de P y Q determinan cuál de las cuatro fracciones de la familia se obtiene; la que tiene P y Q positivos es la principal. Hay que elegir los generadores de modo que los efectos que pueden ser importantes no queden aliados entre sí.
 
 Ejemplo: 2^{6−2} con E = ABC y F = BCD. Las palabras son ABCE, BCDF y su producto ADEF. La palabra más corta tiene cuatro letras, así que es resolución IV: los efectos principales son alias de interacciones de tres y cinco factores, y las interacciones dobles son alias entre sí y de interacciones de orden superior. Las 15 cadenas son seis de efectos principales, siete de interacciones dobles y dos formadas solo por interacciones triples.
 
 Construcción: se escribe el 2^{4} completo en A, B, C y D (16 corridas) y se agregan las columnas E = ABC y F = BCD.""",
-  left=[bul("Dos generadores **P** y **Q**; su producto **PQ** también es palabra",
-            "Cada efecto tiene **tres alias**"),
+  left=[bul("**2^{k−2}** corridas, la cuarta parte: dos generadores **P** y **Q**; su producto **PQ** también es palabra",
+            "Cada efecto tiene **tres alias** (efecto × cada palabra)",
+            "Los signos de P y Q dan **4 fracciones**, una **familia**; +P, +Q es la principal", size=15),
         form("I = P = Q = PQ", "2^{6−2}:  E = ABC,  F = BCD", "I = ABCE = BCDF = ADEF", size=19),
         note("Palabra más corta: 4 letras  →  **resolución IV**")],
   right=[tab(["Efectos principales", "Interacciones de 2 factores"],
@@ -626,27 +573,6 @@ Al cambiar el signo de un generador cambia también el de la interacción genera
         form("Con F = −BCD:   A = BCE = −DEF = −ABCDF   ⇒   ℓ_{A} → A + BCE − DEF − ABCDF", size=17),
         note("El signo de la interacción generalizada es el **producto** de los signos de los generadores", size=15)])
 
-S("¿Cómo se sabe qué factores importan antes de correr?",
-  """No hace falta saberlo. Antes de experimentar nadie sabe cuáles factores son activos; eso es justamente lo que el experimento va a averiguar. Lo que se decide antes son supuestos generales, y lo que se averigua después sale de la misma fracción.
-
-Antes de correr: se aceptan dos principios. Escasez de efectos: en la mayoría de los procesos solo unos pocos factores importan, aunque no se sepa cuáles. Jerarquía: las interacciones de tres o más factores casi siempre son despreciables. Con eso se elige la resolución; con resolución IV, todo efecto principal sale libre de las interacciones dobles, sea cual sea el factor que resulte activo. Si el ingeniero sospecha que algunos factores importan más, los asigna a columnas que no formen una palabra, por ejemplo a las del diseño básico.
-
-Se corre una sola vez la fracción. No se necesita el factorial completo: con las 16 corridas del 2^{6−2} se calculan 15 contrastes, uno por cadena de alias, y esos 15 efectos van a la gráfica de Daniel.
-
-Después de correr: la gráfica dice qué factores son activos. Recién entonces se pregunta qué diseño forman las corridas ya hechas en esos factores; eso es la proyección. Si los activos no forman una palabra, se tiene un factorial completo en ellos. Si forman una palabra, queda alguna ambigüedad entre alias, y se resuelve agregando corridas (fracción alterna o doblez) que se suman a las ya hechas.""",
-  left=[cards(("1 · Antes de correr", "Supuestos: **escasez de efectos** y **jerarquía**  →  se elige la **resolución** y la asignación de columnas"),
-              ("2 · Se corre la fracción", "**Una sola vez**: 2^{k−p} corridas, sin el factorial completo"),
-              ("3 · Gráfica de Daniel", "Con los efectos de la **propia fracción** se ve qué factores son activos"),
-              ("4 · Proyección", "¿Qué diseño forman las corridas **ya hechas** en los factores activos?"),
-              size=15, cols=2)],
-  right=[tab(["Los activos…", "Resultado"],
-             [["**No** forman una palabra", "Factorial **completo** en ellos: listo"],
-              ["**Sí** forman una palabra", "Ambigüedad entre alias  →  **doblez** o fracción alterna"]],
-             size=15, colw=[0.45, 0.55]),
-         note("La proyección **no se planea**: es lo que vale lo ya corrido una vez se sabe qué importa", size=15),
-         note("Las corridas nuevas **se suman** a las anteriores: nunca se empieza de cero", size=15)],
-  ratio=0.55)
-
 # Ejemplo didáctico: 2^(3-1) con I = ABC, datos sin ruido
 def _cafe(m, runs):
     return [m(*r) for r in runs]
@@ -674,31 +600,6 @@ E("didáctico", "el sabor de un café", "ejemplo construido para la clase, con d
   "Ver, con cuentas a mano, qué se puede concluir con 4 corridas, cuándo la **proyección** basta y cuándo hace falta un **doblez**",
   ["Escribir la fracción, la palabra y los alias", "Caso 1: calcular los contrastes y proyectar en A y B",
    "Caso 2: identificar la ambigüedad entre C y AB", "Caso 2: correr la fracción alterna y separar C de AB"])
-
-S("Ejemplo didáctico · Una fracción pequeña y su notación",
-  """Para ver la proyección y el doblez con cuentas a mano se usa la fracción más pequeña posible. Se quiere mejorar el puntaje de sabor de un café (escala 0 a 100) y se estudian tres factores a dos niveles: A temperatura del agua (88 o 96 °C), B molienda (gruesa o fina) y C tiempo de infusión (3 o 4 min). El factorial completo 2^{3} tiene 8 corridas; se corre la mitad, 4 corridas, con C = AB, es decir I = ABC.
-
-Notación. Cada factor se codifica x = −1 en el nivel bajo y x = +1 en el alto. Una corrida se nombra con las letras de los factores que están en nivel alto: a es A alto y B, C bajos; abc es todo alto; (1) es todo bajo. La palabra ABC dice que en todas las corridas x_{A}x_{B}x_{C} = +1. Por eso la columna de A coincide con la de BC, la de B con AC y la de C con AB: son alias.
-
-ℓ_{A} es el contraste de la columna A dividido entre 2, es decir el promedio de las corridas con A alto menos el de las corridas con A bajo. La flecha ℓ_{A} → A + BC se lee «ℓ_{A} estima la suma del efecto de A y el de la interacción BC»: con estos datos no se pueden separar.
-
-Los datos de los dos casos que siguen son inventados y sin error experimental, para que las cuentas den números redondos. Con datos reales habría ruido, y por eso en la práctica se usan fracciones más grandes y la gráfica de Daniel.""",
-  left=[tab(["Factor", "Nivel bajo (x = −1)", "Nivel alto (x = +1)"],
-            [["A  Temperatura del agua", "88 °C", "96 °C"], ["B  Molienda", "gruesa", "fina"],
-             ["C  Tiempo de infusión", "3 min", "4 min"]], size=14, colw=[0.42, 0.29, 0.29]),
-        tab(["Corrida", "A", "B", "C = AB"],
-            [[l, sg(r[0]), sg(r[1]), sg(r[2])] for l, r in zip(_lp, _fp)], size=15, first_left=False),
-        txt("Respuesta: **puntaje de sabor** (0 a 100). Datos ilustrativos, sin error.", size=13)],
-  right=[tab(["Símbolo", "Significa"],
-             [["x = −1, +1", "Nivel bajo, nivel alto"],
-              ["a, abc, (1)", "Letras de los factores en **alto**; (1) = todos bajos"],
-              ["I = ABC", "x_{A}x_{B}x_{C} = +1 en **todas** las corridas"],
-              ["A = BC", "Columnas idénticas: **alias**"],
-              ["ℓ_{A}", "Promedio con A alto − promedio con A bajo"],
-              ["ℓ_{A} → A + BC", "ℓ_{A} estima la **suma** de los dos efectos"],
-              ["ℓ′_{A}", "Lo mismo, calculado en la **segunda** fracción"]],
-             size=14, colw=[0.32, 0.68])],
-  ratio=0.48)
 
 S("Caso 1 · C no influye: la proyección",
   f"""Suponga que el sabor responde así (el experimentador no lo sabe): y = 70 + 5x_{{A}} + 3x_{{B}}. Es decir, A sube el puntaje en 10 puntos al pasar de bajo a alto, B lo sube en 6, y C no hace nada. Las cuatro corridas dan a = {_y1[0]}, b = {_y1[1]}, c = {_y1[2]} y abc = {_y1[3]}.
@@ -776,7 +677,9 @@ Para saberlo basta contar: se miran las 16 corridas solo en las columnas que que
 
 Ejemplo con el 2^{6−2} (E = ABC, F = BCD). Suponga que solo A, B y C importan. Se borran D, E y F. En las columnas A, B y C aparecen las ocho combinaciones del 2^{3}, y cada una exactamente dos veces: la corrida 1 y la 9 son (−, −, −), la 2 y la 10 son (+, −, −), y así sucesivamente. Las 16 corridas son entonces dos réplicas completas de un 2^{3}.
 
-Eso tiene una consecuencia práctica: las dos corridas de cada par se hicieron en las mismas condiciones de A, B y C, así que su diferencia es error puro. El fraccionado no replicado se convierte en un factorial replicado con 16 − 8 = 8 grados de libertad para el error, y el ANOVA ya no depende de descartar efectos.""",
+Eso tiene una consecuencia práctica: las dos corridas de cada par se hicieron en las mismas condiciones de A, B y C, así que su diferencia es error puro. El fraccionado no replicado se convierte en un factorial replicado con 16 − 8 = 8 grados de libertad para el error, y el ANOVA ya no depende de descartar efectos.
+
+Una pregunta frecuente: ¿cómo se sabe qué factores importan antes de correr? No hace falta saberlo. Antes de correr se aceptan dos principios generales, escasez de efectos (pocos factores importan) y jerarquía (las interacciones de tres o más factores casi siempre son despreciables), y con ellos se elige la resolución; si se sospecha que algunos factores importan más, se asignan a columnas que no formen una palabra. Se corre una sola vez la fracción y la gráfica de Daniel dice qué factores son activos. Recién entonces se pregunta qué diseño forman las corridas ya hechas en esos factores: eso es la proyección. Si los activos forman una palabra queda una ambigüedad entre alias, y se resuelve agregando corridas (fracción alterna o doblez) que se suman a las ya hechas; nunca se empieza de cero.""",
   left=[num("Decidir qué factores son **inactivos**",
             "**Borrar** sus columnas de la tabla del diseño",
             "**Contar** cuántas veces aparece cada combinación de signos en las columnas que quedan",
@@ -784,8 +687,11 @@ Eso tiene una consecuencia práctica: las dos corridas de cada par se hicieron e
         note("2^{6−2} con solo A, B, C activos: **8 combinaciones × 2 veces** = dos réplicas de un 2^{3}  →  **8 g.l. de error puro**", size=15)],
   right=[tab(["A", "B", "C", "Corridas", "Veces"],
              [[sg(k[0]), sg(k[1]), sg(k[2]), " y ".join(map(str, v)), str(len(v))] for k, v in _pABC],
-             size=15, first_left=False),
-         txt("Corridas numeradas como en la tabla del 2^{6−2} (E = ABC, F = BCD)", size=12)],
+             size=14, first_left=False, pad=0.08),
+         txt("Corridas numeradas como en la tabla del 2^{6−2} (E = ABC, F = BCD)", size=12),
+         note("La proyección **no se planea**: la gráfica de Daniel dice qué factores son activos y recién entonces se "
+              "mira qué diseño forman las corridas **ya hechas**. Si los activos forman una palabra, se agregan corridas "
+              "(alterna o doblez) que **se suman** a las anteriores", size=13)],
   ratio=0.5)
 
 _pABCE = _proy("ABCE")
@@ -796,7 +702,9 @@ Si los cuatro factores son A, B, C y D, se obtienen las 16 combinaciones, una ve
 
 Pero si los cuatro factores son A, B, C y E, solo aparecen 8 combinaciones, dos veces cada una. La razón es que ABCE es una palabra de la relación de definición: en todas las corridas el producto de los signos de A, B, C y E vale +1, porque E se construyó como ABC. Conocidos A, B y C, el signo de E queda fijado, y las combinaciones con E distinto de ABC nunca se corren. El resultado son dos réplicas de un 2^{4−1} con I = ABCE, y en él E sigue confundido con ABC.
 
-Regla: un subconjunto de factores se proyecta en un factorial completo si no contiene ninguna palabra de la relación de definición. Por eso, al asignar factores a columnas, conviene que los que se creen más importantes no formen una palabra.""",
+Regla: un subconjunto de factores se proyecta en un factorial completo si no contiene ninguna palabra de la relación de definición. Por eso, al asignar factores a columnas, conviene que los que se creen más importantes no formen una palabra.
+
+Resumen para el 2^{6−2} con I = ABCE = BCDF = ADEF: hay 15 subconjuntos de cuatro factores; tres son palabras (ABCE, BCDF y ADEF) y en ellos el diseño se pliega en dos réplicas de un 2^{4−1}; en los otros doce, como ABCD o ABCF, se proyecta en una réplica de un 2^{4} completo. En cualquier subconjunto de tres factores se proyecta en dos réplicas de un 2^{3}, porque al ser de resolución IV ninguna palabra tiene tres letras y ningún trío queda amarrado; en cualquier par, en cuatro réplicas de un 2^{2}, que es lo que pasa en el ejemplo 3 con A y B. En general, un 2^{k−2} se pliega en un factorial completo o en un fraccionado en cualquier subconjunto de r ≤ k − 2 factores.""",
   left=[tab(["A", "B", "C", "E", "Corridas", "Veces"],
             [[sg(k[0]), sg(k[1]), sg(k[2]), sg(k[3]), " y ".join(map(str, v)), str(len(v))] for k, v in _pABCE],
             size=14, first_left=False),
@@ -807,27 +715,10 @@ Regla: un subconjunto de factores se proyecta en un factorial completo si no con
               ["A, B, C, E", "Sí (ABCE)", "8 × 2", "2 réplicas de **2^{4−1}**"]],
              size=14, colw=[0.25, 0.2, 0.22, 0.33], hl=[2]),
          form("ABCE palabra  ⇒  x_{A}x_{B}x_{C}x_{E} = +1 siempre", "⇒  E queda fijado por A, B y C", size=16),
-         note("Factorial completo ⇔ el subconjunto **no contiene una palabra**", size=15)],
+         note("Factorial completo ⇔ el subconjunto **no contiene una palabra**. En el 2^{6−2}: de 15 subconjuntos de 4 "
+              "factores, **12** dan un 2^{4} completo y **3** (las palabras) un 2^{4−1} replicado; cualquier trío, dos "
+              "réplicas de un 2^{3}; cualquier par, cuatro réplicas de un 2^{2} (ejemplo 3)", size=13)],
   ratio=0.48)
-
-S("Resumen: ¿en qué se proyecta el 2^{6−2}?",
-  """Esta tabla resume lo que se obtiene al contar combinaciones en cada tamaño de subconjunto, como en las dos diapositivas anteriores. Un 2^{k−2} se pliega en un factorial completo o en un fraccionado en cualquier subconjunto de r ≤ k − 2 factores. La diferencia la marca la relación de definición: los subconjuntos que forman factoriales completos son los que no son palabras de ella.
-
-Para el 2^{6−2} con I = ABCE = BCDF = ADEF hay 15 subconjuntos de cuatro factores. Tres son palabras (ABCE, BCDF y ADEF), y en ellos el diseño se pliega en dos réplicas de un 2^{4−1}. En los otros doce, como ABCD o ABCF, se proyecta en una réplica de un 2^{4} completo.
-
-En cualquier subconjunto de tres factores se proyecta en dos réplicas de un 2^{3}: como el diseño es de resolución IV, ninguna palabra tiene tres letras, así que ningún trío queda amarrado. En cualquier par de factores se proyecta en cuatro réplicas de un 2^{2}.""",
-  left=[tab(["Subconjunto de factores", "Se proyecta en…"],
-             [["4 factores que **no** son palabra (12, p. ej. ABCD)", "Una réplica de un **2^{4} completo**"],
-              ["4 factores que **sí** son palabra (ABCE, BCDF, ADEF)", "Dos réplicas de un **2^{4−1}**"],
-              ["Cualesquiera 3 factores", "Dos réplicas de un **2^{3}**"],
-              ["Cualesquiera 2 factores", "Cuatro réplicas de un **2^{2}**"]],
-             size=15, colw=[0.55, 0.45])],
-  right=[form("Subconjunto que **no** es palabra ⇒ factorial completo", size=18),
-         bul("En general: completo o fraccionado en cualquier subconjunto de **r ≤ k − 2** factores",
-             "Por eso conviene que los factores que se creen importantes **no formen una palabra**", size=16),
-         note("De los 15 subconjuntos de 4 factores: **12** dan un 2^{4} completo y **3** (las palabras) dan un 2^{4−1} replicado", size=15),
-         note("En el ejemplo 3 solo A y B resultan activos: el 2^{6−2} queda en **cuatro réplicas de un 2^{2}**", size=15)],
-  ratio=0.56)
 
 E(3, "contracción en moldeo por inyección", "Montgomery, ejemplo 8-4",
   ["Las piezas fabricadas en un proceso de moldeo por inyección presentan una **contracción excesiva**, y eso causa problemas en las operaciones de ensamble posteriores.",
@@ -1155,7 +1046,7 @@ Regla de decisión: se rechaza H_{0} si F_{0} supera el valor crítico F_{α, 1,
         txt("Ejemplo, columna A del 2^{4−1}:   H_{0}: β_{A} + β_{BCD} = 0", size=16),
         form("Se rechaza H_{0} si  F_{0} > F_{α, 1, gl del error}", "o si  valor p < α", size=20)],
   right=[bul("Una hipótesis por cada **cadena de alias** que entra al modelo",
-             "Se prueba la **cadena completa**: A + BCD, no A sola (siguientes dos diapositivas)",
+             "Se prueba la **cadena completa**: A + BCD, no A sola (siguientes diapositivas)",
              "Si BCD es **despreciable**, equivale a  H_{0}: β_{A} = 0",
              "Nivel de significancia habitual: **α = 0.05**"),
          note("H_{0}: el factor no afecta la respuesta.  H_{A}: el factor sí la afecta.")])
@@ -1194,52 +1085,31 @@ _atr = [["A + BCD", "A", "Jerarquía: la triple BCD se supone despreciable"],
         ["AC + BD", "AC", "Herencia: A y C activos, B inactivo"],
         ["AD + BC", "AD", "Herencia: A y D activos, B inactivo"]]
 _dt = [[c, f(_dec[k][0]), pv(_dec[k][1]), "Sí", a, w] for (c, a, w), k in zip(_atr, ["A", "C", "D", "AC", "AD"])]
-S("¿Cómo se lee la decisión de cada cadena?",
+S("¿Cómo se lee la decisión de cada cadena y a qué término se atribuye?",
   f"""La prueba se hace en dos momentos que conviene no mezclar.
 
 Primero la decisión estadística, que es sobre la cadena. Si F_{{0}} supera el valor crítico (o el valor p es menor que α), se rechaza H_{{0}} y se concluye que la cadena está activa: al menos uno de sus efectos es distinto de cero. Si no se rechaza, se concluye que la cadena no muestra efecto; lo usual es que todos sus términos sean nulos, aunque no se puede descartar una cancelación.
 
 Después viene la atribución, que no es estadística: decidir a qué término de la cadena se le adjudica el efecto. Se hace con supuestos y conocimiento del proceso, y hay que decirlo en el informe. Hay dos herramientas. La jerarquía (escasez de efectos): las interacciones de orden alto son raras, así que en A + BCD el efecto se atribuye a A. La herencia: una interacción suele ser importante cuando sus factores también lo son. En una cadena de dos interacciones dobles, como AC + BD, la jerarquía no decide (ambas son dobles); como A y C resultaron activos y B no, se atribuye a AC.
 
-En el ejemplo 1 el ANOVA del modelo reducido rechaza H_{{0}} en las cinco cadenas que entraron: A + BCD (F_{{0}} = {f(_dec["A"][0])}, p = {pv(_dec["A"][1])}), C + ABD (F_{{0}} = {f(_dec["C"][0])}), D + ABC (F_{{0}} = {f(_dec["D"][0])}), AC + BD (F_{{0}} = {f(_dec["AC"][0])}) y AD + BC (F_{{0}} = {f(_dec["AD"][0])}), con 1 y {m1["dfe"]} grados de libertad. Las tres primeras se atribuyen a los efectos principales por jerarquía y las dos últimas a AC y AD por herencia. Si la atribución queda en duda, la salida es correr más corridas: la fracción alterna separa A de BCD y AC de BD, que es justo lo que hace el ejemplo 1 en su continuación.""",
-  left=[cards(("1 · Decisión estadística", "Sobre la **cadena**: se rechaza H_{0} ⇒ **la cadena está activa** "
-                                         "(al menos uno de sus efectos ≠ 0)"),
-              ("2 · Atribución", "Sobre el **término**: no es estadística; se apoya en **jerarquía**, **herencia** "
-                                 "y conocimiento del proceso, y se declara"),
-              size=14, cols=1)],
+En el ejemplo 1 el ANOVA del modelo reducido rechaza H_{{0}} en las cinco cadenas que entraron: A + BCD (F_{{0}} = {f(_dec["A"][0])}, p = {pv(_dec["A"][1])}), C + ABD (F_{{0}} = {f(_dec["C"][0])}), D + ABC (F_{{0}} = {f(_dec["D"][0])}), AC + BD (F_{{0}} = {f(_dec["AC"][0])}) y AD + BC (F_{{0}} = {f(_dec["AD"][0])}), con 1 y {m1["dfe"]} grados de libertad. Las tres primeras se atribuyen a los efectos principales por jerarquía y las dos últimas a AC y AD por herencia.
+
+¿Cómo se sabe entonces qué término de la cadena produce el efecto? Ninguna herramienta estadística del fraccionado ve factores: la gráfica normal de Daniel, el diagrama de Pareto y el ANOVA usan el mismo contraste de cada columna, y en el 2^{{4−1}} con I = ABCD la columna de A es la columna de BCD; el punto de la gráfica normal es el de «A + BCD», no el de A. La pregunta se resuelve en tres capas. Antes de correr, con la resolución: en resolución III un principal queda aliado con dobles y la duda es real; en IV solo con triples, de modo que atribuirle el efecto al principal es un riesgo pequeño y conocido, y las dobles quedan aliadas entre sí; en V los principales quedan con cuádruples y las dobles con triples. Después de correr, con la atribución razonada de arriba (jerarquía, herencia, conocimiento del proceso), que es razonamiento, no prueba, y se declara en el informe. Y para saberlo con datos, más corridas: la fracción alterna o el doblez cambian el signo de los alias, y al combinar las dos fracciones los términos se separan. En el ejemplo 1, con la fracción alterna del ejemplo 8-3: A = ({f(ef1["A"][1])} + {f(ef1b["A"][1])}) / 2 = {f((ef1["A"][1] + ef1b["A"][1]) / 2)} y BCD = {f((ef1["A"][1] - ef1b["A"][1]) / 2)}; AC = {f((ef1["AC"][1] + ef1b["AC"][1]) / 2)} y BD = {f((ef1["AC"][1] - ef1b["AC"][1]) / 2)}; AD = {f((ef1["AD"][1] + ef1b["AD"][1]) / 2)} y BC = {f((ef1["AD"][1] - ef1b["AD"][1]) / 2)}. La jerarquía y la herencia habían acertado. Otras salidas: el doblez de un solo factor separa ese factor y todas sus interacciones dobles, y una corrida de confirmación verifica que la respuesta predicha con el modelo atribuido coincide con la observada. En resumen: la prueba responde si la cadena pesa; qué término pesa lo acota la resolución, lo razonan la jerarquía y la herencia, y lo confirman las corridas adicionales. Por eso las conclusiones de un fraccionado son tentativas hasta confirmarlas.""",
+  left=[cards(("1 · Decisión estadística", "Sobre la **cadena**: se rechaza H_{0} ⇒ **la cadena está activa**. "
+                                         "Daniel, Pareto y ANOVA ven **cadenas**, no factores"),
+              ("2 · Atribución razonada", "Sobre el **término**: **jerarquía** (A + BCD → A), **herencia** "
+                                          "(AC + BD → AC: A y C activos, B no), conocimiento del proceso. "
+                                          "No es estadística; se declara"),
+              ("3 · Para saberlo: más corridas", f"La **fracción alterna** o el **doblez** separan la cadena. Ejemplo 1: "
+                                                  f"A = {f((ef1['A'][1] + ef1b['A'][1]) / 2)} y BCD = {f((ef1['A'][1] - ef1b['A'][1]) / 2)}; "
+                                                  f"AC = {f((ef1['AC'][1] + ef1b['AC'][1]) / 2)} y BD = {f((ef1['AC'][1] - ef1b['AC'][1]) / 2)}"),
+              size=13, cols=1)],
   right=[tab(["Cadena", "F_{0}", "Valor p", "¿Rechaza H_{0}?", "Se atribuye a", "Por qué"], _dt,
              size=12, first_left=True, colw=[0.15, 0.12, 0.12, 0.13, 0.13, 0.35]),
          txt(f"Ejemplo 1 (2^{{4−1}}, I = ABCD), modelo reducido, gl del error = {m1['dfe']}", size=12),
-         note("Rechazar H_{0} en AC + BD dice que **la cadena** pesa; que sea **AC** lo dice la herencia", size=14)],
-  ratio=0.38)
-
-_sep = [[alias1[w], f(ef1[w][1]), f(ef1b[w][1]), f"**{w} = {f((ef1[w][1] + ef1b[w][1]) / 2)}**",
-         f"{alias1[w].split(' + ')[1]} = {f((ef1[w][1] - ef1b[w][1]) / 2)}"] for w in ("A", "AC", "AD")]
-S("¿Cómo sé qué término de la cadena produce el efecto?",
-  f"""Ninguna herramienta estadística del fraccionado ve factores: la gráfica normal de Daniel, el diagrama de Pareto y el ANOVA usan el mismo contraste de cada columna, y en el 2^{{4−1}} con I = ABCD la columna de A es la columna de BCD. El punto de la gráfica normal es el de «A + BCD», no el de A. Con los datos de una sola fracción no hay forma de separarlos. La pregunta de qué término produce el efecto se resuelve en tres capas.
-
-Antes de correr, con la resolución. Al elegirla se decide qué mezclas se aceptan. En resolución III un efecto principal queda aliado con interacciones dobles y la duda es real. En resolución IV queda aliado solo con triples o mayores, de modo que atribuirle el efecto al principal es un riesgo pequeño y conocido; las dobles quedan aliadas entre sí. En resolución V los principales quedan con cuádruples y las dobles con triples.
-
-Después de correr, con una atribución razonada. Jerarquía o escasez de efectos: los principales son más frecuentes que las dobles y estas más que las triples, así que en A + BCD se atribuye a A. Herencia: una interacción suele ser activa cuando sus factores lo son; en el ejemplo 1, AC + BD se atribuye a AC porque A y C son activos y B no. Conocimiento del proceso: si físicamente un término no tiene sentido, pesa en contra. Esto es razonamiento, no prueba, y se declara en el informe.
-
-Para saberlo con datos, más corridas. La fracción alterna o el doblez cambian el signo de los alias, y al combinar las dos fracciones los términos se separan: la primera fracción estima A + BCD y la alterna, I = −ABCD, estima A − BCD; la semisuma da A y la semidiferencia da BCD. En el ejemplo 1 (primera fracción y fracción alterna del ejemplo 8-3): A = ({f(ef1["A"][1])} + {f(ef1b["A"][1])}) / 2 = {f((ef1["A"][1] + ef1b["A"][1]) / 2)} y BCD = {f((ef1["A"][1] - ef1b["A"][1]) / 2)}; AC = {f((ef1["AC"][1] + ef1b["AC"][1]) / 2)} y BD = {f((ef1["AC"][1] - ef1b["AC"][1]) / 2)}; AD = {f((ef1["AD"][1] + ef1b["AD"][1]) / 2)} y BC = {f((ef1["AD"][1] - ef1b["AD"][1]) / 2)}. La jerarquía y la herencia habían acertado: las triples y las dobles compañeras quedan cerca de cero. Otras salidas: el doblez de un solo factor separa ese factor y todas sus interacciones dobles, y una corrida de confirmación verifica que la respuesta predicha con el modelo atribuido coincide con la observada.
-
-En resumen: la prueba de hipótesis responde si la cadena pesa; qué término pesa lo acota la resolución, lo razonan la jerarquía y la herencia, y lo confirman las corridas adicionales. Por eso las conclusiones de un fraccionado son tentativas hasta confirmarlas.""",
-  left=[cards(("1 · Antes de correr: la resolución", "Decide qué mezcla se acepta. **III**: principal + dobles (duda real). "
-                                                       "**IV**: principal + triples (riesgo pequeño); dobles entre sí. "
-                                                       "**V**: dobles + triples"),
-              ("2 · Después: atribución razonada", "**Jerarquía**: A + BCD → A.  **Herencia**: AC + BD → AC "
-                                                    "(A y C activos, B no).  **Conocimiento** del proceso. Se declara"),
-              ("3 · Para saberlo: más corridas", "**Fracción alterna** o **doblez** separan la cadena; "
-                                                  "**doblez de un factor**; **corrida de confirmación**"),
-              size=13, cols=1)],
-  right=[txt("Daniel, Pareto y ANOVA ven **cadenas**, no factores: el punto de A es el de **A + BCD**", size=15),
-         tab(["Cadena", "1ª fracción ℓ", "Alterna ℓ′", "(ℓ + ℓ′)/2", "(ℓ − ℓ′)/2"], _sep,
-             size=13, first_left=True, colw=[0.22, 0.18, 0.18, 0.22, 0.2]),
-         txt("Ejemplo 1: la alterna (I = −ABCD) estima A − BCD, AC − BD y AD − BC", size=12),
-         note("La prueba dice **si** la cadena pesa; **qué** término pesa lo acota la resolución, lo razona la "
-              "jerarquía y lo **confirman** las corridas adicionales", size=14)],
-  ratio=0.44)
+         note("Rechazar H_{0} en AC + BD dice que **la cadena** pesa; que sea **AC** lo dice la herencia y lo "
+              "**confirman** las corridas adicionales", size=14)],
+  ratio=0.42)
 
 S("¿Cómo debo analizar los datos recolectados?",
   """La ruta de análisis tiene siete pasos. Se calculan los contrastes y los efectos de todas las cadenas de alias. Se identifican los efectos activos: si no hay réplicas, con la gráfica de probabilidad normal o seminormal y el diagrama de Pareto. Se interpreta cada cadena activa para decidir a qué efecto se atribuye. Se ajusta el modelo reducido y se construye la tabla ANOVA, usando los efectos descartados como error. Se verifican los supuestos con los residuos. Se interpretan los efectos con gráficas de efectos principales, de interacción y de cubo. Por último se informa la conclusión en términos del problema del investigador y se confirma.
@@ -1296,16 +1166,13 @@ El método de Lenth, que traza la línea de referencia del diagrama de Pareto: e
 Montgomery advierte que el método de Lenth solo es razonable cuando hay pocos efectos activos y recomienda usarlo como complemento de la gráfica normal. En el ejemplo 1, donde cinco de siete efectos son grandes, Lenth no detecta ninguno (PSE = 24.75).
 
 Y los principios de interpretación de cadenas: escasez de efectos (Montgomery lo nombra en la introducción del capítulo), jerarquía (los efectos de orden bajo son más probables; Montgomery lo invoca en el ejemplo 8-6, pág. 335, para conservar el factor D en el modelo junto con la interacción AD) y herencia (una interacción es más creíble si sus factores tienen efecto principal; este nombre es usual en otros textos, como Wu y Hamada).""",
-  left=[bul("**Gráfica normal o seminormal de efectos**: los inactivos caen sobre una recta",
+  body=[bul("**Gráfica normal o seminormal de efectos**: los inactivos caen sobre una recta",
             "**Pareto con método de Lenth**: activo si |efecto| > margen de error; complementa la gráfica normal, no la sustituye",
             "Los efectos descartados pasan a formar el **error** del ANOVA"),
         form("s_{0} = 1.5 · mediana |ℓ_{i}|", "PSE = 1.5 · mediana { |ℓ_{i}| : |ℓ_{i}| < 2.5 s_{0} }",
-             "ME = t_{0.025, m/3} · PSE", size=17)],
-  right=[txt("**Para interpretar una cadena de alias**", size=18),
-         cards(("Escasez", "Pocos efectos son realmente activos"),
-               ("Jerarquía", "Los efectos de orden bajo son más probables que los de orden alto"),
-               ("Herencia", "Una interacción es más creíble si sus factores tienen efecto principal"),
-               size=15, cols=1)], ratio=0.54)
+             "ME = t_{0.025, m/3} · PSE", size=17),
+        note("Lenth solo es razonable con **pocos efectos activos**: en el ejemplo 1, con cinco de siete efectos grandes, "
+             "no detecta ninguno (PSE = 24.75). Las cadenas activas se atribuyen con escasez, jerarquía y herencia", size=15)])
 
 S("¿Qué debemos verificar sobre el modelo?",
   """Las pruebas F del ANOVA son válidas si los errores son normales, tienen varianza constante y son independientes. Los errores no se observan, así que se trabaja con los residuos: la diferencia entre cada respuesta observada y el valor que predice el modelo ajustado.
@@ -1369,24 +1236,8 @@ Si el modelo deja residuos con patrón: probablemente falta un término; hay que
               "Revisar cadenas de alias; agregar términos o corridas"]],
             size=16, colw=[0.2, 0.36, 0.44])])
 
-S("¿Qué es la proyección en el caso general?",
-  """Un diseño de resolución R contiene un factorial completo en cualquier subconjunto de R − 1 factores. Si al analizar resulta que solo unos pocos factores son activos, se descartan los demás y el diseño se convierte, sin correr nada más, en un factorial completo (posiblemente con réplicas) en los factores activos.
-
-En general, un 2^{k−p} se proyecta en un factorial completo en cualquier subconjunto de r ≤ k − p factores que no contenga una palabra de la relación de definición; si la contiene, lo que queda es un factorial fraccionado con réplicas. Consecuencia práctica: al asignar los factores a las columnas conviene que los que se creen más importantes no formen juntos una palabra.""",
-  left=[bul("Resolución **R** ⇒ factorial completo en cualquier subconjunto de **R − 1** factores",
-            "Al descartar factores inactivos se ganan **réplicas** sin correr nada más",
-            "Si los factores activos contienen una **palabra**, queda un fraccionado con réplicas, no un completo"),
-        note("Asigne los factores que cree importantes de modo que **no formen una palabra**")],
-  right=[tab(["Diseño", "Se proyecta en…"],
-             [["2^{3−1}_{III}", "2^{2} completo en cualquier par de factores"],
-              ["2^{4−1}_{IV}", "2^{3} completo en cualesquiera tres factores"],
-              ["2^{5−1}_{V}", "2^{4} completo en cuatro factores; dos réplicas de un 2^{3} en tres"],
-              ["2^{6−2}_{IV}", "Dos réplicas de un 2^{3} en cualesquiera tres factores"],
-              ["2^{7−4}_{III}", "Dos réplicas de un 2^{2} en cualquier par de factores"]],
-             size=15, colw=[0.27, 0.73])], ratio=0.46)
-
-S("¿Cómo asigno los factores a las columnas?",
-  """La proyección permite asignar los factores con estrategia. En el 2^{7−3}_{IV} de 16 corridas hay 35 subconjuntos de cuatro factores; siete son palabras de la relación de definición y los otros 28 forman un 2^{4} completo. Uno de ellos, el más obvio, es el de las columnas del diseño básico: A, B, C y D.
+S("¿Cómo aprovecho la proyección al asignar los factores a las columnas?",
+  """Un diseño de resolución R contiene un factorial completo en cualquier subconjunto de R − 1 factores, y en general un 2^{k−p} se proyecta en un factorial completo en cualquier subconjunto de factores que no contenga una palabra de la relación de definición; si la contiene, queda un fraccionado con réplicas. Si al analizar solo unos pocos factores resultan activos, el diseño se convierte, sin correr nada más, en un factorial completo (posiblemente con réplicas) en ellos. La proyección permite entonces asignar los factores con estrategia. En el 2^{7−3}_{IV} de 16 corridas hay 35 subconjuntos de cuatro factores; siete son palabras de la relación de definición y los otros 28 forman un 2^{4} completo. Uno de ellos, el más obvio, es el de las columnas del diseño básico: A, B, C y D.
 
 Montgomery lo ilustra con un molino de bolas con siete factores. Se tiene bastante certeza de que la velocidad del motor, el modo de alimentación, el tamaño de la alimentación y el tipo de material afectan la eficiencia y pueden interactuar; se sabe menos de la muesca, el ángulo de la criba y el nivel de vibración, que probablemente son insignificantes. La estrategia es asignar los cuatro primeros a las columnas A, B, C y D y las «variables menores» a E, F y G. Si se está en lo correcto y estas resultan despreciables, queda un 2^{4} completo en las variables clave.
 
@@ -1395,7 +1246,9 @@ Las conclusiones obtenidas así deben considerarse tentativas: suele haber expli
             [["A", "Velocidad del motor"], ["B", "Modo de alimentación"], ["C", "Tamaño de la alimentación"],
              ["D", "Tipo de material"], ["E = ABC", "Muesca"], ["F = BCD", "Ángulo de la criba"],
              ["G = ACD", "Nivel de vibración de la criba"]], size=15, colw=[0.3, 0.7], hl=[0, 1, 2, 3])],
-  right=[bul("Factores **importantes** y que pueden interactuar: columnas del **diseño básico**",
+  right=[bul("Resolución **R** ⇒ factorial completo en cualquier subconjunto de **R − 1** factores; en general, en todo "
+             "subconjunto que **no contenga una palabra**",
+             "Factores **importantes** y que pueden interactuar: columnas del **diseño básico**",
              "Factores **menores**: columnas generadas",
              "Si los menores no influyen, queda un **2^{4} completo** en los importantes",
              "De 35 subconjuntos de 4 factores, **28** dan un 2^{4} completo", size=16),
@@ -1463,40 +1316,23 @@ S("¿Cómo se separa un fraccionado en bloques?",
 
 El procedimiento tiene cinco pasos. (1) Decidir cuántos bloques hacen falta: dos bloques confunden una columna; cuatro bloques confunden dos columnas y su producto (tres en total). (2) Escribir las cadenas de alias del fraccionado. (3) Escoger para los bloques una cadena formada solo por interacciones de orden alto, porque se va a perder. Nunca una que contenga efectos principales o interacciones dobles de interés. En el 2^{6−2} con I = ABCE = BCDF = ADEF hay quince cadenas; solo dos están formadas únicamente por interacciones triples: ABD = ACF = BEF = CDE y ABF = ACD = BDE = CEF. La tabla XII de Montgomery sugiere ABD. (4) Calcular el signo de ABD en cada corrida, que es el producto de los signos de A, B y D. (5) Repartir: las ocho corridas con ABD = − forman el bloque 1 y las ocho con ABD = + el bloque 2.
 
-Atajo para el paso 4 sin calcular signos: contar cuántas letras tiene en común cada combinación de tratamientos con ABD. Si el número es par (0 o 2), ABD vale − y la corrida va al bloque 1, que es el bloque principal porque contiene a (1). Si es impar (1 o 3), ABD vale + y va al bloque 2. Ejemplos: abf tiene en común a y b, dos letras, par: bloque 1 (A +, B +, D −, producto −). ae tiene en común solo a, una letra, impar: bloque 2 (A +, B −, D −, producto +). En la notación de Montgomery es la regla L = x_{1} + x_{2} + x_{4} = 0 (mod 2) para el bloque principal, donde x vale 1 si la letra está y 0 si no. Fuente: Montgomery, sección 8-4 y fig. 8-18; la figura imprime «abef» en el bloque 1 y debe ser adef, la que pertenece a la fracción.""",
+Atajo para el paso 4 sin calcular signos: contar cuántas letras tiene en común cada combinación de tratamientos con ABD. Si el número es par (0 o 2), ABD vale − y la corrida va al bloque 1, que es el bloque principal porque contiene a (1). Si es impar (1 o 3), ABD vale + y va al bloque 2. Ejemplos: abf tiene en común a y b, dos letras, par: bloque 1 (A +, B +, D −, producto −). ae tiene en común solo a, una letra, impar: bloque 2 (A +, B −, D −, producto +). En la notación de Montgomery es la regla L = x_{1} + x_{2} + x_{4} = 0 (mod 2) para el bloque principal, donde x vale 1 si la letra está y 0 si no. Fuente: Montgomery, sección 8-4 y fig. 8-18; la figura imprime «abef» en el bloque 1 y debe ser adef, la que pertenece a la fracción.
+
+Qué se pierde y qué se conserva. Supóngase que la tarde da respuestas sistemáticamente más altas que la mañana. La columna de ABD vale − en toda la mañana y + en toda la tarde, así que su contraste es exactamente la diferencia entre turnos: el efecto estimado de la cadena ABD = ACF = BEF = CDE ya no se puede separar del efecto de los bloques. Por eso se escogió una cadena de triples: se pierde algo que de todos modos se suponía despreciable. En el ANOVA esa columna aparece como la fila de bloques, con 1 grado de libertad y la misma suma de cuadrados. Todas las demás columnas están balanceadas dentro de cada bloque, con cuatro signos + y cuatro signos − en cada turno: al calcular el contraste de A, el corrimiento de la tarde aparece cuatro veces sumando y cuatro veces restando, y se cancela. Lo mismo pasa con las otras trece cadenas, que incluyen todos los efectos principales y todas las interacciones dobles. Es la ortogonalidad de la tabla de signos: la columna de bloques (ABD) es ortogonal a todas las demás.""",
   left=[tab(["Mañana · ABD −", "Letras en común", "Tarde · ABD +", "Letras en común"], _bl,
             size=13, first_left=False, colw=[0.29, 0.21, 0.29, 0.21], pad=0.06),
         txt("Montgomery, fig. 8-18 (la figura imprime «abef»; debe ser adef)", size=11)],
-  right=[txt("Procedimiento general, aplicado al moldeo en **dos turnos**. Se reparte con el **signo de una "
-             "columna**; esa columna queda **confundida** con los bloques", size=14),
-         num("Decidir cuántos bloques: **2** bloques confunden **1** columna; **4** confunden **2** y su producto",
+  right=[num("Decidir cuántos bloques: **2** bloques confunden **1** columna; **4** confunden **2** y su producto",
              "Escribir las **cadenas de alias** del fraccionado",
              "Escoger una cadena con **solo interacciones de orden alto**: aquí ABD = ACF = BEF = CDE",
              "Calcular el **signo de ABD** en cada corrida: signo de A × signo de B × signo de D",
-             "Repartir: **ABD = −** a la mañana (bloque 1), **ABD = +** a la tarde (bloque 2)", size=14),
+             "Repartir: **ABD = −** a la mañana (bloque 1), **ABD = +** a la tarde (bloque 2); ABD queda "
+             "**confundida** con el turno", size=13),
          note("**Atajo**: letras en común con ABD. **Par** (0 o 2) → mañana; **impar** (1 o 3) → tarde. "
               "abf: a, b = 2 → mañana.  ae: a = 1 → tarde", size=13),
-         form("Bloque principal:  L = x_{1} + x_{2} + x_{4} = 0  (mod 2)", size=15)], ratio=0.44)
-
-_ba = [[_nom(r), sg(r["A"]), _nom(q), sg(q["A"])] for r, q in zip(_b1, _b2)]
-S("¿Qué se pierde y qué se conserva al hacer bloques?",
-  """Supóngase que el bloque 2 da respuestas sistemáticamente más altas que el bloque 1, por ejemplo porque se corrió otro día. Ese corrimiento se suma a las ocho corridas del bloque 2.
-
-Lo que se pierde: la columna de ABD vale − en todo el bloque 1 y + en todo el bloque 2, así que su contraste es exactamente la diferencia entre bloques. El efecto estimado de la cadena ABD = ACF = BEF = CDE ya no se puede separar del efecto de los bloques. Por eso se escogió una cadena de triples: se pierde algo que de todos modos se suponía despreciable. En el ANOVA esa columna aparece como la fila de bloques, con 1 grado de libertad y la misma suma de cuadrados.
-
-Lo que se conserva: todas las demás columnas están balanceadas dentro de cada bloque, con cuatro signos + y cuatro signos − en el bloque 1 y lo mismo en el bloque 2. La tabla lo muestra para A. Al calcular el contraste de A, el corrimiento del bloque 2 aparece cuatro veces sumando y cuatro veces restando, y se cancela. Lo mismo pasa con las otras trece cadenas, que incluyen todos los efectos principales y todas las interacciones dobles. Es la ortogonalidad de la tabla de signos: la columna de bloques (ABD) es ortogonal a todas las demás.
-
-Con cuatro bloques se escogen dos columnas, por ejemplo P y Q. Los bloques son las cuatro combinaciones de signos (−,−), (−,+), (+,−) y (+,+), y quedan confundidas P, Q y su producto PQ, con 3 grados de libertad. Las tres deben ser cadenas que se puedan perder; es lo que se resuelve en el ejemplo 4 de la máquina CNC, que sigue.""",
-  left=[tab(["Bloque 1", "Signo de A", "Bloque 2", "Signo de A"], _ba, size=13, first_left=False, pad=0.06),
-        note("A tiene **4 + y 4 −** en cada bloque: la diferencia entre bloques **se cancela** en su contraste", size=13)],
-  right=[cards(("Se pierde", "La cadena **ABD = ACF = BEF = CDE**: su contraste es la diferencia entre bloques. "
-                             "En el ANOVA es la fila de **bloques** (1 g.l.)"),
-               ("Se conserva", "Las otras **13 cadenas** (todos los principales y todas las dobles): están "
-                               "**balanceadas** dentro de cada bloque"),
-               ("Cuatro bloques", "Dos columnas **P** y **Q**; se confunden P, Q y **PQ** (3 g.l.). "
-                                  "Las tres deben ser prescindibles (ejemplo 4)"),
-               size=13, cols=1)],
-  ratio=0.42)
+         note("**Se pierde** la cadena ABD = ACF = BEF = CDE: su contraste es la diferencia entre turnos (fila de "
+              "**bloques** del ANOVA, 1 g.l.). **Se conserva** el resto: las otras 13 cadenas tienen 4 + y 4 − en "
+              "cada turno y la diferencia se cancela en sus contrastes", size=13)], ratio=0.44)
 
 E(4, "máquina CNC", "Montgomery, ejemplo 8-6",
   ["Una máquina CNC de cinco ejes produce el impulsor de un motor de turbina. Una característica de calidad clave es el **perfil de los álabes**: interesa su desviación respecto al perfil especificado en el plano, medida como la desviación estándar de la diferencia entre ambos.",
@@ -1571,26 +1407,39 @@ Hay un requisito más, que pesa en el paso 3: la máquina tiene cuatro husillos 
          note("Resolución requerida: **IV**, corrida en **cuatro bloques**", size=15)],
   ratio=0.5)
 
-S("Ejemplo 4 · Paso 3: ¿16 o 32 corridas? Aquí deciden los bloques",
-  """La tabla de diseños recomendados ofrece dos diseños de resolución IV para ocho factores: el 2^{8−4}_{IV} de 16 corridas y el 2^{8−3}_{IV} de 32. Sin bloques, el de 16 bastaría. Los bloques cambian la decisión, y este es el punto que conviene entender bien.
+S("Ejemplo 4 · Paso 3: ¿16 o 32 corridas? Qué significa «confundir con bloques»",
+  """La tabla de diseños recomendados ofrece dos diseños de resolución IV para ocho factores: el 2^{8−4}_{IV} de 16 corridas y el 2^{8−3}_{IV} de 32. Sin bloques, el de 16 bastaría. Los bloques cambian la decisión. Montgomery lo dice así: el de 16 «no puede correrse en cuatro bloques sin confundir cuatro interacciones de dos factores con los bloques». Para entender la frase hay que tener claro qué es confundir.
 
-Cuatro bloques necesitan tres columnas confundidas: se escogen dos columnas P y Q, los bloques son las cuatro combinaciones de signos de P y Q, y su producto PQ queda confundido también. Son 3 grados de libertad que se pierden.
+Dos efectos están confundidos cuando los datos no permiten distinguirlos. Ocurre cuando la columna de signos con la que se estima uno es idéntica a la columna con la que se estima el otro: el contraste calcula entonces la suma de ambos y no hay manera de repartirla. Cuando los dos efectos son de factores, Montgomery lo llama alias; cuando uno de ellos es la diferencia entre bloques (husillos, turnos, días), lo llama confundido con bloques. Es el mismo fenómeno con dos nombres. Ya se vio con el moldeo en dos turnos: la columna ABD valía − en toda la mañana y + en toda la tarde, así que su contraste medía a la vez la interacción ABD y la diferencia entre turnos, y nunca se sabría cuál de las dos se está viendo. En cambio A seguía limpio, porque cada turno tenía cuatro corridas con A alto y cuatro con A bajo y la diferencia se cancelaba.
 
-En el 2^{8−4}_{IV} las 15 columnas son 8 efectos principales y 7 cadenas de cuatro interacciones dobles cada una (por ejemplo AB = CG = DH = EF). No hay ninguna columna formada solo por interacciones triples. Las tres columnas de bloques tendrían que ser cadenas de dobles: se perderían 3 cadenas, es decir, 12 de las 28 interacciones dobles, justo lo que los ingenieros no quieren ignorar.
+Por eso cuatro bloques cuestan tres columnas. Para repartir las corridas en cuatro husillos se usan dos columnas P y Q: cada husillo recibe las corridas con una combinación de signos (−,−), (−,+), (+,−) o (+,+). Dentro de cada husillo P es constante, Q es constante y, por tanto, también su producto PQ. Las tres columnas valen lo mismo en todas las corridas de un husillo, así que las tres quedan confundidas con los husillos: son 3 grados de libertad perdidos. Y en un fraccionado cada columna no es un solo efecto sino una cadena de alias completa: lo que se pierde es la cadena entera.
+
+En el 2^{8−4}_{IV} las 15 columnas son 8 efectos principales y 7 cadenas de cuatro interacciones dobles cada una (por ejemplo AB = CG = DH = EF). No hay ninguna columna formada solo por interacciones triples, es decir, ninguna columna «barata». Cualquier columna que se use para bloques cuesta cuatro interacciones dobles de un golpe, que es la frase del libro, y con cuatro bloques hacen falta tres columnas: se perderían 12 de las 28 interacciones dobles, justo lo que los ingenieros no quieren ignorar.
 
 En el 2^{8−3}_{IV} hay 31 columnas. Varias cadenas están formadas solo por interacciones triples y pueden ir a los bloques sin costo; muchas interacciones dobles quedan solas en su cadena. Por eso se elige el 2^{8−3}_{IV} en cuatro bloques de ocho corridas: los bloques obligan a duplicar el tamaño del experimento para no perder las interacciones dobles. Fuente: Montgomery, ejemplo 8-6.""",
-  left=[tab(["", "2^{8−4}_{IV}", "2^{8−3}_{IV}"],
-            [["Corridas", "16", "32"],
-             ["Columnas (grados de libertad)", "15", "31"],
-             ["Cadenas solo de triples", "**ninguna**", "varias"],
-             ["Cadenas de dobles", "7, de **4 dobles** cada una", "7 con alias; el resto, dobles solas"],
-             ["Con 4 bloques se pierden", "**3 cadenas de dobles** (12 dobles)", "2 cadenas triples y **EH**"]],
-            size=14, colw=[0.36, 0.32, 0.32], hl=[4])],
-  right=[cards(("¿Qué pide un diseño en 4 bloques?", "Dos columnas **P** y **Q**: los bloques son sus 4 combinaciones de "
-                                                     "signos; **PQ** también queda confundida. **3 g.l.** perdidos"),
-               ("Decisión", "Se elige el **2^{8−3}_{IV}** en **4 bloques de 8**: los bloques obligan a duplicar el "
-                            "experimento para no perder interacciones dobles"), size=14, cols=1)],
-  ratio=0.55)
+  left=[cards(("¿Qué es confundir?", "Dos efectos están **confundidos** cuando se estiman con la **misma columna de "
+                                     "signos**: el contraste mide su **suma** y los datos no los separan. Entre efectos "
+                                     "de factores se llama **alias**; cuando uno de los dos es la diferencia entre "
+                                     "bloques, **confundido con bloques**. Moldeo: ABD era − en la mañana y + en la "
+                                     "tarde, su contraste medía ABD **más** el turno"),
+              ("¿Por qué 4 bloques cuestan 3 columnas?", "Dos columnas **P** y **Q** reparten las corridas por sus 4 "
+                                                          "combinaciones de signos. Dentro de cada bloque P, Q y su "
+                                                          "producto **PQ** son constantes: las tres quedan confundidas "
+                                                          "(**3 g.l.**), y cada columna arrastra su **cadena de alias "
+                                                          "completa**"),
+              size=13, cols=1)],
+  right=[tab(["", "2^{8−4}_{IV}", "2^{8−3}_{IV}"],
+             [["Corridas", "16", "32"],
+              ["Columnas (grados de libertad)", "15", "31"],
+              ["Cadenas solo de triples", "**ninguna**", "varias"],
+              ["Cadenas de dobles", "7, de **4 dobles** cada una", "7 con alias; el resto, dobles solas"],
+              ["Con 4 bloques se pierden", "**3 cadenas de dobles** (12 dobles)", "2 cadenas triples y **EH**"]],
+             size=13, colw=[0.36, 0.32, 0.32], hl=[4]),
+         note("Montgomery: el de 16 «no puede correrse en cuatro bloques sin **confundir cuatro interacciones de dos "
+              "factores** con los bloques»: toda columna de bloques sería una cadena de 4 dobles", size=13),
+         cards(("Decisión", "Se elige el **2^{8−3}_{IV}** en **4 bloques de 8**: los bloques obligan a duplicar el "
+                            "experimento para no perder interacciones dobles"), size=13, cols=1)],
+  ratio=0.45)
 
 S("Ejemplo 4 · Paso 4: generadores, relación de definición y alias",
   """El diseño básico es el 2^{5} completo en A, B, C, D y E (32 corridas). Los tres factores restantes se generan con F = ABC, G = ABD y H = BCDE (tabla 8-14). Los generadores son I = ABCF, I = ABDG e I = BCDEH; sus productos completan la relación de definición, con 2^{3} − 1 = 7 palabras: ABCF, ABDG, CDFG, BCDEH, ADEFH, ACEGH y BEFGH. La más corta tiene cuatro letras: resolución IV.
@@ -1698,12 +1547,16 @@ Conclusión: la desviación del perfil es mínima con A en nivel bajo (eje x en 
 
 section(7, "Diseños de resolución III", "Saturados, doblez y diseños de Plackett-Burman")
 
+_sat = [["2^{3−1}_{III}", "3", "4", "C = AB"], ["2^{7−4}_{III}", "7", "8", "D = AB, E = AC, F = BC, G = ABC"],
+        ["2^{15−11}_{III}", "15", "16", "las 11 interacciones del 2^{4}"], ["2^{31−26}_{III}", "31", "32", "las 26 interacciones del 2^{5}"]]
 S("¿Qué son los diseños de resolución III y los diseños saturados?",
   """Un diseño de resolución III es un fraccionado cuya relación de definición tiene como palabra más corta una de tres letras. La consecuencia práctica es que ningún efecto principal está aliado con otro efecto principal, pero cada efecto principal sí está aliado con interacciones de dos factores. Por eso solo se interpretan bien si se puede suponer que esas interacciones son despreciables.
 
 Un diseño saturado es un diseño de resolución III que estudia el máximo número posible de factores con sus corridas: k = N − 1. La razón es una cuenta de grados de libertad. Con N corridas se pueden estimar N − 1 efectos (el grado de libertad restante se usa en la media general). Si hay N − 1 factores, cada uno de esos grados de libertad se gasta en un efecto principal y el diseño queda lleno: no sobra ninguna columna para estimar interacciones ni para el error. Con ocho corridas, siete factores saturan el diseño; con seis factores sobra una columna, con cinco sobran dos, y así sucesivamente.
 
-Estos diseños se usan para tamizado (screening): al comienzo de una investigación, cuando hay muchos factores candidatos y se espera que solo unos pocos importen. El subtema tiene cuatro partes: cómo se construye un saturado, cómo se adapta a menos factores eliminando columnas, cómo se separan después los alias con el doblez y, cuando N no es potencia de 2, los diseños de Plackett-Burman.""",
+Estos diseños se usan para tamizado (screening): al comienzo de una investigación, cuando hay muchos factores candidatos y se espera que solo unos pocos importen.
+
+Los saturados que existen se construyen todos igual: se escribe el factorial completo en los primeros factores y a cada interacción de sus columnas se le asigna un factor nuevo. Con el 2^{2} se obtiene el 2^{3−1}_{III} (3 factores en 4 corridas); con el 2^{3}, el 2^{7−4}_{III} (7 en 8), que es el que se desarrolla a continuación; con el 2^{4} en A, B, C y D y once factores igualados a todas sus interacciones, el 2^{15−11}_{III}, que estudia 15 factores en 16 corridas, cada uno alias de siete interacciones dobles; con el 2^{5}, el 2^{31−26}_{III} (31 en 32). Para otro número de factores se eliminan columnas, como se ve más adelante, y cuando N no es potencia de 2 están los diseños de Plackett-Burman.""",
   left=[txt("**Diseño de resolución III**: fraccionado cuya palabra más corta en la relación de definición tiene "
             "**tres letras**. Ningún efecto principal está aliado con otro principal, pero **cada principal sí está "
             "aliado con interacciones dobles**. Solo se interpreta bien si esas interacciones son despreciables.", size=15),
@@ -1713,17 +1566,15 @@ Estos diseños se usan para tamizado (screening): al comienzo de una investigaci
             "no sobra ninguna columna para interacciones ni para el error.", size=15),
         txt("**Para qué se usan**: tamizado (screening), cuando hay muchos factores candidatos y se espera que "
             "solo unos pocos importen.", size=15)],
-  right=[txt("**Cuenta de grados de libertad con N = 8 corridas**", size=15),
-         tab(["Factores k", "Para efectos principales", "Columnas que sobran", "¿Saturado?"],
-             [["7", "7", "0", "**sí**"], ["6", "6", "1", "no"], ["5", "5", "2", "no"], ["4", "4", "3", "no"]],
-             size=14, hl=[0], first_left=False, colw=[0.18, 0.32, 0.28, 0.22]),
-         cards(("Partes del subtema", "1) construir el saturado; 2) **eliminar columnas** si hay menos factores; "
-                                      "3) separar los alias con el **doblez**; 4) **Plackett-Burman** cuando N no es potencia de 2"),
-               size=14, cols=1)],
+  right=[txt("**Los diseños saturados que existen**", size=15),
+         tab(["Diseño", "Factores", "Corridas", "Factores nuevos ="], _sat, size=14, first_left=False,
+             colw=[0.22, 0.17, 0.17, 0.44]),
+         note("Saturado: **N corridas, N − 1 factores**. Para menos factores se **eliminan columnas** con cuidado "
+              "(se ve más adelante); para N que no es potencia de 2, **Plackett-Burman**", size=14)],
   ratio=0.55)
 
 _rows = [[str(i + 1)] + [sg(r[c]) for c in "ABCDEFG"] for i, r in enumerate(r4)]
-S("¿Qué es un diseño saturado? El 2^{7−4}_{III}",
+S("El diseño saturado 2^{7−4}_{III}: construcción y alias",
   """Los diseños de resolución III permiten estudiar hasta k = N − 1 factores en N corridas, con N múltiplo de 4. El 2^{7−4} estudia siete factores en solo ocho corridas: se escribe el 2^{3} completo en A, B y C y se definen D = AB, E = AC, F = BC y G = ABC. Se dice que el diseño está saturado porque usa todos los grados de libertad para efectos principales.
 
 El costo es alto: cada efecto principal es alias de tres interacciones dobles. Solo sirve si se puede suponer que las interacciones son despreciables o si se planea un doblez posterior.""",
@@ -1864,28 +1715,22 @@ La regla práctica: al eliminar columnas, revisar que el subconjunto que queda n
                size=14, cols=1)],
   ratio=0.56)
 
-_sat = [["2^{3−1}_{III}", "3", "4", "C = AB"], ["2^{7−4}_{III}", "7", "8", "D = AB, E = AC, F = BC, G = ABC"],
-        ["2^{15−11}_{III}", "15", "16", "las 11 interacciones del 2^{4}"], ["2^{31−26}_{III}", "31", "32", "las 26 interacciones del 2^{5}"]]
-S("¿Qué diseños saturados existen?",
-  """La construcción del 2^{7−4} se generaliza: se escribe el factorial completo en los primeros factores y a cada interacción de sus columnas se le asigna un factor nuevo. Con el 2^{2} se obtiene el 2^{3−1}_{III} (3 factores en 4 corridas); con el 2^{3}, el 2^{7−4}_{III} (7 en 8); con el 2^{4} en A, B, C y D y once factores igualados a todas sus interacciones, el 2^{15−11}_{III}, que estudia 15 factores en 16 corridas, cada uno alias de siete interacciones dobles; con el 2^{5}, el 2^{31−26}_{III} (31 en 32).
+S("¿Qué es el doblez y qué otras salidas hay para los alias?",
+  """En un diseño de resolución III cada efecto principal está mezclado con interacciones dobles. Para separarlos se usa el ensamblaje secuencial: se corre una segunda fracción en la que se han invertido los signos de algunos factores y se combinan las dos. A esta técnica se le llama doblez o plegado (fold over). Hay dos variantes: el doblez de un solo factor invierte los signos de un factor; el doblez completo, o reflexión, invierte los signos de todos.
 
-En todos, N corridas estudian N − 1 factores: no queda ningún grado de libertad libre, por eso se llaman saturados. Para menos factores se eliminan columnas como se vio, cuidando que el subconjunto que queda no forme una palabra.""",
-  body=[tab(["Diseño saturado", "Factores", "Corridas", "Factores nuevos ="], _sat, size=16, first_left=False,
-            colw=[0.22, 0.14, 0.14, 0.5]),
-        note("Saturado: **N corridas, N − 1 factores**. Para menos factores: **eliminar columnas** con cuidado", size=16)])
+La estructura de alias de la segunda fracción no hay que calcularla de cero: se obtiene cambiando el signo de los factores invertidos en la estructura de alias de la fracción original. Después, como con la fracción alterna, la semisuma y la semidiferencia de las estimaciones de las dos fracciones separan los efectos; las dos fracciones funcionan como bloques.
 
-S("¿Qué es el doblez?",
-  """En un diseño de resolución III cada efecto principal está mezclado con interacciones dobles. Para separarlos se usa el ensamblaje secuencial: se corre una segunda fracción en la que se han invertido los signos de algunos factores y se combinan las dos. A esta técnica se le llama doblez o plegado (fold over).
-
-La estructura de alias de la segunda fracción no hay que calcularla de cero: se obtiene cambiando el signo de los factores invertidos en la estructura de alias de la fracción original. Después, como con la fracción alterna, la semisuma y la semidiferencia de las estimaciones de las dos fracciones separan los efectos.
-
-Hay dos variantes. El doblez de un solo factor invierte los signos de un factor. El doblez completo, o reflexión, invierte los signos de todos.""",
+Las conclusiones de un fraccionado son tentativas porque siempre existe una explicación alternativa basada en los alias, y la tabla reúne las cuatro formas de resolver la duda. Corrida de confirmación: predecir con el modelo la respuesta en una condición nueva y comprobarla. Fracción alterna: en una fracción un medio, correr la otra mitad completa el factorial. Doblez completo: separa los efectos principales de las interacciones dobles y convierte un diseño de resolución III en uno de resolución IV. Doblez de un factor: en un diseño de resolución III o mayor, y despreciando interacciones de tres o más factores, deja limpio ese factor y todas sus interacciones dobles; cuesta las mismas corridas que el doblez completo.""",
   left=[bul("Correr una **segunda fracción** con signos invertidos y combinarla con la primera",
             "Alias de la segunda fracción: **cambiar el signo** de los factores invertidos",
-            "Separar con **½ (ℓ + ℓ′)** y **½ (ℓ − ℓ′)**", size=17)],
-  right=[cards(("Doblez de un solo factor", "Se invierten los signos de **un** factor"),
-               ("Doblez completo (reflexión)", "Se invierten los signos de **todos** los factores"),
-               size=17, cols=1)], ratio=0.55)
+            "Separar con **½ (ℓ + ℓ′)** y **½ (ℓ − ℓ′)**: cada una aísla una parte de la cadena", size=16),
+        note("Las dos fracciones funcionan como **bloques**", size=15)],
+  right=[tab(["Estrategia", "Qué se corre", "Qué se gana"],
+             [["Confirmación", "Una o pocas corridas nuevas", "Verifica la predicción del modelo"],
+              ["Fracción alterna", "La otra mitad del 2^{k−1}", "Completa el factorial"],
+              ["Doblez completo", "Todos los signos invertidos", "Principales libres de dobles (III → IV)"],
+              ["Doblez de un factor", "Signos de **un** factor invertidos", "Ese factor y sus dobles, limpios"]],
+             size=14, colw=[0.26, 0.36, 0.38])], ratio=0.42)
 
 _rows = [["A", "A + BD + CE + FG", "A − BD + CE + FG", "A + CE + FG", "BD"],
          ["B", "B + AD + CF + EG", "B − AD + CF + EG", "B + CF + EG", "AD"],
@@ -1927,7 +1772,7 @@ E(5, "tiempo de enfoque del ojo", "Montgomery, ejemplo 8-7",
 
 _o4 = sorted("ABCDEFG", key=lambda w: abs(ef4[w]))
 S("Ejemplo 5 · Una primera fracción ambigua",
-  """Experimento sobre el tiempo de enfoque del ojo con siete factores: A agudeza visual, B distancia al objetivo, C forma del objetivo, D nivel de iluminación, E tamaño del objetivo, F densidad y G sujeto. Se corre el 2^{7−4} de ocho corridas. Fuente: Montgomery, ejemplo 8-7.
+  """Se corre el 2^{7−4}_{III} de ocho corridas del enunciado anterior (Montgomery, ejemplo 8-7).
 
 Tres estimaciones son grandes: ℓ_{B} = 38.38, ℓ_{D} = 28.88 y ℓ_{A} = 20.63. La lectura más simple es que A, B y D son activos. Pero como D = AB, hay otras tres explicaciones igual de lógicas: A, B y la interacción AB; A, D y la interacción AD; o B, D y la interacción BD. La fracción sola no permite distinguirlas.""",
   left=[bars(_o4, [ef4[w] for w in _o4], "Efecto estimado (ms)", h=3.9,
@@ -1975,17 +1820,22 @@ S("¿Qué son los diseños de Plackett-Burman?",
 
 Se construyen a partir de un renglón generador que se desplaza cíclicamente una posición cada vez; al final se agrega un renglón con todos los signos negativos. Para N = 28 la construcción es distinta, con tres bloques de signos.
 
-Advertencia: su estructura de alias es muy compleja. En el diseño de 12 corridas cada efecto principal es alias parcial de todas las interacciones dobles en las que no participa. Si hay interacciones importantes, pueden aparecer como falsos efectos principales. Montgomery recomienda usarlos con mucho cuidado. A su favor: se proyectan en un factorial completo en cualesquiera tres factores, y bajo ciertas condiciones sus alias se pueden desenredar con técnicas de regresión.""",
+Advertencia: su estructura de alias es muy compleja. En el diseño de 12 corridas cada efecto principal es alias parcial de todas las interacciones dobles en las que no interviene: por ejemplo, la interacción AB es alias parcial de los nueve efectos principales C, D, …, K, y cada efecto principal es alias parcial de 45 interacciones dobles. «Parcial» quiere decir que la interacción no se suma completa a la estimación, sino con un peso fraccionario. Si hay interacciones importantes, pueden aparecer como varios falsos efectos principales. En diseños mayores la situación es aún más compleja; Montgomery recomienda usarlos con mucho cuidado, y bajo ciertas condiciones sus alias se pueden desenredar con técnicas de regresión.
+
+Su ventaja está en la proyección. El de 12 corridas se proyecta en tres réplicas de un 2^{2} completo en cualquier par de factores, y en cualquier trío de factores en un 2^{3} completo más una fracción 2^{3−1}. Por eso se dice que tiene proyectividad 3, mientras que un 2^{k−p}_{III} solo tiene proyectividad 2. Las proyecciones en tres y cuatro factores no son balanceadas.""",
   left=[bul("Resolución III para **k = N − 1** factores en N corridas",
             "N **múltiplo de 4**: 12, 20, 24, 28, 36",
             "Para N = 12, 20, 24 y 36 se construye **desplazando cíclicamente** un renglón generador y agregando un renglón de signos −"),
         tab(["N", "Renglón generador"], [["12", "+ + − + + + − − − + −"],
              ["20", "+ + − − + + + + − + − + − − − − + + −"],
              ["24", "+ + + + + − + − + + − − + + − − + − + − − − −"]], size=14, colw=[0.1, 0.9], first_left=False)],
-  right=[note("**Cuidado:** cada efecto principal es **alias parcial** de muchas interacciones dobles. "
-              "Una interacción real puede aparecer como varios falsos efectos principales.", size=17),
-         bul("Úselos **con mucho cuidado**, para tamizado, cuando no se esperan interacciones importantes",
-             "Un **2^{k−p}** de tamaño parecido puede ser mejor elección", size=17)], ratio=0.52)
+  right=[cards(("Alias parciales", "En el de 12 corridas cada principal es alias **parcial** (con peso fraccionario) de 45 "
+                                   "interacciones dobles; una interacción real puede aparecer como **varios** falsos principales"),
+               ("Proyectividad 3", "En cualquier par: 3 réplicas de un 2^{2}; en cualquier trío: un 2^{3} completo + un "
+                                   "2^{3−1} (no balanceado). Un 2^{k−p}_{III} solo tiene proyectividad 2"),
+               size=14, cols=1),
+         bul("Úselos **con mucho cuidado**, para tamizado sin interacciones esperadas; un **2^{k−p}** de tamaño "
+             "parecido puede ser mejor elección", size=15)], ratio=0.52)
 
 _pb_gen = [1, 1, -1, 1, 1, 1, -1, -1, -1, 1, -1]
 _pbL = "ABCDEFGHJKL"
@@ -2007,17 +1857,6 @@ La tabla es el diseño de 12 corridas para 11 factores construido de esa forma, 
              "Repetir hasta **N − 1** filas",
              "Agregar una fila de **signos −**", size=15),
          form("N = 12:  + + − + + + − − − + −", size=15)], ratio=0.66)
-
-S("Alias parciales y proyectividad",
-  """Los diseños de Plackett-Burman no geométricos tienen estructuras de alias muy intrincadas. En el diseño de 12 corridas, cada efecto principal es alias parcial de todas las interacciones dobles en las que no interviene. Por ejemplo, la interacción AB es alias parcial de los nueve efectos principales C, D, …, K, y cada efecto principal es alias parcial de 45 interacciones dobles. «Parcial» quiere decir que la interacción no se suma completa a la estimación, sino con un peso fraccionario. En diseños mayores la situación es aún más compleja; Montgomery recomienda usarlos con mucho cuidado.
-
-Su ventaja está en la proyección. El de 12 corridas se proyecta en tres réplicas de un 2^{2} completo en cualquier par de factores, y en cualquier trío de factores en un 2^{3} completo más una fracción 2^{3−1}. Por eso se dice que tiene proyectividad 3, mientras que un 2^{k−p}_{III} solo tiene proyectividad 2. Las proyecciones en tres y cuatro factores no son balanceadas.""",
-  left=[cards(("Alias parciales", "Cada principal es alias **parcial** de 45 interacciones dobles; AB se reparte entre los 9 principales C, …, K"),
-              ("Consecuencia", "Una interacción real puede aparecer como **varios** falsos efectos principales"), size=15, cols=1)],
-  right=[tab(["Proyección del PB de 12 corridas", "Resultado"],
-             [["En 2 factores", "Tres réplicas de un 2^{2}"], ["En 3 factores", "Un 2^{3} completo + un 2^{3−1}"],
-              ["Proyectividad", "**3** (un 2^{k−p}_{III} tiene 2)"]], size=15, colw=[0.5, 0.5]),
-         note("Las proyecciones en 3 y 4 factores **no son balanceadas**", size=15)], ratio=0.5)
 
 E(6, "Plackett-Burman con datos simulados", "Montgomery, ejemplo 8-8",
   ["Se quiere tamizar **11 factores** (A a L, sin I) con el mínimo de corridas. Un Plackett-Burman de **12 corridas** lo permite: es de resolución III y cada interacción doble queda repartida parcialmente sobre varios efectos principales.",
@@ -2041,51 +1880,27 @@ Recomendación del libro: si la elección es entre un 2^{11−7}_{III} geométri
                ("Recomendación", "Preferir un **2^{11−7}_{III}** de 16 corridas a un PB de 12 que haya que doblar"),
                size=15, cols=1)], ratio=0.55)
 
-S("¿Cómo se resuelven las dudas que dejan los alias?",
-  """Las conclusiones de un fraccionado son tentativas porque siempre existe una explicación alternativa basada en los alias. Hay cuatro formas de resolver la duda.
-
-Corrida de confirmación: predecir con el modelo la respuesta en una condición nueva y comprobarla. Fracción alterna: en una fracción un medio, correr la otra mitad completa el factorial. Doblez completo: correr una segunda fracción con los signos de todos los factores invertidos; separa los efectos principales de las interacciones dobles y convierte un diseño de resolución III en uno de resolución IV. Doblez de un factor: invertir los signos de un solo factor; en un diseño de resolución III o mayor, y despreciando interacciones de tres o más factores, deja limpio ese factor y todas sus interacciones dobles. Cuesta las mismas corridas que el doblez completo.
-
-Cuando se agrega una segunda fracción, las dos se combinan con la semisuma y la semidiferencia de las estimaciones.""",
-  left=[tab(["Estrategia", "Qué se corre", "Qué se gana"],
-            [["Confirmación", "Una o pocas corridas nuevas", "Verifica la predicción del modelo"],
-             ["Fracción alterna", "La otra mitad del 2^{k−1}", "Completa el factorial"],
-             ["Doblez completo", "Todos los signos invertidos", "Principales libres de interacciones dobles (III → IV)"],
-             ["Doblez de un factor", "Signos de un factor invertidos", "Ese factor y sus interacciones dobles, limpios"]],
-            size=15, colw=[0.24, 0.34, 0.42])],
-  right=[form("½ (ℓ_{i} + ℓ′_{i})", "½ (ℓ_{i} − ℓ′_{i})", size=24),
-         txt("Semisuma y semidiferencia de las estimaciones de las dos fracciones: cada una aísla una parte de la cadena",
-             size=16),
-         note("Las dos fracciones funcionan como **bloques**")], ratio=0.62)
-
 section(8, "Diseños de resolución IV y V", "Diseños mínimos, doblez y fracciones irregulares")
-
-S("¿Qué es un diseño de resolución IV?",
-  """Un 2^{k−p} es de resolución IV si los efectos principales están separados de las interacciones dobles y algunas interacciones dobles son alias entre sí. Si se suprimen las interacciones de tres o más factores, los efectos principales se estiman directamente. Ya se vieron dos: el 2^{6−2}_{IV} del ejemplo 3 y el 2^{7−3}_{IV} que resultó de combinar las dos fracciones del ejemplo 5.
-
-Hay un límite inferior de tamaño: todo diseño 2^{k−p}_{IV} debe tener al menos 2k corridas. Los diseños de resolución IV con exactamente 2k corridas se llaman diseños mínimos. Por ejemplo, el 2^{4−1}_{IV} tiene 8 = 2·4 corridas y el 2^{8−4}_{IV} tiene 16 = 2·8.""",
-  left=[bul("Principales **separados** de las interacciones dobles",
-            "Algunas interacciones dobles son **alias entre sí**",
-            "Suprimiendo triples, los principales se estiman **directamente**", size=17),
-        form("Resolución IV ⇒ N ≥ 2k corridas", size=20)],
-  right=[tab(["Diseño mínimo", "Factores", "Corridas = 2k"],
-             [["2^{4−1}_{IV}", "4", "8"], ["2^{8−4}_{IV}", "8", "16"], ["2^{16−11}_{IV}", "16", "32"]],
-             size=16, first_left=False),
-         note("Diseño **mínimo**: resolución IV con exactamente **2k** corridas", size=15)], ratio=0.52)
 
 _rows = [["+", "−", "−", "+"], ["+", "+", "−", "−"], ["+", "−", "+", "−"], ["+", "+", "+", "+"],
          ["−", "+", "+", "−"], ["−", "−", "+", "+"], ["−", "+", "−", "+"], ["−", "−", "−", "−"]]
-S("¿Cómo se obtiene un resolución IV a partir de un resolución III?",
-  """Los diseños de resolución IV se pueden obtener doblando un diseño de resolución III. Se toma el 2^{k−p}_{III}, se le agrega la segunda fracción con todos los signos invertidos, y se aprovecha la columna identidad: en la primera fracción es toda +, y en la segunda se cambia a toda −. Esa columna se asigna al factor k + 1. El resultado es un 2^{k+1−p}_{IV}.
+S("¿Qué es un diseño de resolución IV y cómo se obtiene de uno de resolución III?",
+  """Un 2^{k−p} es de resolución IV si los efectos principales están separados de las interacciones dobles y algunas interacciones dobles son alias entre sí. Si se suprimen las interacciones de tres o más factores, los efectos principales se estiman directamente. Ya se vieron dos: el 2^{6−2}_{IV} del ejemplo 3 y el 2^{7−3}_{IV} que resultó de combinar las dos fracciones del ejemplo 5.
 
-La tabla es la del libro (tabla 8-27): del 2^{3−1}_{III} con I = ABC se obtiene un 2^{4−1}_{IV}, y es fácil verificar que su relación de definición es I = ABCD. Con cuatro corridas más se gana un factor y se sube de resolución III a IV.""",
-  left=[tab(["D (columna I)", "A", "B", "C"], _rows, size=15, hl=[0, 1, 2, 3], first_left=False),
-        txt("Arriba: 2^{3−1}_{III} original (I = ABC). Abajo: segunda fracción con los signos invertidos", size=13)],
-  right=[num("Tomar el **2^{k−p}_{III}**",
-             "Agregar la fracción con **todos los signos invertidos**",
-             "La columna **I** pasa de + a −: se asigna al factor **k + 1**", size=16),
-         form("2^{3−1}_{III}  →  2^{4−1}_{IV},   I = ABCD", size=18),
-         note("Un factor más y resolución IV con solo **doblar**", size=15)], ratio=0.42)
+Hay un límite inferior de tamaño: todo diseño 2^{k−p}_{IV} debe tener al menos 2k corridas. Los diseños de resolución IV con exactamente 2k corridas se llaman diseños mínimos. Por ejemplo, el 2^{4−1}_{IV} tiene 8 = 2·4 corridas y el 2^{8−4}_{IV} tiene 16 = 2·8.
+
+Los diseños de resolución IV se pueden obtener doblando un diseño de resolución III. Se toma el 2^{k−p}_{III}, se le agrega la segunda fracción con todos los signos invertidos, y se aprovecha la columna identidad: en la primera fracción es toda +, y en la segunda se cambia a toda −. Esa columna se asigna al factor k + 1. El resultado es un 2^{k+1−p}_{IV}. La tabla es la del libro (tabla 8-27): del 2^{3−1}_{III} con I = ABC se obtiene un 2^{4−1}_{IV}, y es fácil verificar que su relación de definición es I = ABCD. Con cuatro corridas más se gana un factor y se sube de resolución III a IV.""",
+  left=[bul("Principales **separados** de las interacciones dobles; algunas dobles son **alias entre sí**",
+            "Suprimiendo triples, los principales se estiman **directamente**",
+            "Tamaño mínimo **N ≥ 2k**; con exactamente 2k corridas se llama diseño **mínimo**", size=15),
+        tab(["Diseño mínimo", "Factores", "Corridas = 2k"],
+            [["2^{4−1}_{IV}", "4", "8"], ["2^{8−4}_{IV}", "8", "16"], ["2^{16−11}_{IV}", "16", "32"]],
+            size=14, first_left=False)],
+  right=[tab(["D (columna I)", "A", "B", "C"], _rows, size=13, hl=[0, 1, 2, 3], first_left=False, pad=0.07),
+         num("Tomar el **2^{k−p}_{III}** y agregar la fracción con **todos los signos invertidos**",
+             "La columna **I** pasa de + a −: se asigna al factor **k + 1**  ⇒  2^{3−1}_{III} → 2^{4−1}_{IV}, I = ABCD",
+             size=14),
+         txt("Tabla 8-27 del libro: arriba la fracción original (I = ABC), abajo la invertida", size=12)], ratio=0.48)
 
 S("¿Cómo se dobla un diseño de resolución IV?",
   """También se doblan diseños de resolución IV, para separar interacciones dobles que son alias entre sí. Montgomery y Runger señalan tres objetivos posibles: romper tantas cadenas de interacciones dobles como sea posible, romper las de una cadena específica, o romper las que incluyen un factor específico.
