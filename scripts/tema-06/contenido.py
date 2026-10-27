@@ -926,8 +926,45 @@ La resolución es la longitud de la palabra más corta. Para construirlo se escr
              ["Construcción", "Factorial completo en k − p factores + p columnas generadas"]],
             size=17, colw=[0.4, 0.6])])
 
-S("¿Qué generadores elijo?",
+S("¿Cómo se escogen los generadores?",
+  """El procedimiento concreto tiene ocho pasos.
+
+1. Fijar cuántos factores hay (k) y cuántas corridas se pueden pagar (N). Como N = 2^{k−p}, el número de generadores es p = k − log₂N. Con 6 factores y 16 corridas, p = 6 − 4 = 2.
+2. Decidir la resolución mínima que se necesita, según las interacciones que se está dispuesto a despreciar: III si solo interesan los efectos principales (tamizado), IV si los principales deben quedar libres de interacciones dobles, V si también las interacciones dobles deben quedar libres entre sí.
+3. Escribir el diseño básico: el factorial completo en los primeros k − p factores. En el ejemplo, el 2^{4} en A, B, C y D, con sus 16 corridas.
+4. A cada factor que sobra se le asigna una columna de interacción del diseño básico: sus signos serán los de esa interacción. Si E = ABC, la columna de E es el producto de las columnas A, B y C, y el generador es I = ABCE (se multiplica E = ABC por E y E² = I). Cada factor nuevo debe usar una columna distinta.
+5. Multiplicar los generadores entre sí, de dos en dos, de tres en tres, etc., cancelando las letras repetidas (A² = I). Así se obtiene la relación de definición completa, con 2^{p} − 1 palabras.
+6. La resolución es la longitud de la palabra más corta. Si es menor que la requerida en el paso 2, se vuelve al paso 4 con otras columnas.
+7. Si hay varios candidatos con la misma resolución, se escoge el de aberración mínima: el que tiene menos palabras de esa longitud mínima (siguiente diapositiva).
+8. Con el diseño elegido se escriben los alias de las interacciones que interesan y se asignan los factores reales a las letras, de modo que los que pueden interactuar no queden en la misma cadena.
+
+En el 2^{6−2} de la tabla, el primer candidato (E = ABC, F = BCD) da tres palabras de cuatro letras: resolución IV. El segundo usa F = ABCD; como ABCE y ABCDF comparten las letras A, B y C, su producto es DEF, de solo tres letras, y la resolución baja a III. El tercero repite la columna ABCD para E y para F: el producto es EF y los dos factores quedan aliados entre sí (resolución II), por eso cada factor nuevo debe usar una columna distinta. La regla práctica es elegir generadores largos que compartan pocas letras. Con 16 corridas no existe un 2^{6−2} de resolución V: haría falta asignar a E y a F columnas de cuatro letras distintas, y en el 2^{4} la única es ABCD. Fuente: Montgomery, sección 8-4.""",
+  left=[num("Fijar k y las corridas N que se pueden pagar: **p = k − log₂N** generadores",
+            "Decidir la **resolución** necesaria: III solo principales; IV principales libres de dobles; "
+            "V dobles libres entre sí",
+            "Escribir el **diseño básico**: 2^{k−p} completo en los primeros k − p factores (A, B, C, D)",
+            "A cada factor sobrante, una **columna de interacción** distinta del básico: "
+            "E = ABC ⇒ generador **I = ABCE**",
+            "Multiplicar los generadores entre sí, cancelando letras repetidas (A² = I): "
+            "**2^{p} − 1 palabras**",
+            "**Resolución** = longitud de la palabra más corta; si no alcanza, volver al paso 4 con otras columnas",
+            "Si hay empate en resolución: **aberración mínima** (siguiente diapositiva)",
+            "Escribir los alias y **asignar** los factores reales a las letras, sin poner en la misma cadena "
+            "los que pueden interactuar", size=14)],
+  right=[txt("**Ejemplo**: 6 factores, 16 corridas ⇒ p = 2, básico 2^{4} en A, B, C, D", size=15),
+         tab(["Generadores", "Palabras", "R"],
+             [["E = ABC,  F = BCD", "ABCE, BCDF, ADEF", "IV"],
+              ["E = ABC,  F = ABCD", "ABCE, ABCDF, **DEF**", "III"],
+              ["E = ABCD,  F = ABCD", "ABCDE, ABCDF, **EF**", "II"]],
+             size=14, hl=[0], colw=[0.36, 0.5, 0.14]),
+         note("Generadores **largos** que compartan **pocas letras**: ABCE y ABCDF comparten ABC y su producto es DEF", size=14),
+         note("Con 16 corridas no hay 2^{6−2}_{V}: solo existe una columna de 4 letras, ABCD", size=14)],
+  ratio=0.5)
+
+S("¿Cómo se desempata entre diseños de igual resolución?",
   """Primer criterio: máxima resolución. Segundo criterio, para desempatar entre diseños de igual resolución: aberración mínima, es decir, el menor número de palabras de longitud mínima.
+
+Los pasos para comparar candidatos son: (1) escribir la relación de definición completa de cada uno; (2) anotar la longitud de cada palabra; (3) descartar los de menor resolución; (4) entre los que quedan, contar cuántas palabras tienen la longitud mínima y quedarse con el que tiene menos; (5) comprobarlo contando las cadenas de interacciones dobles aliadas entre sí, que es lo que realmente se pierde.
 
 La tabla compara tres diseños 2^{7−2} de resolución IV. El diseño C tiene una sola palabra de cuatro letras, frente a tres y dos de los diseños A y B; por eso deja menos interacciones dobles confundidas entre sí y es el preferido. En la práctica no hay que buscar los generadores: las tablas de diseños recomendados ya entregan el diseño de máxima resolución y aberración mínima, y el software estadístico trae generadores predeterminados.""",
   body=[tab(["", "Diseño A", "Diseño B", "Diseño C"],
@@ -937,9 +974,69 @@ La tabla compara tres diseños 2^{7−2} de resolución IV. El diseño C tiene u
              ["Longitud de las palabras", "4, 4, 4", "4, 4, 6", "4, 5, 5"],
              ["Cadenas de interacciones dobles aliadas", "7", "6", "3"]], size=16,
             colw=[0.25, 0.25, 0.25, 0.25]),
-        num("**Máxima resolución**: la palabra más corta, lo más larga posible",
-            "**Aberración mínima**: el menor número de palabras de longitud mínima", size=17),
-        note("El diseño C tiene una sola palabra de 4 letras: es el de **aberración mínima**")])
+        num("Escribir la **relación de definición** de cada candidato y la longitud de cada palabra",
+            "Descartar los de menor **resolución**",
+            "Entre los que quedan, contar las palabras de **longitud mínima**: gana el que tiene **menos**",
+            "Comprobar: menos **cadenas de interacciones dobles** aliadas entre sí", size=15),
+        note("Los tres son IV; el diseño C tiene una sola palabra de 4 letras: es el de **aberración mínima**", size=15)])
+
+E("didáctico", "generadores para un pan", "ejemplo construido para la clase",
+  ["Una panadería quiere aumentar el **volumen** de su pan (mL). Se estudian cinco factores a dos niveles: "
+   "A levadura (1 o 2 %), B temperatura del horno (180 o 200 °C), C tiempo de horneado (25 o 30 min), "
+   "D azúcar (3 o 6 %) y E humedad de la masa (60 o 65 %).",
+   "Cada corrida ocupa el horno una tarde. El presupuesto es de **8 corridas**; con esfuerzo se podrían pagar 16. "
+   "El panadero está seguro de que hay una **interacción temperatura × tiempo** y quiere que ningún efecto "
+   "principal quede mezclado con ella; las interacciones de tres o más factores se consideran despreciables."],
+  "Escoger los generadores con el procedimiento de ocho pasos.",
+  ["Calcular p con 8 corridas y la resolución que hace falta",
+   "Probar generadores y decir si alguno alcanza esa resolución",
+   "Decidir qué hacer si no alcanza: pagar más corridas o asignar bien los factores",
+   "Escribir los alias del diseño elegido"])
+
+S("Ejemplo didáctico · Pasos 1 a 6: ¿alcanzan 8 corridas?",
+  """Paso 1: k = 5 factores y N = 8 corridas, así que p = 5 − log₂8 = 5 − 3 = 2 generadores: es un 2^{5−2}, fracción un cuarto.
+
+Paso 2: el panadero quiere los efectos principales libres de la interacción temperatura × tiempo. Si no se sabe de antemano qué letras tocarán a esos dos factores, la forma segura es pedir resolución IV, en la que ningún efecto principal se mezcla con ninguna interacción doble.
+
+Paso 3: el diseño básico es el 2^{3} completo en A, B y C, con 8 corridas. Sus columnas de interacción disponibles son cuatro: AB, AC, BC y ABC.
+
+Pasos 4 y 5: a D y a E se les asignan dos de esas columnas, distintas, y se multiplican los generadores. Con D = AB y E = AC los generadores son I = ABD e I = ACE, y su producto es BCDE. Con D = ABC y E = AB salen ABCD, ABE y CDE. Con D = ABC y E = BC salen ABCD, BCE y ADE.
+
+Paso 6: la palabra más corta tiene tres letras en los tres candidatos: resolución III. No es mala suerte: hay 12 maneras de asignar dos columnas a D y E y todas dan resolución III con dos palabras de tres letras. La razón es que solo hay una columna de tres letras (ABC); el otro factor recibe una columna de dos letras y su generador tiene tres. Conclusión: con 8 corridas la resolución IV es imposible para cinco factores.""",
+  left=[num("k = 5, N = 8  ⇒  **p = 2**: un 2^{5−2}",
+            "Efectos principales libres de interacciones dobles  ⇒  hace falta **resolución IV**",
+            "Diseño básico: **2^{3}** en A, B, C. Columnas disponibles: **AB, AC, BC, ABC**",
+            "Asignar a D y E dos columnas distintas y multiplicar los generadores",
+            "Leer la palabra más corta: **3 letras** en todos  ⇒  **resolución III**", size=15)],
+  right=[tab(["Generadores", "Palabras", "R"],
+             [["D = AB,  E = AC", "ABD, ACE, BCDE", "III"],
+              ["D = ABC,  E = AB", "ABCD, ABE, CDE", "III"],
+              ["D = ABC,  E = BC", "ABCD, BCE, ADE", "III"]],
+             size=14, colw=[0.36, 0.5, 0.14]),
+         note("Las **12** asignaciones posibles dan **resolución III**: solo hay una columna de 3 letras, ABC", size=15),
+         note("Paso 6: **no alcanza**. Con 8 corridas la resolución IV es imposible para 5 factores", size=15)],
+  ratio=0.5)
+
+S("Ejemplo didáctico · Decisión y pasos 7 y 8",
+  """Como la resolución IV no se alcanza con 8 corridas, hay dos caminos.
+
+Opción 1, pagar 16 corridas. Ahora p = 5 − 4 = 1. El diseño básico es el 2^{4} en A, B, C y D, y E se asigna a la columna más larga, E = ABCD, con generador I = ABCDE. La única palabra tiene cinco letras: resolución V, más de lo pedido. Cada efecto principal queda aliado con una interacción de cuatro factores y cada interacción doble con una de tres, así que la interacción temperatura × tiempo se estima limpia. El paso 7 no hace falta porque hay un solo candidato de resolución V.
+
+Opción 2, quedarse en 8 corridas y aprovechar el paso 8. Con D = AB y E = AC (I = ABD = ACE = BCDE), las cadenas de alias, despreciando las interacciones de tres o más factores, son: A = BD = CE, B = AD, C = AE, D = AB, E = AC, BC = DE y BE = CD. Las interacciones BC, DE, BE y CD son las únicas que no están aliadas con ningún efecto principal. Por eso conviene dar a la temperatura y al tiempo las letras B y C: su interacción BC queda en la cadena BC = DE, junto a otra interacción doble pero lejos de los efectos principales. La asignación queda A levadura, B temperatura, C tiempo, D azúcar y E humedad, que es la del enunciado.
+
+El costo de la opción 2: la levadura (A) queda aliada con las interacciones temperatura × azúcar (BD) y tiempo × humedad (CE), y cada uno de los otros efectos principales queda aliado con una interacción doble. Si el panadero cree que esas interacciones no existen, las 8 corridas bastan; si duda, la opción 1 es la segura. Es exactamente la lógica del procedimiento: el paso 6 dice que el diseño pequeño no da la resolución pedida y el paso 8 permite proteger la única interacción que se teme.""",
+  left=[txt("**Opción 1 · pagar 16 corridas**", size=16),
+        bul("p = 1, básico 2^{4} en A, B, C, D", "**E = ABCD**  ⇒  I = ABCDE: **resolución V**",
+            "Temperatura × tiempo se estima **limpia**", size=15),
+        txt("**Opción 2 · quedarse en 8 corridas**", size=16),
+        bul("D = AB, E = AC: I = ABD = ACE = BCDE",
+            "Paso 8: temperatura y tiempo en **B y C**, porque BC no está aliada con ningún efecto principal", size=15)],
+  right=[tab(["Cadena de alias (2^{5−2}, D = AB, E = AC)", "¿Mezcla un efecto principal?"],
+             [["A = BD = CE", "Sí"], ["B = AD", "Sí"], ["C = AE", "Sí"], ["D = AB", "Sí"], ["E = AC", "Sí"],
+              ["**BC = DE**  (temperatura × tiempo)", "**No**"], ["BE = CD", "No"]],
+             size=14, hl=[5], colw=[0.62, 0.38]),
+         note("Opción 2: la interacción temida queda **lejos de los efectos principales**, pero cada principal sigue aliado con una doble", size=14)],
+  ratio=0.48)
 
 S("Diseños recomendados hasta 32 corridas",
   """Esta tabla reúne los diseños de máxima resolución y aberración mínima para 3 a 8 factores con un máximo de 32 corridas. Se lee por filas: número de factores, diseño con su resolución, corridas y generadores. Todos los generadores admiten signo positivo o negativo; con todos positivos se obtiene la fracción principal.
@@ -960,19 +1057,53 @@ Nota para quien coteje con el libro: la tabla 8-14 de Montgomery imprime el 2^{7
              ["8", "2^{8−4}_{IV}", "16", "E = BCD,  F = ACD,  G = ABC,  H = ABD"]],
             size=14, colw=[0.13, 0.17, 0.13, 0.57], first_left=False)])
 
-S("¿Cómo elijo un diseño para siete factores?",
-  """Ejemplo 8-5 de Montgomery. Se tienen siete factores, interesa estimar los siete efectos principales y tener una idea de las interacciones dobles, y se está dispuesto a suponer despreciables las interacciones de tres o más factores. Eso pide resolución IV.
+S("¿Cómo elijo un diseño para siete factores? (pasos 1 y 2)",
+  """Ejemplo 8-5 de Montgomery, resuelto con el procedimiento de ocho pasos. Se tienen siete factores, interesa estimar los siete efectos principales y tener una idea de las interacciones dobles, y se está dispuesto a suponer despreciables las interacciones de tres o más factores.
 
-La tabla de diseños recomendados ofrece dos de resolución IV: el 2^{7−2} de 32 corridas y el 2^{7−3} de 16. En el de 16 corridas los siete efectos principales son alias de interacciones triples y las interacciones dobles quedan aliadas en grupos de tres: cumple el objetivo. El de 32 corridas permitiría además estimar de forma única 15 de las 21 interacciones dobles, más información de la que se necesita. Se elige el 2^{7−3}.
+Paso 2 primero, porque es el que fija la exigencia: los efectos principales no deben mezclarse con interacciones dobles, así que se pide resolución IV. No se pide V porque basta con una idea de las interacciones dobles; no hace falta estimarlas por separado.
 
-Se construye con el 2^{4} en A, B, C y D y las columnas E = ABC, F = BCD y G = ACD. La relación de definición completa tiene siete palabras, todas de cuatro letras.""",
-  left=[tab(["", "2^{7−3}_{IV}", "2^{7−2}_{IV}"],
-            [["Corridas", "16", "32"], ["Efectos principales", "Alias de triples", "Alias de triples o limpios"],
-             ["Interacciones dobles", "En grupos de tres", "15 de 21 limpias"], ["¿Cumple el objetivo?", "Sí", "Sí, con información de sobra"]],
-            size=15, colw=[0.36, 0.32, 0.32], hl=[0])],
-  right=[form("E = ABC,  F = BCD,  G = ACD", size=19),
-         form("I = ABCE = BCDF = ADEF = ACDG", "= BDEG = CEFG = ABFG", size=17),
-         note("Se elige el diseño **más pequeño** que cumple el objetivo: el 2^{7−3} de 16 corridas", size=15)],
+Paso 1: se recorren los tamaños posibles, de menor a mayor, y se busca el más pequeño que alcance la resolución IV. Con N = 8 corridas, p = 7 − 3 = 4: el diseño básico es el 2^{3} en A, B y C, que solo tiene cuatro columnas de interacción (AB, AC, BC y ABC). Los cuatro factores nuevos las ocupan todas, tres de ellos reciben columnas de dos letras y sus generadores tienen tres letras: el diseño es forzosamente de resolución III (es el diseño saturado 2^{7−4}_{III}). Con N = 16, p = 3: existe el 2^{7−3}_{IV}. Con N = 32, p = 2: el 2^{7−2}_{IV}. Con N = 64, p = 1: el 2^{7−1}_{VII}, con I = ABCDEFG.
+
+Entre los que cumplen se elige el más pequeño. El de 16 corridas deja los siete efectos principales aliados solo con interacciones triples y las interacciones dobles en grupos de tres: cumple el objetivo. El de 32 corridas estimaría además de forma única 15 de las 21 interacciones dobles, más información de la que se pidió, al doble de costo. Se elige el 2^{7−3}_{IV} de 16 corridas.""",
+  left=[txt("**Objetivo**: 7 efectos principales y una idea de las interacciones dobles; triples despreciables", size=15),
+        num("**Paso 2**: principales libres de dobles  ⇒  **resolución IV**",
+            "**Paso 1**: probar N = 8, 16, 32, … y quedarse con el **menor** que da IV", size=15),
+        note("Con 8 corridas el básico 2^{3} solo tiene 4 columnas (AB, AC, BC, ABC) para 4 factores nuevos: "
+             "tres generadores de 3 letras  ⇒  **III** forzosamente", size=14)],
+  right=[tab(["Corridas N", "p", "Mejor diseño", "¿Cumple IV?"],
+             [["8", "4", "2^{7−4}_{III}", "No"],
+              ["**16**", "**3**", "**2^{7−3}_{IV}**", "**Sí**: dobles en grupos de 3"],
+              ["32", "2", "2^{7−2}_{IV}", "Sí: 15 de 21 dobles limpias"],
+              ["64", "1", "2^{7−1}_{VII}", "Sí, de sobra"]],
+             size=15, hl=[1], colw=[0.2, 0.1, 0.28, 0.42], first_left=False),
+         note("Se elige el diseño **más pequeño** que cumple el objetivo: el **2^{7−3}_{IV}** de 16 corridas", size=15)],
+  ratio=0.47)
+
+S("¿Cómo elijo un diseño para siete factores? (pasos 3 a 8)",
+  """Paso 3: el diseño básico es el 2^{4} completo en A, B, C y D, con 16 corridas.
+
+Paso 4: hay que darle a E, F y G tres columnas de interacción distintas. El 2^{4} tiene once: seis de dos letras (AB, AC, AD, BC, BD, CD), cuatro de tres letras (ABC, ABD, ACD, BCD) y una de cuatro (ABCD). Hay 165 maneras de escoger tres; solo 4 dan resolución IV, y son las que usan tres de las cuatro columnas de tres letras. Una columna de dos letras da un generador de tres letras (resolución III). Usar ABCD también falla: con E = ABC y G = ABCD los generadores ABCE y ABCDG comparten A, B y C, y su producto es DEG, de tres letras. Se toma E = ABC, F = BCD y G = ACD, como en la tabla 8-15.
+
+Paso 5: con tres generadores la relación de definición completa tiene 2^{3} − 1 = 7 palabras: los tres generadores, los tres productos de dos en dos (ABCE·BCDF = ADEF, ABCE·ACDG = BDEG, BCDF·ACDG = ABFG) y el producto de los tres (CEFG).
+
+Paso 6: las siete palabras tienen cuatro letras: resolución IV, la pedida.
+
+Paso 7: las cuatro asignaciones que dan resolución IV tienen el mismo patrón, siete palabras de cuatro letras, así que no hay nada que desempatar.
+
+Paso 8: cada efecto principal queda aliado con cuatro interacciones triples (por ejemplo A = BCE = BFG = CDG = DEF) y las 21 interacciones dobles forman 7 cadenas de tres: AB = CE = FG, AC = BE = DG, AD = CG = EF, AE = BC = DF, AF = BG = DE, AG = BF = CD y BD = CF = EG. Para asignar los factores reales, Montgomery aconseja (molino de bolas) poner en A, B, C y D los factores que se creen importantes y que pueden interactuar, y en E, F y G las variables menores. Si las menores resultan inactivas, el diseño se proyecta en un 2^{4} completo en los factores clave. Fuente: Montgomery, ejemplo 8-5, tabla 8-15 y sección de proyección.""",
+  left=[bul("**Paso 3**: básico **2^{4}** en A, B, C, D (16 corridas)",
+            "**Paso 4**: E, F, G en **tres de las cuatro columnas de 3 letras**: E = ABC, F = BCD, G = ACD",
+            "**Paso 5**: 3 generadores + 3 productos de dos en dos + 1 de los tres = **7 palabras**",
+            "**Paso 6**: todas de 4 letras  ⇒  **resolución IV**",
+            "**Paso 7**: las 4 opciones válidas tienen el mismo patrón: **sin empate**",
+            "**Paso 8**: factores **importantes** en A, B, C, D; **menores** en E, F, G", size=15),
+        note("Solo **4 de 165** elecciones dan IV. Con ABCD: ABCE · ABCDG = **DEG**  ⇒  III", size=14)],
+  right=[form("I = ABCE = BCDF = ACDG = ADEF", "= BDEG = ABFG = CEFG", size=16),
+         tab(["Interacciones dobles aliadas (7 cadenas)"],
+             [["AB = CE = FG"], ["AC = BE = DG"], ["AD = CG = EF"], ["AE = BC = DF"],
+              ["AF = BG = DE"], ["AG = BF = CD"], ["BD = CF = EG"]],
+             size=13, first_left=False, pad=0.06),
+         note("Principales: cada uno con **4 triples**, p. ej. A = BCE = BFG = CDG = DEF", size=14)],
   ratio=0.5)
 
 S("¿Cómo debo recolectar los datos?",
@@ -1024,10 +1155,91 @@ Regla de decisión: se rechaza H_{0} si F_{0} supera el valor crítico F_{α, 1,
         txt("Ejemplo, columna A del 2^{4−1}:   H_{0}: β_{A} + β_{BCD} = 0", size=16),
         form("Se rechaza H_{0} si  F_{0} > F_{α, 1, gl del error}", "o si  valor p < α", size=20)],
   right=[bul("Una hipótesis por cada **cadena de alias** que entra al modelo",
-             "Se prueba la **cadena completa**: A + BCD, no A sola",
+             "Se prueba la **cadena completa**: A + BCD, no A sola (siguientes dos diapositivas)",
              "Si BCD es **despreciable**, equivale a  H_{0}: β_{A} = 0",
              "Nivel de significancia habitual: **α = 0.05**"),
          note("H_{0}: el factor no afecta la respuesta.  H_{A}: el factor sí la afecta.")])
+
+_bcd = [[t, sg(r["A"]), sg(r["B"] * r["C"] * r["D"]), str(v)] for r, t, v in zip(r1, trat1, y1)]
+_sp = sum(v for r, v in zip(r1, y1) if r["A"] > 0)
+_sm = sum(v for r, v in zip(r1, y1) if r["A"] < 0)
+S("¿Por qué se prueba la cadena completa?",
+  f"""Con el ejemplo 1 (índice de filtración, 2^{{4−1}} con I = ABCD). La relación de definición dice que A = BCD: en las ocho corridas de la fracción, la columna de signos de A y la columna de la interacción BCD (producto de las columnas B, C y D) son idénticas, como muestra la tabla. No es una aproximación: son la misma columna.
+
+El efecto se estima con el contraste de esa columna: ℓ_{{A}} = (suma de las respuestas con signo + menos suma de las respuestas con signo −) / 4 = ({_sp} − {_sm}) / 4 = {f(ef1["A"][1])}. Como la columna es la misma, el número {f(ef1["A"][1])} es a la vez el contraste de A y el de BCD. Lo que mide es la suma de los dos efectos: ℓ_{{A}} estima A + BCD (en coeficientes, β̂_{{A}} estima β_{{A}} + β_{{BCD}}).
+
+Por eso varios «mundos» distintos producen exactamente los mismos datos: que A valga {f(ef1["A"][1])} y BCD cero; que A sea cero y BCD valga {f(ef1["A"][1])}; o que se repartan, por ejemplo 10 y 9. Los datos no pueden distinguirlos. Incluso puede pasar lo contrario: si A valiera 19 y BCD −19, la columna daría cero y A parecería inactivo aunque no lo es (cancelación; es rara, pero posible).
+
+Conclusión: la prueba F de la columna de A no puede referirse a A sola, porque los datos no contienen información sobre A sola. La única hipótesis que los datos pueden juzgar es la de la cadena: H_{{0}}: β_{{A}} + β_{{BCD}} = 0 frente a H_{{A}}: β_{{A}} + β_{{BCD}} ≠ 0.""",
+  left=[tab(["Corrida", "A", "BCD = B·C·D", "y"], _bcd, size=14, first_left=False, pad=0.07),
+        note("Columnas **idénticas**: el contraste de A es también el de BCD", size=14)],
+  right=[form(f"ℓ_{{A}} = ({_sp} − {_sm}) / 4 = {f(ef1['A'][1])}  →  estima A + BCD", size=17),
+         tab(["Mundo posible", "A", "BCD", "ℓ_{A} observado"],
+             [["Solo A", f(ef1["A"][1]), "0", f(ef1["A"][1])],
+              ["Solo BCD", "0", f(ef1["A"][1]), f(ef1["A"][1])],
+              ["Se reparten", "10.00", "9.00", f(ef1["A"][1])],
+              ["Se cancelan", f(ef1["A"][1]), f(-ef1["A"][1]), "**0.00**"]],
+             size=14, hl=[3], first_left=True, colw=[0.34, 0.18, 0.18, 0.3]),
+         txt(f"Varios «mundos» distintos producen exactamente los mismos datos: que A valga {f(ef1['A'][1])} y BCD "
+             f"cero; que A sea cero y BCD valga {f(ef1['A'][1])}; o que se repartan, por ejemplo 10 y 9. Los datos no "
+             "pueden distinguirlos. Incluso puede pasar lo contrario: si A valiera 19 y BCD −19, la columna daría cero "
+             "y A parecería inactivo aunque no lo es (cancelación; es rara, pero posible).", size=13),
+         note("Los datos solo ven la **suma**: H_{0}: β_{A} + β_{BCD} = 0", size=15)],
+  ratio=0.42)
+
+_dec = {t: (F, p) for t, _, _, _, F, p in m1["anova"]}
+_atr = [["A + BCD", "A", "Jerarquía: la triple BCD se supone despreciable"],
+        ["C + ABD", "C", "Jerarquía"],
+        ["D + ABC", "D", "Jerarquía"],
+        ["AC + BD", "AC", "Herencia: A y C activos, B inactivo"],
+        ["AD + BC", "AD", "Herencia: A y D activos, B inactivo"]]
+_dt = [[c, f(_dec[k][0]), pv(_dec[k][1]), "Sí", a, w] for (c, a, w), k in zip(_atr, ["A", "C", "D", "AC", "AD"])]
+S("¿Cómo se lee la decisión de cada cadena?",
+  f"""La prueba se hace en dos momentos que conviene no mezclar.
+
+Primero la decisión estadística, que es sobre la cadena. Si F_{{0}} supera el valor crítico (o el valor p es menor que α), se rechaza H_{{0}} y se concluye que la cadena está activa: al menos uno de sus efectos es distinto de cero. Si no se rechaza, se concluye que la cadena no muestra efecto; lo usual es que todos sus términos sean nulos, aunque no se puede descartar una cancelación.
+
+Después viene la atribución, que no es estadística: decidir a qué término de la cadena se le adjudica el efecto. Se hace con supuestos y conocimiento del proceso, y hay que decirlo en el informe. Hay dos herramientas. La jerarquía (escasez de efectos): las interacciones de orden alto son raras, así que en A + BCD el efecto se atribuye a A. La herencia: una interacción suele ser importante cuando sus factores también lo son. En una cadena de dos interacciones dobles, como AC + BD, la jerarquía no decide (ambas son dobles); como A y C resultaron activos y B no, se atribuye a AC.
+
+En el ejemplo 1 el ANOVA del modelo reducido rechaza H_{{0}} en las cinco cadenas que entraron: A + BCD (F_{{0}} = {f(_dec["A"][0])}, p = {pv(_dec["A"][1])}), C + ABD (F_{{0}} = {f(_dec["C"][0])}), D + ABC (F_{{0}} = {f(_dec["D"][0])}), AC + BD (F_{{0}} = {f(_dec["AC"][0])}) y AD + BC (F_{{0}} = {f(_dec["AD"][0])}), con 1 y {m1["dfe"]} grados de libertad. Las tres primeras se atribuyen a los efectos principales por jerarquía y las dos últimas a AC y AD por herencia. Si la atribución queda en duda, la salida es correr más corridas: la fracción alterna separa A de BCD y AC de BD, que es justo lo que hace el ejemplo 1 en su continuación.""",
+  left=[cards(("1 · Decisión estadística", "Sobre la **cadena**: se rechaza H_{0} ⇒ **la cadena está activa** "
+                                         "(al menos uno de sus efectos ≠ 0)"),
+              ("2 · Atribución", "Sobre el **término**: no es estadística; se apoya en **jerarquía**, **herencia** "
+                                 "y conocimiento del proceso, y se declara"),
+              size=14, cols=1)],
+  right=[tab(["Cadena", "F_{0}", "Valor p", "¿Rechaza H_{0}?", "Se atribuye a", "Por qué"], _dt,
+             size=12, first_left=True, colw=[0.15, 0.12, 0.12, 0.13, 0.13, 0.35]),
+         txt(f"Ejemplo 1 (2^{{4−1}}, I = ABCD), modelo reducido, gl del error = {m1['dfe']}", size=12),
+         note("Rechazar H_{0} en AC + BD dice que **la cadena** pesa; que sea **AC** lo dice la herencia", size=14)],
+  ratio=0.38)
+
+_sep = [[alias1[w], f(ef1[w][1]), f(ef1b[w][1]), f"**{w} = {f((ef1[w][1] + ef1b[w][1]) / 2)}**",
+         f"{alias1[w].split(' + ')[1]} = {f((ef1[w][1] - ef1b[w][1]) / 2)}"] for w in ("A", "AC", "AD")]
+S("¿Cómo sé qué término de la cadena produce el efecto?",
+  f"""Ninguna herramienta estadística del fraccionado ve factores: la gráfica normal de Daniel, el diagrama de Pareto y el ANOVA usan el mismo contraste de cada columna, y en el 2^{{4−1}} con I = ABCD la columna de A es la columna de BCD. El punto de la gráfica normal es el de «A + BCD», no el de A. Con los datos de una sola fracción no hay forma de separarlos. La pregunta de qué término produce el efecto se resuelve en tres capas.
+
+Antes de correr, con la resolución. Al elegirla se decide qué mezclas se aceptan. En resolución III un efecto principal queda aliado con interacciones dobles y la duda es real. En resolución IV queda aliado solo con triples o mayores, de modo que atribuirle el efecto al principal es un riesgo pequeño y conocido; las dobles quedan aliadas entre sí. En resolución V los principales quedan con cuádruples y las dobles con triples.
+
+Después de correr, con una atribución razonada. Jerarquía o escasez de efectos: los principales son más frecuentes que las dobles y estas más que las triples, así que en A + BCD se atribuye a A. Herencia: una interacción suele ser activa cuando sus factores lo son; en el ejemplo 1, AC + BD se atribuye a AC porque A y C son activos y B no. Conocimiento del proceso: si físicamente un término no tiene sentido, pesa en contra. Esto es razonamiento, no prueba, y se declara en el informe.
+
+Para saberlo con datos, más corridas. La fracción alterna o el doblez cambian el signo de los alias, y al combinar las dos fracciones los términos se separan: la primera fracción estima A + BCD y la alterna, I = −ABCD, estima A − BCD; la semisuma da A y la semidiferencia da BCD. En el ejemplo 1 (primera fracción y fracción alterna del ejemplo 8-3): A = ({f(ef1["A"][1])} + {f(ef1b["A"][1])}) / 2 = {f((ef1["A"][1] + ef1b["A"][1]) / 2)} y BCD = {f((ef1["A"][1] - ef1b["A"][1]) / 2)}; AC = {f((ef1["AC"][1] + ef1b["AC"][1]) / 2)} y BD = {f((ef1["AC"][1] - ef1b["AC"][1]) / 2)}; AD = {f((ef1["AD"][1] + ef1b["AD"][1]) / 2)} y BC = {f((ef1["AD"][1] - ef1b["AD"][1]) / 2)}. La jerarquía y la herencia habían acertado: las triples y las dobles compañeras quedan cerca de cero. Otras salidas: el doblez de un solo factor separa ese factor y todas sus interacciones dobles, y una corrida de confirmación verifica que la respuesta predicha con el modelo atribuido coincide con la observada.
+
+En resumen: la prueba de hipótesis responde si la cadena pesa; qué término pesa lo acota la resolución, lo razonan la jerarquía y la herencia, y lo confirman las corridas adicionales. Por eso las conclusiones de un fraccionado son tentativas hasta confirmarlas.""",
+  left=[cards(("1 · Antes de correr: la resolución", "Decide qué mezcla se acepta. **III**: principal + dobles (duda real). "
+                                                       "**IV**: principal + triples (riesgo pequeño); dobles entre sí. "
+                                                       "**V**: dobles + triples"),
+              ("2 · Después: atribución razonada", "**Jerarquía**: A + BCD → A.  **Herencia**: AC + BD → AC "
+                                                    "(A y C activos, B no).  **Conocimiento** del proceso. Se declara"),
+              ("3 · Para saberlo: más corridas", "**Fracción alterna** o **doblez** separan la cadena; "
+                                                  "**doblez de un factor**; **corrida de confirmación**"),
+              size=13, cols=1)],
+  right=[txt("Daniel, Pareto y ANOVA ven **cadenas**, no factores: el punto de A es el de **A + BCD**", size=15),
+         tab(["Cadena", "1ª fracción ℓ", "Alterna ℓ′", "(ℓ + ℓ′)/2", "(ℓ − ℓ′)/2"], _sep,
+             size=13, first_left=True, colw=[0.22, 0.18, 0.18, 0.22, 0.2]),
+         txt("Ejemplo 1: la alterna (I = −ABCD) estima A − BCD, AC − BD y AD − BC", size=12),
+         note("La prueba dice **si** la cadena pesa; **qué** término pesa lo acota la resolución, lo razona la "
+              "jerarquía y lo **confirman** las corridas adicionales", size=14)],
+  ratio=0.44)
 
 S("¿Cómo debo analizar los datos recolectados?",
   """La ruta de análisis tiene siete pasos. Se calculan los contrastes y los efectos de todas las cadenas de alias. Se identifican los efectos activos: si no hay réplicas, con la gráfica de probabilidad normal o seminormal y el diagrama de Pareto. Se interpreta cada cadena activa para decidir a qué efecto se atribuye. Se ajusta el modelo reducido y se construye la tabla ANOVA, usando los efectos descartados como error. Se verifican los supuestos con los residuos. Se interpretan los efectos con gráficas de efectos principales, de interacción y de cubo. Por último se informa la conclusión en términos del problema del investigador y se confirma.
@@ -1190,21 +1402,101 @@ Las conclusiones obtenidas así deben considerarse tentativas: suele haber expli
          note("Las conclusiones son **tentativas**: puede haber explicaciones con interacciones de orden alto", size=15)],
   ratio=0.48)
 
+def _nom(r):
+    return "".join(k.lower() for k in "ABCDEF" if r[k] > 0) or "(1)"
+
+
+_t1 = [[str(i + 1), _nom(r), sg(r["D"])] for i, r in enumerate(r3[:8])]
+_t2 = [[str(i + 9), _nom(r), sg(r["D"])] for i, r in enumerate(r3[8:])]
+_tt = [a_ + b_ for a_, b_ in zip(_t1, _t2)]
+S("¿Qué es un bloque? Un caso concreto",
+  """Se toma el ejemplo 3, el moldeo por inyección: un 2^{6−2}_{IV} de 16 corridas con I = ABCE = BCDF = ADEF. Supóngase que la inyectora solo permite hacer 8 corridas por turno, así que el experimento se corre en dos partes: 8 corridas en la mañana y 8 en la tarde. Por la tarde la máquina está más caliente y las piezas se contraen un poco más, digamos 5 unidades más en todas las corridas de la tarde, sin importar los factores.
+
+Cada uno de esos grupos de corridas hechas en las mismas condiciones (el mismo turno) es un bloque. El turno no es un factor que interese estudiar: es una fuente de variación molesta que no se puede eliminar. Formar bloques significa decidir de antemano qué corridas van en cada parte, de modo que esa diferencia no estropee los efectos que sí interesan. Es exactamente lo que se pregunta: tomar una fracción, aquí un 2^{6−2}, y correrla por secciones.
+
+La pregunta concreta es qué 8 corridas se hacen en la mañana. La forma ingenua es hacer las 8 primeras del orden estándar en la mañana y las 8 últimas en la tarde. La tabla muestra el problema: en el orden estándar del diseño básico, D es la columna que cambia más despacio, así que las corridas 1 a 8 tienen todas D en nivel bajo y las corridas 9 a 16 tienen todas D en nivel alto. El turno y el factor D quedan perfectamente mezclados: cualquier diferencia entre mañana y tarde se va a leer como efecto de D.""",
+  left=[txt("**Ejemplo 3, moldeo**: 2^{6−2}_{IV}, 16 corridas. La inyectora solo permite **8 corridas por turno**: "
+            "mañana y tarde. En la tarde la máquina está más caliente: **+5** de contracción en todas sus corridas", size=15),
+        cards(("Bloque", "Cada grupo de corridas hechas en las **mismas condiciones** (aquí, el mismo turno). El turno "
+                         "no se estudia: es variación **molesta** que no se puede quitar"),
+              ("La decisión", "¿Qué 8 corridas van en la mañana y cuáles en la tarde?"), size=14, cols=1)],
+  right=[txt("**Reparto ingenuo**: las 8 primeras del orden estándar en la mañana", size=15),
+         tab(["Corrida", "Mañana", "D", "Corrida", "Tarde", "D"], _tt, size=13, first_left=False, pad=0.05),
+         note("Toda la mañana tiene **D −** y toda la tarde **D +**: el turno queda **mezclado con D**", size=14)],
+  ratio=0.44)
+
+def _efm(y, t):
+    sgn = [1] * len(r3)
+    for k in t:
+        sgn = [a_ * r[k] for a_, r in zip(sgn, r3)]
+    return sum(v for v, x in zip(y, sgn) if x > 0) / 8 - sum(v for v, x in zip(y, sgn) if x < 0) / 8
+
+
+_yn = [v + 5 * (i >= 8) for i, v in enumerate(y3)]
+_yb = [v + 5 * (r["A"] * r["B"] * r["D"] > 0) for v, r in zip(y3, r3)]
+_ce = [[t if t != "ABD" else "ABD (+ ACF + BEF + CDE)", f(_efm(y3, t)), f(_efm(_yn, t)), f(_efm(_yb, t))]
+       for t in ("A", "B", "D", "AB", "AD", "ABD")]
+S("¿Qué pasa con los efectos según cómo se reparta?",
+  f"""Para ver el daño se toman los datos reales del ejemplo 3 y se les suma 5 a las corridas de la tarde, como si el turno tuviera ese efecto. Después se recalculan los efectos con dos repartos distintos.
+
+Con el reparto ingenuo (las 8 primeras corridas en la mañana) la tarde coincide con D alto, y el efecto de D pasa de {f(_efm(y3, "D"))} a {f(_efm(_yn, "D"))}. D era inactivo y ahora parecería activo: se concluiría que D importa cuando lo que importa es el turno. Los demás efectos no cambian, porque sus columnas tienen cuatro signos + y cuatro − en cada turno.
+
+Con el reparto por el signo de ABD (las corridas con ABD negativo en la mañana y las de ABD positivo en la tarde) el único efecto que cambia es el de la cadena ABD = ACF = BEF = CDE, que pasa de {f(_efm(y3, "ABD"))} a {f(_efm(_yb, "ABD"))}. Todos los efectos principales y todas las interacciones dobles quedan exactamente igual que sin turnos.
+
+Esa es toda la idea de los bloques. La diferencia entre bloques siempre se va a pegar a alguna columna: a la columna con la que se hizo el reparto. Lo que se decide al formar bloques es cuál columna se sacrifica. Se elige una cadena formada solo por interacciones de orden alto, que de todos modos se suponían despreciables. La diapositiva siguiente da el procedimiento general.""",
+  left=[tab(["Efecto", "Sin turnos", "Reparto ingenuo (por D)", "Reparto por ABD"], _ce,
+            size=14, hl=[2, 5], colw=[0.34, 0.18, 0.26, 0.22]),
+        txt("Datos del ejemplo 3; a la tarde se le suman 5 unidades", size=12)],
+  right=[bul("**Ingenuo**: D pasa de " + f(_efm(y3, "D")) + " a **" + f(_efm(_yn, "D")) + "**: parece activo y no lo es",
+             "**Por ABD**: solo cambia la cadena ABD, de " + f(_efm(y3, "ABD")) + " a **" + f(_efm(_yb, "ABD")) + "**",
+             "Principales y dobles: **iguales** que sin turnos", size=15),
+         note("La diferencia entre bloques **siempre** cae en una columna: se escoge **cuál se sacrifica**, "
+              "una de orden alto", size=15)],
+  ratio=0.55)
+
+_b1 = [r for r in r3 if r["A"] * r["B"] * r["D"] < 0]
+_b2 = [r for r in r3 if r["A"] * r["B"] * r["D"] > 0]
+_com = lambda r: str(sum(1 for k in "ABD" if r[k] > 0))
+_bl = [[_nom(a), _com(a), _nom(b), _com(b)] for a, b in zip(_b1, _b2)]
 S("¿Cómo se separa un fraccionado en bloques?",
-  """A veces un fraccionado tiene tantas corridas que no se pueden hacer todas en condiciones homogéneas. Entonces se confunde con bloques, igual que un 2^{k}. La tabla XII del apéndice de Montgomery da los arreglos recomendados; en ellos el bloque más pequeño tiene ocho corridas.
+  """Un bloque es un grupo de corridas hechas en condiciones parecidas: el mismo día, el mismo lote de material, la misma máquina. Se forman bloques cuando no se pueden hacer todas las corridas en condiciones homogéneas, y se hace igual que en un 2^{k}: se escoge una columna del diseño y se usa su signo para repartir las corridas. Todas las corridas con signo − van a un bloque y todas las de signo + al otro. Esa columna queda confundida con los bloques: su contraste mide a la vez su efecto y la diferencia entre bloques.
 
-El procedimiento: se elige para confundir con los bloques una cadena de alias formada solo por interacciones de orden alto, para no perder efectos de interés. En el 2^{6−2} con I = ABCE = BCDF = ADEF hay dos cadenas formadas solo por interacciones triples; la tabla sugiere ABD (con sus alias CDE, ACF y BEF).
+El procedimiento tiene cinco pasos. (1) Decidir cuántos bloques hacen falta: dos bloques confunden una columna; cuatro bloques confunden dos columnas y su producto (tres en total). (2) Escribir las cadenas de alias del fraccionado. (3) Escoger para los bloques una cadena formada solo por interacciones de orden alto, porque se va a perder. Nunca una que contenga efectos principales o interacciones dobles de interés. En el 2^{6−2} con I = ABCE = BCDF = ADEF hay quince cadenas; solo dos están formadas únicamente por interacciones triples: ABD = ACF = BEF = CDE y ABF = ACD = BDE = CEF. La tabla XII de Montgomery sugiere ABD. (4) Calcular el signo de ABD en cada corrida, que es el producto de los signos de A, B y D. (5) Repartir: las ocho corridas con ABD = − forman el bloque 1 y las ocho con ABD = + el bloque 2.
 
-Las corridas se reparten según el signo de ABD. El bloque principal contiene las combinaciones de tratamientos con un número par de letras en común con ABD, es decir, las que cumplen L = x_{1} + x_{2} + x_{4} = 0 (mod 2), donde x vale 1 si la letra está presente y 0 si no.""",
-  left=[tab(["Bloque 1 (principal)", "Bloque 2"],
-            [["(1)", "ae"], ["abf", "acf"], ["cef", "bef"], ["abce", "bc"], ["adef", "df"], ["bde", "abd"],
-             ["acd", "cde"], ["bcdf", "abcdef"]], size=15, first_left=False),
-        txt("Montgomery, fig. 8-18. La figura imprime «abef» en el bloque 1; para pertenecer a la fracción debe ser adef", size=12)],
-  right=[num("Elegir una cadena de alias con **solo interacciones de orden alto**",
-             "Confundirla con los bloques: aquí **ABD = CDE = ACF = BEF**",
-             "Repartir las corridas según el signo de ABD", size=16),
-         form("Bloque principal:  L = x_{1} + x_{2} + x_{4} = 0  (mod 2)", size=17),
-         note("Bloque principal: número **par** de letras en común con ABD", size=15)], ratio=0.4)
+Atajo para el paso 4 sin calcular signos: contar cuántas letras tiene en común cada combinación de tratamientos con ABD. Si el número es par (0 o 2), ABD vale − y la corrida va al bloque 1, que es el bloque principal porque contiene a (1). Si es impar (1 o 3), ABD vale + y va al bloque 2. Ejemplos: abf tiene en común a y b, dos letras, par: bloque 1 (A +, B +, D −, producto −). ae tiene en común solo a, una letra, impar: bloque 2 (A +, B −, D −, producto +). En la notación de Montgomery es la regla L = x_{1} + x_{2} + x_{4} = 0 (mod 2) para el bloque principal, donde x vale 1 si la letra está y 0 si no. Fuente: Montgomery, sección 8-4 y fig. 8-18; la figura imprime «abef» en el bloque 1 y debe ser adef, la que pertenece a la fracción.""",
+  left=[tab(["Mañana · ABD −", "Letras en común", "Tarde · ABD +", "Letras en común"], _bl,
+            size=13, first_left=False, colw=[0.29, 0.21, 0.29, 0.21], pad=0.06),
+        txt("Montgomery, fig. 8-18 (la figura imprime «abef»; debe ser adef)", size=11)],
+  right=[txt("Procedimiento general, aplicado al moldeo en **dos turnos**. Se reparte con el **signo de una "
+             "columna**; esa columna queda **confundida** con los bloques", size=14),
+         num("Decidir cuántos bloques: **2** bloques confunden **1** columna; **4** confunden **2** y su producto",
+             "Escribir las **cadenas de alias** del fraccionado",
+             "Escoger una cadena con **solo interacciones de orden alto**: aquí ABD = ACF = BEF = CDE",
+             "Calcular el **signo de ABD** en cada corrida: signo de A × signo de B × signo de D",
+             "Repartir: **ABD = −** a la mañana (bloque 1), **ABD = +** a la tarde (bloque 2)", size=14),
+         note("**Atajo**: letras en común con ABD. **Par** (0 o 2) → mañana; **impar** (1 o 3) → tarde. "
+              "abf: a, b = 2 → mañana.  ae: a = 1 → tarde", size=13),
+         form("Bloque principal:  L = x_{1} + x_{2} + x_{4} = 0  (mod 2)", size=15)], ratio=0.44)
+
+_ba = [[_nom(r), sg(r["A"]), _nom(q), sg(q["A"])] for r, q in zip(_b1, _b2)]
+S("¿Qué se pierde y qué se conserva al hacer bloques?",
+  """Supóngase que el bloque 2 da respuestas sistemáticamente más altas que el bloque 1, por ejemplo porque se corrió otro día. Ese corrimiento se suma a las ocho corridas del bloque 2.
+
+Lo que se pierde: la columna de ABD vale − en todo el bloque 1 y + en todo el bloque 2, así que su contraste es exactamente la diferencia entre bloques. El efecto estimado de la cadena ABD = ACF = BEF = CDE ya no se puede separar del efecto de los bloques. Por eso se escogió una cadena de triples: se pierde algo que de todos modos se suponía despreciable. En el ANOVA esa columna aparece como la fila de bloques, con 1 grado de libertad y la misma suma de cuadrados.
+
+Lo que se conserva: todas las demás columnas están balanceadas dentro de cada bloque, con cuatro signos + y cuatro signos − en el bloque 1 y lo mismo en el bloque 2. La tabla lo muestra para A. Al calcular el contraste de A, el corrimiento del bloque 2 aparece cuatro veces sumando y cuatro veces restando, y se cancela. Lo mismo pasa con las otras trece cadenas, que incluyen todos los efectos principales y todas las interacciones dobles. Es la ortogonalidad de la tabla de signos: la columna de bloques (ABD) es ortogonal a todas las demás.
+
+Con cuatro bloques se escogen dos columnas, por ejemplo P y Q. Los bloques son las cuatro combinaciones de signos (−,−), (−,+), (+,−) y (+,+), y quedan confundidas P, Q y su producto PQ, con 3 grados de libertad. Las tres deben ser cadenas que se puedan perder; es lo que se resuelve en el ejemplo 4 de la máquina CNC, que sigue.""",
+  left=[tab(["Bloque 1", "Signo de A", "Bloque 2", "Signo de A"], _ba, size=13, first_left=False, pad=0.06),
+        note("A tiene **4 + y 4 −** en cada bloque: la diferencia entre bloques **se cancela** en su contraste", size=13)],
+  right=[cards(("Se pierde", "La cadena **ABD = ACF = BEF = CDE**: su contraste es la diferencia entre bloques. "
+                             "En el ANOVA es la fila de **bloques** (1 g.l.)"),
+               ("Se conserva", "Las otras **13 cadenas** (todos los principales y todas las dobles): están "
+                               "**balanceadas** dentro de cada bloque"),
+               ("Cuatro bloques", "Dos columnas **P** y **Q**; se confunden P, Q y **PQ** (3 g.l.). "
+                                  "Las tres deben ser prescindibles (ejemplo 4)"),
+               size=13, cols=1)],
+  ratio=0.42)
 
 E(4, "máquina CNC", "Montgomery, ejemplo 8-6",
   ["Una máquina CNC de cinco ejes produce el impulsor de un motor de turbina. Una característica de calidad clave es el **perfil de los álabes**: interesa su desviación respecto al perfil especificado en el plano, medida como la desviación estándar de la diferencia entre ambos.",
@@ -1214,44 +1506,221 @@ E(4, "máquina CNC", "Montgomery, ejemplo 8-6",
   ["Elegir entre 16 y 32 corridas y justificarlo", "Repartir el diseño en cuatro bloques y ver qué se confunde",
    "Estimar los efectos y ajustar el modelo", "Interpretar los alias que queden ambiguos"])
 
-S("Ejemplo 4 · Máquina CNC: 2^{8−3}_{IV} en cuatro bloques",
-  """Una máquina CNC de cinco ejes maquina un propulsor para un motor de turbina. La respuesta es la desviación del perfil de los álabes respecto al plano: la desviación estándar de la diferencia entre el perfil real y el especificado. Se estudian ocho factores. La máquina tiene cuatro areómetros que pueden diferir, así que se tratan como bloques. Fuente: Montgomery, ejemplo 8-6.
+# Ejemplo 4 (Montgomery, ej. 8-6): efectos de la tabla 8-17 sobre ln(desv. estándar × 10^3).
+# Los 32 datos crudos (tabla 8-16) no están transcritos; el análisis se rehace desde los efectos.
+ef8 = {"A": (0.29026, 0.674020), "B": (-0.20054, 0.321729), "C": (-0.02576, 0.005310), "D": (0.10813, 0.093540),
+       "E": (-0.0005063, 0.00000205), "F": (-0.03871, 0.011988), "G": (0.11608, 0.107799), "H": (0.01417, 0.001606),
+       "AB + CF + DG": (-0.00588, 0.0002767), "AC + BF": (-0.06206, 0.030815), "AD + BG": (-0.37412, 1.119705),
+       "AE": (0.00804, 0.000517), "AF + BC": (-0.04502, 0.016214), "AG + BD": (0.05288, 0.022370),
+       "AH": (-0.05042, 0.020339), "BE": (0.09851, 0.077627), "BH": (0.01309, 0.001371), "CD + FG": (0.03452, 0.009535),
+       "CE": (0.03982, 0.012685), "CG + DF": (-0.01467, 0.001721), "CH": (0.06080, 0.029568), "DE": (0.01708, 0.002334),
+       "DH": (0.01569, 0.001969), "EF": (-0.01808, 0.002616), "EG": (-0.05371, 0.023078), "EH": (-0.03534, 0.009993),
+       "FH": (-0.02808, 0.006308), "GH": (0.00489, 0.0001914), "ABE": (0.03331, 0.008874), "ABH": (-0.01261, 0.001273),
+       "ACD": (-0.05433, 0.023617)}
+_blq8 = ("ABE", "ABH", "EH")
+_w8 = [w for w in ef8 if w not in _blq8]
+_v8 = [ef8[w][0] for w in _w8]
+_z8 = normal_scores(_v8)
+_s8 = sorted(range(len(_w8)), key=lambda i: _v8[i])
+_p8 = [(_v8[i], _z8[i]) for i in _s8]
+_act8 = {k for k, i in enumerate(_s8) if _w8[i] in ("A", "B", "AD + BG")}
+_lab8 = {k: _w8[i] for k, i in enumerate(_s8) if _w8[i] in ("A", "B", "AD + BG", "G")}
+pse8 = lenth(_v8); me8 = t_ppf(0.05, len(_v8) / 3) * pse8
+sme8 = t_ppf(1 - 0.95 ** (1 / len(_v8)), len(_v8) / 3) * pse8
+ssb8 = sum(ef8[w][1] for w in _blq8)
+_cubo8 = {(0, 0, 1): 0.9595, (15, 0, 1): 1.745, (0, 15, 1): 0.8280, (15, 15, 1): 1.370,
+          (0, 0, 2): 1.504, (15, 0, 2): 1.310, (0, 15, 2): 1.247, (15, 15, 2): 1.273}
+_ad8 = {(a, d): (_cubo8[(a, 0, d)] + _cubo8[(a, 15, d)]) / 2 for a in (0, 15) for d in (1, 2)}
 
-Los ingenieros confían en que las interacciones de tres o más factores no importan, pero no quieren ignorar las dobles. La tabla de diseños ofrece dos de resolución IV: el 2^{8−4} de 16 corridas y el 2^{8−3} de 32. El de 16 tiene muchas interacciones dobles aliadas entre sí y no se puede correr en cuatro bloques sin confundir cuatro interacciones dobles con ellos. Se elige el 2^{8−3} en cuatro bloques, con F = ABC, G = ABD y H = BCDE. Quedan confundidas con los bloques una cadena de interacciones triples y la interacción EH, entre la desviación del eje a y la velocidad de alimentación, que los ingenieros consideran muy improbable.
+r8 = basic(5); add_factor(r8, "F", "ABC"); add_factor(r8, "G", "ABD"); add_factor(r8, "H", "BCDE")
 
-Como la respuesta es una desviación estándar, se analiza su logaritmo.""",
+
+def _nom8(r):
+    return "".join(k.lower() for k in "ABCDEFGH" if r[k] > 0) or "(1)"
+
+
+def _sg8(r, t):
+    v = 1
+    for k in t:
+        v *= r[k]
+    return v
+
+
+_hus = {}
+for _r in r8:
+    _hus.setdefault((_sg8(_r, "ABE"), _sg8(_r, "ABH")), []).append(_nom8(_r))
+_orden_h = [(-1, -1), (-1, 1), (1, -1), (1, 1)]
+_tab_h = [[f"Husillo {i + 1}", sg(k[0]), sg(k[1]), sg(k[0] * k[1]), ", ".join(_hus[k])] for i, k in enumerate(_orden_h)]
+
+S("Ejemplo 4 · Pasos 1 y 2: respuesta, factores y resolución",
+  """Paso 1, planteamiento. La respuesta es la desviación del perfil de los álabes respecto al plano, medida como la desviación estándar de la diferencia entre el perfil real y el especificado (en milésimas de pulgada). Como es una desviación estándar, se analiza su logaritmo, ln(desviación estándar × 10^{3}): las desviaciones estándar suelen tener varianza que crece con su media, y el logaritmo la estabiliza. Hay ocho factores a dos niveles, los de la tabla.
+
+Paso 2, supuestos y resolución. Los ingenieros creen que las interacciones de tres o más factores son despreciables, pero no quieren ignorar las de dos. De ahí sale la resolución mínima. Resolución III no sirve: mezclaría efectos principales con interacciones dobles, que no se quieren ignorar. Resolución IV basta: los efectos principales quedan aliados solo con triples, que se suponen nulas, y las dobles quedan aliadas entre sí, lo que se acepta porque se pueden interpretar con conocimiento del proceso. Resolución V separaría también las dobles, pero para ocho factores exige 64 corridas (2^{8−2}_{V}), demasiadas.
+
+Hay un requisito más, que pesa en el paso 3: la máquina tiene cuatro husillos (la traducción del libro los llama areómetros) que pueden diferir entre sí. Las corridas se van a repartir en los cuatro husillos, así que el diseño se corre en cuatro bloques.""",
   left=[tab(["Factor", "Bajo (−)", "Alto (+)"],
             [["A  Desviación eje x (0.001 pulg)", "0", "15"], ["B  Desviación eje y (0.001 pulg)", "0", "15"],
              ["C  Desviación eje z (0.001 pulg)", "0", "15"], ["D  Fabricante de la herramienta", "1", "2"],
-             ["E  Desviación eje a (0.001 grados)", "0", "30"], ["F  Velocidad del areómetro (%)", "90", "110"],
+             ["E  Desviación eje a (0.001 grados)", "0", "30"], ["F  Velocidad del husillo (%)", "90", "110"],
              ["G  Altura de la plantilla (0.001 pulg)", "0", "15"], ["H  Velocidad de alimentación (%)", "90", "110"]],
             size=13, colw=[0.6, 0.2, 0.2])],
-  right=[bul("Respuesta: **ln(desviación estándar × 10^{3})**",
-             "Cuatro **areómetros** como bloques",
-             "**2^{8−3}_{IV}** en 4 bloques: 32 corridas", size=16),
-         form("F = ABC,  G = ABD,  H = BCDE", size=17),
-         note("Con bloques se confunden una cadena triple y **EH**, que se considera muy improbable", size=14)],
+  right=[num("**Respuesta**: ln(desviación estándar × 10^{3}); el logaritmo estabiliza la varianza",
+             "**Supuestos**: triples despreciables; dobles **no** se ignoran",
+             "**III** no sirve (principales + dobles); **IV** basta; **V** pide 64 corridas",
+             "**Restricción**: 4 husillos que pueden diferir  ⇒  el diseño va en **4 bloques**", size=15),
+         note("Resolución requerida: **IV**, corrida en **cuatro bloques**", size=15)],
+  ratio=0.5)
+
+S("Ejemplo 4 · Paso 3: ¿16 o 32 corridas? Aquí deciden los bloques",
+  """La tabla de diseños recomendados ofrece dos diseños de resolución IV para ocho factores: el 2^{8−4}_{IV} de 16 corridas y el 2^{8−3}_{IV} de 32. Sin bloques, el de 16 bastaría. Los bloques cambian la decisión, y este es el punto que conviene entender bien.
+
+Cuatro bloques necesitan tres columnas confundidas: se escogen dos columnas P y Q, los bloques son las cuatro combinaciones de signos de P y Q, y su producto PQ queda confundido también. Son 3 grados de libertad que se pierden.
+
+En el 2^{8−4}_{IV} las 15 columnas son 8 efectos principales y 7 cadenas de cuatro interacciones dobles cada una (por ejemplo AB = CG = DH = EF). No hay ninguna columna formada solo por interacciones triples. Las tres columnas de bloques tendrían que ser cadenas de dobles: se perderían 3 cadenas, es decir, 12 de las 28 interacciones dobles, justo lo que los ingenieros no quieren ignorar.
+
+En el 2^{8−3}_{IV} hay 31 columnas. Varias cadenas están formadas solo por interacciones triples y pueden ir a los bloques sin costo; muchas interacciones dobles quedan solas en su cadena. Por eso se elige el 2^{8−3}_{IV} en cuatro bloques de ocho corridas: los bloques obligan a duplicar el tamaño del experimento para no perder las interacciones dobles. Fuente: Montgomery, ejemplo 8-6.""",
+  left=[tab(["", "2^{8−4}_{IV}", "2^{8−3}_{IV}"],
+            [["Corridas", "16", "32"],
+             ["Columnas (grados de libertad)", "15", "31"],
+             ["Cadenas solo de triples", "**ninguna**", "varias"],
+             ["Cadenas de dobles", "7, de **4 dobles** cada una", "7 con alias; el resto, dobles solas"],
+             ["Con 4 bloques se pierden", "**3 cadenas de dobles** (12 dobles)", "2 cadenas triples y **EH**"]],
+            size=14, colw=[0.36, 0.32, 0.32], hl=[4])],
+  right=[cards(("¿Qué pide un diseño en 4 bloques?", "Dos columnas **P** y **Q**: los bloques son sus 4 combinaciones de "
+                                                     "signos; **PQ** también queda confundida. **3 g.l.** perdidos"),
+               ("Decisión", "Se elige el **2^{8−3}_{IV}** en **4 bloques de 8**: los bloques obligan a duplicar el "
+                            "experimento para no perder interacciones dobles"), size=14, cols=1)],
   ratio=0.55)
 
-S("Ejemplo 4 · Efectos, ANOVA y conclusión",
-  """En la gráfica normal de los efectos solo sobresalen A (desviación del eje x), B (desviación del eje y) y la cadena AD + BG. AD es la interacción del eje x con el fabricante de la herramienta y BG la del eje y con la altura de la plantilla. Como las dos incluyen un efecto principal grande, no hay una simplificación lógica obvia: hace falta conocimiento del proceso o más corridas para separarlas.
+S("Ejemplo 4 · Paso 4: generadores, relación de definición y alias",
+  """El diseño básico es el 2^{5} completo en A, B, C, D y E (32 corridas). Los tres factores restantes se generan con F = ABC, G = ABD y H = BCDE (tabla 8-14). Los generadores son I = ABCF, I = ABDG e I = BCDEH; sus productos completan la relación de definición, con 2^{3} − 1 = 7 palabras: ABCF, ABDG, CDFG, BCDEH, ADEFH, ACEGH y BEFGH. La más corta tiene cuatro letras: resolución IV.
 
-Suponiendo, por conocimiento del proceso, que la interacción es AD, el modelo lleva A, B, D y AD. D entra aunque su efecto sea pequeño para respetar el principio de jerarquía. El efecto de los bloques es pequeño: los areómetros no difieren mucho. La gráfica normal de residuales sugiere colas algo más gruesas que las normales.
+Despreciando las interacciones de tres o más factores, los ocho efectos principales quedan limpios. Las interacciones dobles se reparten así: siete cadenas tienen más de una doble (las de la tabla) y las otras trece dobles quedan solas en su cadena: AE, AH, BE, BH, CE, CH, DE, DH, EF, EG, EH, FH y GH. La cadena que más va a importar es AD = BG: la interacción del eje x con el fabricante de la herramienta está aliada con la del eje y con la altura de la plantilla.""",
+  left=[form("F = ABC,   G = ABD,   H = BCDE", size=18),
+        form("I = ABCF = ABDG = CDFG = BCDEH", "= ADEFH = ACEGH = BEFGH", size=16),
+        note("Palabra más corta: **4 letras**  ⇒  **resolución IV**", size=15)],
+  right=[tab(["Cadenas con más de una interacción doble"],
+             [["AB = CF = DG"], ["AC = BF"], ["**AD = BG**"], ["AF = BC"], ["AG = BD"], ["CD = FG"], ["CG = DF"]],
+             size=14, first_left=False, hl=[2], pad=0.06),
+         txt("Los 8 principales, limpios; las otras 13 dobles, **solas** en su cadena", size=14)],
+  ratio=0.5)
 
-Interpretación: con el fabricante 1 la respuesta crece mucho al pasar A de bajo a alto; con el fabricante 2 casi no cambia. La mejor combinación es A en nivel bajo, B en nivel alto y la herramienta del fabricante 1. La tabla ANOVA es la del libro (tabla 8-18).""",
+S("Ejemplo 4 · Paso 5: ¿cómo se reparten en los 4 husillos?",
+  f"""Este es el paso de los bloques. Hay cuatro husillos y cada uno va a recibir 8 corridas. Si hubiera una diferencia entre husillos (uno corta un poco peor que otro), esa diferencia se suma a todas sus corridas; el reparto debe hacer que caiga en columnas que no importen.
+
+Se escogen dos columnas P y Q formadas solo por interacciones de orden alto: P = ABE (cadena ABE = CEF = DEG) y Q = ABH (cadena ABH = CFH = DGH). Las dos son cadenas de triples, que se suponen despreciables. Cada corrida tiene un signo de ABE y uno de ABH, y la combinación de los dos signos dice a qué husillo va: (−, −) al husillo 1, (−, +) al 2, (+, −) al 3 y (+, +) al 4. La tabla muestra las 8 corridas de cada husillo.
+
+El precio inevitable es el producto: PQ = ABE · ABH = EH (A y B se cancelan). La columna de EH vale + en los husillos 1 y 4 y − en los husillos 2 y 3, así que también queda confundida con los husillos. EH es la interacción entre la desviación del eje a y la velocidad de alimentación, que los ingenieros consideran muy improbable; por eso se acepta perderla. Su cadena completa es EH = ACG = ADF = BCD = BFG.
+
+Todas las demás columnas, los ocho efectos principales y las demás interacciones dobles, tienen cuatro signos + y cuatro − dentro de cada husillo: la diferencia entre husillos se cancela en sus contrastes. Dentro de cada husillo se sortea el orden de las 8 corridas; no se sortea entre husillos, porque el husillo de cada corrida ya está fijado por el diseño.""",
+  left=[tab(["Husillo", "ABE", "ABH", "EH", "Sus 8 corridas"], _tab_h, size=12, first_left=False,
+            colw=[0.14, 0.08, 0.08, 0.08, 0.62], pad=0.06),
+        txt("Las 32 corridas del 2^{8−3}_{IV} repartidas por los signos de ABE y ABH", size=12),
+        num("Escoger **P = ABE** y **Q = ABH**: cadenas **solo de triples**",
+            "Cada combinación de signos (P, Q) es un **husillo**",
+            "**PQ = ABE · ABH = EH** queda confundida también: es el precio", size=14)],
+  right=[cards(("Se pierde", "ABE, ABH y **EH** (eje a × velocidad de alimentación, considerada muy improbable)"),
+               ("Se conserva", "Los 8 principales y las demás dobles: **4 + y 4 −** en cada husillo"),
+               ("Aleatorización", "El orden se sortea **dentro** de cada husillo"), size=13, cols=1)],
+  ratio=0.56)
+
+S("Ejemplo 4 · Paso 6: ¿qué efectos son activos?",
+  f"""Con una sola réplica no hay error puro, así que los efectos activos se identifican con la gráfica de probabilidad normal (fig. 8-19 del libro). De las 31 columnas se grafican 28: las tres confundidas con los husillos (ABE, ABH y EH) no son efectos de factores sino diferencias entre husillos, y se dejan fuera. Los valores son los efectos de la tabla 8-17 sobre ln(desviación estándar × 10^{{3}}).
+
+Tres puntos se apartan con claridad de la recta de Daniel: la cadena AD + BG ({f(ef8["AD + BG"][0], 3)}), A ({f(ef8["A"][0], 3)}) y B ({f(ef8["B"][0], 3)}). Les siguen G ({f(ef8["G"][0], 3)}), D ({f(ef8["D"][0], 3)}) y BE ({f(ef8["BE"][0], 3)}), mucho menores. El método de Lenth con los 28 efectos da PSE = {f(pse8, 4)}, ME = {f(me8, 3)} y SME = {f(sme8, 3)}. AD + BG y A superan el SME. B supera el ME pero queda un poco por debajo del SME; se incluye porque se aparta con claridad de la recta y es el tercer efecto en tamaño, casi el doble del siguiente. G queda justo en el límite del ME ({f(ef8["G"][0], 4)} frente a {f(me8, 4)}), y D y BE por debajo: se dejan en el error, como hace Montgomery.
+
+Primera clasificación: al modelo, A, B y la cadena AD + BG; el resto, al error. Falta decidir a qué interacción se atribuye la cadena, que es el paso siguiente.""",
+  left=[scatter(_p8, "Efecto", "Puntuación normal", h=4.2, labels=_lab8, line=daniel(_p8, _act8), hi=_act8,
+                title="Gráfica normal de los 28 efectos (fig. 8-19)"),
+        txt("Sin ABE, ABH y EH, confundidas con los husillos", size=12)],
+  right=[num(f"**Se apartan**: AD + BG = {f(ef8['AD + BG'][0], 3)}, A = {f(ef8['A'][0], 3)}, B = {f(ef8['B'][0], 3)}",
+             f"**Menores**: G = {f(ef8['G'][0], 3)}, D = {f(ef8['D'][0], 3)}, BE = {f(ef8['BE'][0], 3)}",
+             f"**Lenth**: ME = {f(me8, 3)}, SME = {f(sme8, 3)}. AD + BG y A > SME; B > ME; G en el límite; D y BE < ME",
+             "Al **modelo**: A, B y la cadena AD + BG", size=15),
+         note("Las 3 columnas de los husillos **no se grafican**: no son efectos de factores", size=14)],
+  ratio=0.52)
+
+S("Ejemplo 4 · Paso 7: ¿la cadena es AD o BG?",
+  f"""La cadena AD + BG es la más grande de todas ({f(ef8["AD + BG"][0], 3)}), pero los datos no pueden separar sus dos términos: AD es la interacción del eje x con el fabricante de la herramienta y BG la del eje y con la altura de la plantilla.
+
+Las herramientas de atribución no deciden aquí. La jerarquía no ayuda, porque las dos son interacciones dobles. La herencia tampoco: cada una contiene un efecto principal grande (A en AD, B en BG) y uno pequeño de tamaño parecido (D = {f(ef8["D"][0], 3)} en AD, G = {f(ef8["G"][0], 3)} en BG). Montgomery lo dice así: no hay una simplificación lógica obvia.
+
+Quedan dos salidas. La primera, conocimiento del proceso: los ingenieros consideran que la interacción real es AD, entre el eje x y el fabricante de la herramienta. La segunda, más corridas: un doblez del factor A o del factor D separaría la cadena. Montgomery sigue la primera y advierte que la conclusión es tentativa. Por jerarquía del modelo, al incluir AD también entra D, aunque su efecto sea pequeño.""",
+  body=[tab(["", "AD (eje x × fabricante)", "BG (eje y × altura de plantilla)"],
+            [["Jerarquía", "Interacción doble", "Interacción doble"],
+             ["Herencia: principal grande", f"A = {f(ef8['A'][0], 3)}", f"B = {f(ef8['B'][0], 3)}"],
+             ["Herencia: principal pequeño", f"D = {f(ef8['D'][0], 3)}", f"G = {f(ef8['G'][0], 3)}"],
+             ["Conclusión", "**Empate**: los datos no deciden", "**Empate**: los datos no deciden"]],
+            size=15, colw=[0.3, 0.35, 0.35]),
+        cards(("Conocimiento del proceso", "Los ingenieros juzgan que la interacción real es **AD**"),
+              ("Más corridas", "Un **doblez** de A o de D separaría AD de BG"),
+              ("Modelo", "**A, B, D y AD**; D entra por **jerarquía**"), size=14)])
+
+S("Ejemplo 4 · Paso 8: hipótesis, modelo y ANOVA con bloques",
+  f"""Hipótesis: una por cada cadena que entra al modelo. Para la cadena AD + BG, H_{{0}}: β_{{AD}} + β_{{BG}} = 0 frente a H_{{A}}: β_{{AD}} + β_{{BG}} ≠ 0; igual para A, B y D. Se rechaza H_{{0}} si F_{{0}} > F_{{0.05, 1, 24}} = {f(f_ppf(0.05, 1, 24))} o si el valor p es menor que 0.05.
+
+Modelo: ŷ = β_{{0}} + β_{{A}} x_{{A}} + β_{{B}} x_{{B}} + β_{{D}} x_{{D}} + β_{{AD}} x_{{A}} x_{{D}} + (efecto del husillo) + ε. La tabla ANOVA es la del libro (tabla 8-18). Se rechaza H_{{0}} para A, B, D y AD.
+
+La fila de bloques merece atención. Su suma de cuadrados, 0.0201 con 3 grados de libertad, es exactamente la suma de las tres columnas confundidas con los husillos: SS(ABE) + SS(ABH) + SS(EH) = {f(ef8["ABE"][1], 6)} + {f(ef8["ABH"][1], 6)} + {f(ef8["EH"][1], 6)} = {f(ssb8, 4)}. Se separa del error para que la diferencia entre husillos no infle el error y no le reste potencia a las pruebas. No lleva F_{{0}}: los husillos no se asignaron al azar a las corridas, así que la prueba de bloques no tiene la misma validez que las de los factores. Su cuadrado medio, 0.0067, es menor que el del error (0.0171): los husillos casi no difieren.
+
+El error, 0.4099 con 24 grados de libertad, reúne las 24 columnas que no entraron al modelo ni a los bloques: 31 − 4 − 3 = 24.""",
   left=[tab(["SV", "SS", "DF", "MS", "F_{0}", "P-Value"],
             [["A", "0.6740", "1", "0.6740", "39.42", "<0.0001"], ["B", "0.3217", "1", "0.3217", "18.81", "0.0002"],
              ["D", "0.0935", "1", "0.0935", "5.47", "0.0280"], ["AD", "1.1197", "1", "1.1197", "65.48", "<0.0001"],
-             ["Bloques", "0.0201", "3", "0.0067", "", ""], ["Error", "0.4099", "24", "0.0171", "", ""],
-             ["Total", "2.6389", "31", "", "", ""]], size=15)],
-  right=[bul("Activos: **A**, **B** y la cadena **AD + BG**",
-             "Las dos interacciones tienen un efecto principal grande: se requiere **conocimiento del proceso**",
-             "D entra por **jerarquía** (acompaña a AD)",
-             "Bloques pequeños: los areómetros **no difieren** mucho",
-             "Mejor condición: **A bajo, B alto, fabricante 1**", size=15)],
+             ["**Bloques**", "**0.0201**", "**3**", "**0.0067**", "", ""], ["Error", "0.4099", "24", "0.0171", "", ""],
+             ["Total", "2.6389", "31", "", "", ""]], size=14, hl=[4]),
+        form(f"H_{{0}}: β_{{AD}} + β_{{BG}} = 0,   F_{{0.05, 1, 24}} = {f(f_ppf(0.05, 1, 24))}", size=15)],
+  right=[cards(("Bloques = las 3 columnas de los husillos",
+                f"SS(ABE) + SS(ABH) + SS(EH) = **{f(ssb8, 4)}** con **3 g.l.**"),
+               ("¿Por qué separarlos?", "Para que la diferencia entre husillos **no infle el error**"),
+               ("¿Por qué sin F_{0}?", "Los husillos no se asignaron al azar; MS = 0.0067 < 0.0171: **casi no difieren**"),
+               size=13, cols=1),
+         note("Error: 31 − 4 (modelo) − 3 (bloques) = **24 g.l.**", size=14)],
+  ratio=0.52)
+
+S("Ejemplo 4 · Pasos 9 y 10: supuestos e interpretación",
+  f"""Supuestos. Montgomery muestra la gráfica de probabilidad normal de los residuales (fig. 8-20): sugiere colas algo más gruesas que las de la normal, por lo que podría considerarse otra transformación además del logaritmo. Los datos crudos de la tabla 8-16 no se transcribieron aquí, así que esa verificación se cita del libro.
+
+Interpretación. Como el modelo solo tiene A, B y D, el diseño se proyecta en cuatro réplicas de un 2^{{3}} en esos factores (fig. 8-22). Los promedios de ln(desviación) en los ocho vértices dan la interacción AD: con el fabricante 1, la desviación crece mucho al pasar el eje x de 0 a 15 ({f(_ad8[(0, 1)], 3)} a {f(_ad8[(15, 1)], 3)}, promediando sobre B); con el fabricante 2 casi no cambia ({f(_ad8[(0, 2)], 3)} a {f(_ad8[(15, 2)], 3)}). B tiene efecto negativo: la desviación baja cuando el eje y está en su nivel alto.
+
+Conclusión: la desviación del perfil es mínima con A en nivel bajo (eje x en 0), B en nivel alto (eje y en 15) y la herramienta del fabricante 1, vértice con promedio {f(_cubo8[(0, 15, 1)], 3)}. Los husillos casi no difieren. La atribución de la cadena a AD es tentativa y conviene confirmarla con un doblez o una corrida de verificación.""",
+  left=[lines(["A bajo (0)", "A alto (15)"],
+              [("Fabricante 1 (D −)", [_ad8[(0, 1)], _ad8[(15, 1)]]), ("Fabricante 2 (D +)", [_ad8[(0, 2)], _ad8[(15, 2)]])],
+              "ln(desviación) promedio", h=3.6, title="Interacción AD (promedio sobre B)"),
+        txt("Promedios del cubo A, B, D de la fig. 8-22", size=12)],
+  right=[bul("**Residuales** (fig. 8-20): colas algo gruesas; se podría probar otra transformación",
+             "Proyección: **4 réplicas de un 2^{3}** en A, B, D",
+             "Con el **fabricante 1**, A sube mucho la desviación; con el **2**, casi nada",
+             "B **alto** baja la desviación", size=15),
+         note(f"Mejor condición: **A bajo, B alto, fabricante 1** (promedio {f(_cubo8[(0, 15, 1)], 3)}). "
+              "Husillos casi iguales. Confirmar AD", size=14)],
   ratio=0.5)
 
 section(7, "Diseños de resolución III", "Saturados, doblez y diseños de Plackett-Burman")
+
+S("¿Qué son los diseños de resolución III y los diseños saturados?",
+  """Un diseño de resolución III es un fraccionado cuya relación de definición tiene como palabra más corta una de tres letras. La consecuencia práctica es que ningún efecto principal está aliado con otro efecto principal, pero cada efecto principal sí está aliado con interacciones de dos factores. Por eso solo se interpretan bien si se puede suponer que esas interacciones son despreciables.
+
+Un diseño saturado es un diseño de resolución III que estudia el máximo número posible de factores con sus corridas: k = N − 1. La razón es una cuenta de grados de libertad. Con N corridas se pueden estimar N − 1 efectos (el grado de libertad restante se usa en la media general). Si hay N − 1 factores, cada uno de esos grados de libertad se gasta en un efecto principal y el diseño queda lleno: no sobra ninguna columna para estimar interacciones ni para el error. Con ocho corridas, siete factores saturan el diseño; con seis factores sobra una columna, con cinco sobran dos, y así sucesivamente.
+
+Estos diseños se usan para tamizado (screening): al comienzo de una investigación, cuando hay muchos factores candidatos y se espera que solo unos pocos importen. El subtema tiene cuatro partes: cómo se construye un saturado, cómo se adapta a menos factores eliminando columnas, cómo se separan después los alias con el doblez y, cuando N no es potencia de 2, los diseños de Plackett-Burman.""",
+  left=[txt("**Diseño de resolución III**: fraccionado cuya palabra más corta en la relación de definición tiene "
+            "**tres letras**. Ningún efecto principal está aliado con otro principal, pero **cada principal sí está "
+            "aliado con interacciones dobles**. Solo se interpreta bien si esas interacciones son despreciables.", size=15),
+        txt("**Diseño saturado**: diseño de resolución III que estudia el **máximo número de factores** posible, "
+            "**k = N − 1**. Con N corridas se estiman N − 1 efectos (un grado de libertad es para la media). Si hay "
+            "N − 1 factores, todos los grados de libertad se gastan en efectos principales: el diseño queda **lleno** y "
+            "no sobra ninguna columna para interacciones ni para el error.", size=15),
+        txt("**Para qué se usan**: tamizado (screening), cuando hay muchos factores candidatos y se espera que "
+            "solo unos pocos importen.", size=15)],
+  right=[txt("**Cuenta de grados de libertad con N = 8 corridas**", size=15),
+         tab(["Factores k", "Para efectos principales", "Columnas que sobran", "¿Saturado?"],
+             [["7", "7", "0", "**sí**"], ["6", "6", "1", "no"], ["5", "5", "2", "no"], ["4", "4", "3", "no"]],
+             size=14, hl=[0], first_left=False, colw=[0.18, 0.32, 0.28, 0.22]),
+         cards(("Partes del subtema", "1) construir el saturado; 2) **eliminar columnas** si hay menos factores; "
+                                      "3) separar los alias con el **doblez**; 4) **Plackett-Burman** cuando N no es potencia de 2"),
+               size=14, cols=1)],
+  ratio=0.55)
 
 _rows = [[str(i + 1)] + [sg(r[c]) for c in "ABCDEFG"] for i, r in enumerate(r4)]
 S("¿Qué es un diseño saturado? El 2^{7−4}_{III}",
@@ -1260,7 +1729,9 @@ S("¿Qué es un diseño saturado? El 2^{7−4}_{III}",
 El costo es alto: cada efecto principal es alias de tres interacciones dobles. Solo sirve si se puede suponer que las interacciones son despreciables o si se planea un doblez posterior.""",
   left=[tab(["Corrida", "A", "B", "C", "D = AB", "E = AC", "F = BC", "G = ABC"], _rows, size=14,
             first_left=False),
-        note("**Saturado**: 7 factores en 8 corridas (k = N − 1)", size=15)],
+        txt("**Cómo se construye**: (1) se escribe el 2^{3} completo en A, B y C; (2) a cada una de sus cuatro "
+            "interacciones (AB, AC, BC, ABC) se le asigna un factor nuevo. Son 3 + 4 = **7 columnas = N − 1**: saturado.",
+            size=14)],
   right=[tab(["Columna", "Estima"], [[w, f"{w} + {alias4[w]}"] for w in "ABCDEFG"], size=15,
              first_left=False),
          txt("Alias despreciando interacciones de tres o más factores", size=13)], ratio=0.56)
@@ -1270,30 +1741,138 @@ S("¿Cuál es la relación de definición del 2^{7−4}?",
 
 Cada efecto tiene 15 alias. Si se suponen despreciables las interacciones de tres o más factores, cada estimación es la suma del efecto principal y de tres interacciones dobles; son las cadenas de la tabla de la diapositiva anterior (ecuación 8-1 del libro).
 
-Es una fracción un dieciseisavo del 2^{7}. Hay 16 diseños en la familia, uno por cada combinación de signos de los cuatro generadores; con todos positivos se tiene la fracción principal.""",
+Es una fracción un dieciseisavo del 2^{7}. Hay 16 diseños en la familia, uno por cada combinación de signos de los cuatro generadores; con todos positivos se tiene la fracción principal.
+
+Esta lista de 15 palabras es la herramienta para el resto del subtema: al eliminar un factor se tachan las palabras que contienen su letra, y lo que queda es la relación de definición del diseño más pequeño.""",
   body=[form("I = ABD = ACE = BCF = ABCG = BCDE = ACDF = CDG", "= ABEF = BEG = AFG = DEF = ADEG = CEFG = BDFG = ABCDEFG", size=17),
+        txt("**Palabra**: producto de letras cuya columna de signos es toda +, es decir, igual a I. **Cómo se obtienen**: "
+            "cada generador se convierte en palabra multiplicando por la letra nueva, D = AB ⇒ D·D = ABD ⇒ **I = ABD** "
+            "(porque D·D = I). Después se multiplican las palabras entre sí y toda letra repetida se cancela: "
+            "ABD · ACE = A^{2}BCDE = **BCDE**. Cuatro generadores dan 2^{4} − 1 = **15 palabras**.", size=15),
+        txt("**Alias de B**: se multiplica B por cada palabra (B · ABD = AD, B · BCF = CF, B · BEG = EG, …):", size=14),
         form("B = AD = CF = EG = ACG = CDE = AEF = DFG = ABCE = ABFG = BCDG = BDEF = ABCDF = ABDEG = BCEFG = ACDEFG", size=14),
-        cards(("15 palabras", "Generadores y todos sus productos; la más corta tiene **3 letras**: resolución III"),
+        cards(("Resolución III", "La palabra más corta tiene **3 letras** (ABD, ACE, …): un principal se alía con dobles"),
               ("15 alias por efecto", "Despreciando triples: principal + **tres interacciones dobles**"),
-              ("16 fracciones", "Una por cada combinación de signos de los **cuatro generadores**"), size=15)])
+              ("Para eliminar factores", "Al quitar un factor se **tachan las palabras con su letra**; las que quedan son la nueva relación"),
+              size=14)])
 
-S("¿Cómo obtengo diseños para menos factores?",
-  """Del 2^{7−4} saturado se obtienen diseños de resolución III para menos de siete factores en ocho corridas: basta eliminar columnas. Si se elimina G queda un 2^{6−3}_{III}, con D = AB, E = AC y F = BC.
+S("¿Qué significa eliminar un factor y cuál es el procedimiento?",
+  """Los diseños saturados existen solo para k = 3, 7, 15, 31 factores. Cuando el problema tiene otro número de factores, por ejemplo seis, no se construye un diseño nuevo desde cero: se toma el saturado inmediatamente mayor como plantilla y se dejan sin usar las columnas que sobran. A eso se le llama eliminar factores (o eliminar columnas).
 
-Regla: al eliminar d factores, la nueva relación de definición está formada por las palabras de la original que no contienen ninguna de las letras eliminadas. Para el 2^{6−3} quedan siete palabras: I = ABD = ACE = BCF = BCDE = ACDF = ABEF = DEF.
+Eliminar una columna no cambia las corridas. La columna sigue existiendo en la matriz, porque sus signos son el producto de otras columnas, pero no se le asigna ningún factor real: nadie fija esa variable en el laboratorio. Por eso las palabras que contienen su letra desaparecen de la relación de definición. Una palabra como ABCG dice que la columna de G es igual al producto de A, B y C; si G ya no es un factor, esa igualdad ya no liga a factores entre sí. Y las columnas que quedan libres no se pierden: cada una estima una cadena de interacciones.
 
-Hay que elegir bien qué columnas se eliminan. Si se eliminan B, D, F y G quedan tres factores en ocho corridas, pero el diseño resulta ser dos réplicas de un 2^{3−1}, cuando con las mismas ocho corridas se podría tener un 2^{3} completo en A, C y E.
+Procedimiento paso a paso:
+1. Contar los factores k y escoger el saturado más pequeño con N − 1 ≥ k (N = 4, 8, 16, 32).
+2. Calcular cuántas columnas sobran: N − 1 − k.
+3. Elegir cuáles eliminar. Se prefieren columnas generadas, se revisa que las que quedan no formen una palabra corta entre sí y, si es posible, que solo sobrevivan palabras de cuatro o más letras, porque así el diseño gana resolución.
+4. Borrar esas columnas de la tabla. Las N corridas quedan iguales.
+5. Escribir la nueva relación de definición: se tacha toda palabra que contenga alguna letra eliminada. La palabra más corta que quede da la resolución.
+6. Escribir los nuevos alias: en cada cadena se tachan los términos que contienen letras eliminadas.
+7. Interpretar las columnas libres: cada una estima una cadena de interacciones; si se suponen nulas, dan grados de libertad para estimar el error.""",
+  left=[txt("**Eliminar un factor** = usar el saturado como **plantilla** para menos factores, dejando **sin asignar** "
+            "las columnas que sobran. Se hace porque los saturados solo existen para k = 3, 7, 15, 31.", size=15),
+        cards(("Las corridas no cambian", "La columna sigue en la matriz (sus signos son producto de otras), pero "
+                                          "**nadie fija esa variable** en el laboratorio"),
+              ("Por qué se tachan palabras", "ABCG dice «la columna G = A·B·C». Si G no es un factor, esa igualdad "
+                                             "**ya no liga factores**: la palabra sale de la relación"),
+              size=14, cols=1)],
+  right=[txt("**Paso a paso**", size=16),
+         num("**Contar k** y escoger el saturado más pequeño con **N − 1 ≥ k** (N = 4, 8, 16, 32)",
+             "**Cuántas sobran**: N − 1 − k columnas",
+             "**Cuáles eliminar**: que lo que queda **no forme palabras cortas**; si se puede, que solo "
+             "sobrevivan palabras de **4 o más letras** (se gana resolución)",
+             "**Borrar** esas columnas: las N corridas quedan iguales",
+             "**Nueva relación**: tachar toda palabra con una letra eliminada; la más corta que quede da la **resolución**",
+             "**Nuevos alias**: tachar en cada cadena los términos con letras eliminadas",
+             "**Columnas libres**: estiman cadenas de interacciones o dan grados de libertad al error", size=13)],
+  ratio=0.45)
 
-La misma idea da diseños saturados mayores: con el 2^{4} en A, B, C y D y once factores nuevos igualados a todas sus interacciones se obtiene el 2^{15−11}_{III}, que estudia 15 factores en 16 corridas, cada uno alias de siete interacciones dobles. Del mismo modo, el 2^{31−26}_{III} estudia 31 factores en 32 corridas.""",
-  left=[form("Nueva relación = palabras que **no contienen** las letras eliminadas", size=17),
-        tab(["Se elimina", "Queda", "Relación de definición"],
-            [["G", "2^{6−3}_{III}", "I = ABD = ACE = BCF = BCDE = ACDF = ABEF = DEF"],
-             ["B, D, F, G", "3 factores", "Dos réplicas de un 2^{3−1} (mala elección)"]],
-            size=14, colw=[0.2, 0.2, 0.6], first_left=False)],
-  right=[tab(["Diseño saturado", "Factores", "Corridas"],
-             [["2^{3−1}_{III}", "3", "4"], ["2^{7−4}_{III}", "7", "8"], ["2^{15−11}_{III}", "15", "16"],
-              ["2^{31−26}_{III}", "31", "32"]], size=15, first_left=False),
-         note("Para 3 factores en 8 corridas es mejor un **2^{3} completo** en A, C y E", size=15)], ratio=0.58)
+_rows98 = [[str(i + 1)] + [sg(r[c]) for c in "ABCDEF"] + ["(" + sg(r["G"]) + ")"] for i, r in enumerate(r4)]
+S("Ejemplo: ¿cómo se pasa del 2^{7−4} a seis factores?",
+  """Se aplican los siete pasos a un caso concreto: hay seis factores y solo se pueden hacer ocho corridas.
+
+Paso 1: con k = 6 el saturado más pequeño que alcanza es el de N = 8, el 2^{7−4}_{III}: el 2^{3} en A, B y C con D = AB, E = AC, F = BC y G = ABC (la tabla).
+
+Paso 2: sobran N − 1 − k = 8 − 1 − 6 = 1 columna.
+
+Paso 3: se elige cuál. Con seis factores en ocho corridas el diseño es necesariamente de resolución III, y quitar D, E, F o G da lo mismo en resolución: siempre quedan siete palabras y la más corta es de tres letras. Se elige G.
+
+Paso 4: se borra la columna de G. Las ocho corridas quedan iguales; solo que nadie fija esa columna. El diseño que queda es un 2^{6−3}_{III}, con D = AB, E = AC y F = BC.
+
+Paso 5: nueva relación de definición. De las 15 palabras del 2^{7−4} (I = ABD = ACE = BCF = ABCG = BCDE = ACDF = CDG = ABEF = BEG = AFG = DEF = ADEG = BDFG = CEFG = ABCDEFG) se tachan las ocho que tienen G y quedan siete: I = ABD = ACE = BCF = BCDE = ACDF = ABEF = DEF. La más corta tiene tres letras: resolución III.
+
+Paso 6: los alias se aligeran. En el 2^{7−4}, A = BD = CE = FG; al quitar G desaparece FG y queda A = BD = CE. Cada efecto principal pasa de tres interacciones dobles aliadas a dos.
+
+Paso 7: la columna liberada no se tira. La columna ABC, que era la de G, ahora estima la cadena de interacciones AF + BE + CD. Sirve para ver si hay interacciones o, si se suponen nulas, como un grado de libertad para el error.""",
+  left=[tab(["Corrida", "A", "B", "C", "D = AB", "E = AC", "F = BC", "G = ABC (se borra)"], _rows98, size=13,
+            first_left=False, pad=0.06),
+        note("Las **8 corridas no cambian**: solo la columna de G deja de ser un factor", size=14)],
+  right=[num("k = 6  ⇒  N − 1 ≥ 6  ⇒  **N = 8**: el **2^{7−4}_{III}**",
+             "Sobran 8 − 1 − 6 = **1 columna**",
+             "Quitar D, E, F o G da igual (siempre III): se elige **G**",
+             "Se **borra** G  ⇒  **2^{6−3}_{III}** con D = AB, E = AC, F = BC",
+             "Se tachan las 8 palabras con G; quedan **7**, la más corta de 3 letras: **III**",
+             "En A = BD = CE = FG sale FG  →  **A = BD = CE**",
+             "La columna ABC (la de G) estima **AF + BE + CD**", size=13),
+         form("I = ABD = ACE = BCF = BCDE", "= ACDF = ABEF = DEF", size=15)],
+  ratio=0.53)
+
+S("¿Qué diseño queda según cuántos factores se eliminen?",
+  """La tabla aplica el mismo procedimiento quitando cada vez más columnas del 2^{7−4}. En cada fila, la relación de definición son las palabras de la original que solo usan las letras que quedan.
+
+Con seis factores (se quita G) queda el 2^{6−3}_{III} de la diapositiva anterior. Con cinco (se quitan F y G) queda el 2^{5−2}_{III}, con D = AB y E = AC e I = ABD = ACE = BCDE; los alias de A son BD y CE, y las dos columnas libres estiman BC + DE y BE + CD.
+
+Con cuatro factores aparece la lección importante: importa cuáles se quitan. Si se quitan E, F y G queda D = AB, con I = ABD: resolución III, y A, B y D siguen aliados con interacciones dobles. Si en cambio se quitan D, E y F y se conserva G = ABC, la única palabra es ABCG, de cuatro letras: resolución IV, y los cuatro efectos principales quedan libres de interacciones dobles. Con el mismo número de corridas se gana una resolución. Es el 2^{4−1}_{IV} de la tabla de diseños recomendados (allí la cuarta letra se llama D, con D = ABC). Las tres columnas libres estiman AB + CG, AC + BG y AG + BC.
+
+Con tres factores lo correcto es quedarse con A, B y C, las columnas del diseño básico: no queda ninguna palabra y el diseño es el 2^{3} completo. La diapositiva siguiente muestra qué pasa si se eligen mal.""",
+  body=[txt("Cada fila repite los siete pasos sobre el 2^{7−4}, quitando cada vez más columnas. La **relación de definición** "
+            "de cada fila son las palabras de la original que **solo usan las letras que quedan**, y la **resolución** es la "
+            "longitud de la más corta. Al quitar columnas los alias se aligeran y las columnas libres pasan a estimar interacciones.",
+            size=15),
+        tab(["Factores", "Se eliminan", "Diseño que queda", "Relación de definición", "Alias de A (dobles)", "Columnas libres estiman"],
+            [["6", "G", "2^{6−3}_{III}", "ABD, ACE, BCF, BCDE, ACDF, ABEF, DEF", "BD, CE", "AF + BE + CD"],
+             ["5", "F, G", "2^{5−2}_{III}", "ABD, ACE, BCDE", "BD, CE", "BC + DE;  BE + CD"],
+             ["4", "E, F, G", "2^{4−1}_{III}", "ABD", "BD", "AC;  BC;  CD"],
+             ["**4**", "**D, E, F**", "**2^{4−1}_{IV}**", "**ABCG**", "**ninguno**", "AB + CG;  AC + BG;  AG + BC"],
+             ["3", "D, E, F, G", "**2^{3} completo**", "ninguna", "ninguno", "AB, AC, BC, ABC"]],
+            size=13, hl=[3], first_left=False, colw=[0.09, 0.12, 0.14, 0.27, 0.14, 0.24]),
+        cards(("Con 4 factores importa cuáles se quitan", "Si se conserva **G = ABC**, la única palabra que sobrevive es "
+                                                       "**ABCG** (4 letras): **resolución IV**, principales libres de dobles. "
+                                                       "Si se conserva D = AB sobrevive ABD (3 letras): solo III"),
+              ("Con 3 factores", "Quedarse con **A, B y C**: no sobrevive ninguna palabra y se obtiene el **2^{3} completo**. "
+                                 "Otra elección puede repetir corridas (diapositiva siguiente)"),
+              size=13)])
+
+_dup3 = {0: 3, 2: 1, 1: 4, 3: 2, 4: 7, 6: 5, 5: 8, 7: 6}
+_rows3 = [[str(i + 1), sg(r["A"]), sg(r["C"]), sg(r["E"]), f"= corrida {_dup3[i]}", sg(r["A"]), sg(r["B"]), sg(r["C"])]
+          for i, r in enumerate(r4)]
+S("¿Qué pasa si se eliminan mal las columnas?",
+  """Supóngase que hay tres factores y se toman del 2^{7−4} las columnas A, C y E, eliminando B, D, F y G. Parece razonable, pero E = AC: la palabra ACE sigue en la relación de definición. El diseño en A, C y E es entonces una fracción 2^{3−1} con I = ACE.
+
+La tabla lo hace visible. En la columna de la izquierda solo aparecen cuatro combinaciones distintas de A, C y E: (−, −, +), (+, −, −), (−, +, −) y (+, +, +), cada una dos veces. Las ocho corridas son dos réplicas de un 2^{3−1}: cada efecto principal sigue aliado con una interacción doble (A = CE, C = AE, E = AC) y la mitad de las combinaciones de tratamientos nunca se prueba.
+
+Con las mismas ocho corridas se puede tener algo mucho mejor: quedarse con A, B y C, las columnas del diseño básico. Entre ellas no hay ninguna palabra, así que las ocho corridas son las ocho combinaciones distintas del 2^{3} completo, sin ningún alias.
+
+La regla práctica: al eliminar columnas, revisar que el subconjunto que queda no forme una palabra de la relación de definición. Si la forma, el diseño se repite en lugar de completarse.""",
+  left=[tab(["N°", "Mala: A", "C", "E = AC", "Se repite", "Buena: A", "B", "C"], _rows3, size=12,
+            first_left=False, pad=0.06, colw=[0.08, 0.13, 0.08, 0.12, 0.21, 0.14, 0.08, 0.08]),
+        txt("Mala elección: A, C, E (cada combinación aparece dos veces). Buena: A, B, C (8 combinaciones distintas)", size=12)],
+  right=[cards(("Quedarse con A, C, E", "ACE es una palabra: **2^{3−1} repetido dos veces**. Solo 4 combinaciones "
+                                         "distintas; A = CE, C = AE, E = AC"),
+               ("Quedarse con A, B, C", "Ninguna palabra: **2^{3} completo**, 8 combinaciones distintas, sin alias"),
+               ("Regla", "El subconjunto que queda **no debe formar una palabra** de la relación de definición"),
+               size=14, cols=1)],
+  ratio=0.56)
+
+_sat = [["2^{3−1}_{III}", "3", "4", "C = AB"], ["2^{7−4}_{III}", "7", "8", "D = AB, E = AC, F = BC, G = ABC"],
+        ["2^{15−11}_{III}", "15", "16", "las 11 interacciones del 2^{4}"], ["2^{31−26}_{III}", "31", "32", "las 26 interacciones del 2^{5}"]]
+S("¿Qué diseños saturados existen?",
+  """La construcción del 2^{7−4} se generaliza: se escribe el factorial completo en los primeros factores y a cada interacción de sus columnas se le asigna un factor nuevo. Con el 2^{2} se obtiene el 2^{3−1}_{III} (3 factores en 4 corridas); con el 2^{3}, el 2^{7−4}_{III} (7 en 8); con el 2^{4} en A, B, C y D y once factores igualados a todas sus interacciones, el 2^{15−11}_{III}, que estudia 15 factores en 16 corridas, cada uno alias de siete interacciones dobles; con el 2^{5}, el 2^{31−26}_{III} (31 en 32).
+
+En todos, N corridas estudian N − 1 factores: no queda ningún grado de libertad libre, por eso se llaman saturados. Para menos factores se eliminan columnas como se vio, cuidando que el subconjunto que queda no forme una palabra.""",
+  body=[tab(["Diseño saturado", "Factores", "Corridas", "Factores nuevos ="], _sat, size=16, first_left=False,
+            colw=[0.22, 0.14, 0.14, 0.5]),
+        note("Saturado: **N corridas, N − 1 factores**. Para menos factores: **eliminar columnas** con cuidado", size=16)])
 
 S("¿Qué es el doblez?",
   """En un diseño de resolución III cada efecto principal está mezclado con interacciones dobles. Para separarlos se usa el ensamblaje secuencial: se corre una segunda fracción en la que se han invertido los signos de algunos factores y se combinan las dos. A esta técnica se le llama doblez o plegado (fold over).

@@ -1,6 +1,6 @@
 """Genera la presentación del protocolo de experimentación del trabajo práctico (25 oct 2026):
 diseño de comparación simple, una prueba por corriente, del ancho de pulso del láser frente a la
-hoja de pruebas de fábrica. Versión mínima (12 diapositivas): poco texto en pantalla, el detalle
+hoja de pruebas de fábrica. Versión mínima (13 diapositivas): poco texto en pantalla, el detalle
 va en las notas del orador.
 
 Uso: .venv/bin/python render_protocolo_pptx.py <salida.pptx> <carpeta_figuras> <analisis_piloto.json>
@@ -176,23 +176,32 @@ def build(out, figdir, analisis):
 
     # 7 · Orden sorteado --------------------------------------------------------------------------
     s = d.content("5 · Cómo se mide", "¿Por qué se sortea el orden dentro del día?",
-                  "Tres días, tres réplicas por corriente y por día, nueve trazas al día en orden sorteado con semilla "
-                  "anotada. Las tres pruebas t son independientes, pero las tres muestras comparten montaje, detector "
-                  "y reloj. Si el montaje deriva (alineación, temperatura), con las réplicas agrupadas por corriente la "
-                  "deriva de una hora entra entera en la media de esa corriente (sesgo) y sus réplicas se parecen "
-                  "demasiado (S subestimada): t0 queda mal en numerador y denominador. Con el sorteo el momento de "
-                  "cada traza es aleatorio e intercambiable entre corrientes: lo que el tiempo aporte pasa al error, "
-                  "con media cero en cada muestra, que es lo que supone la prueba t (Montgomery, sec. 1-3). Las "
-                  "corrientes no interfieren: cada traza es una realización física separada y el láser no guarda "
-                  "memoria de la corriente anterior tras 5 min. Es la misma aleatorización de un diseño de un solo "
-                  "factor pero con otro fin: proteger cada muestra del tiempo, no comparar niveles.",
+                  "Notación: ȳₖ es la media de las réplicas de la corriente k (k = 1, 2, 3 para 5, 6 y 7 A) y Sₖ su "
+                  "desviación estándar. Deriva: un cambio lento del montaje a lo largo de la tarde (alineación, "
+                  "temperatura del cuarto, detector que se calienta) que no depende de la corriente. Cada traza mide "
+                  "τ real de su corriente + deriva del momento en que se tomó + ruido. Ejemplo: 9 trazas en una tarde y "
+                  "una deriva de +2 fs por traza (0, 2, …, 16 fs). Agrupadas por corriente, I₁ recibe 0, 2 y 4 fs (sesgo "
+                  "+2 fs), I₂ 6, 8 y 10 (+8 fs) e I₃ 12, 14 y 16 (+14 fs): a 7 A se mediría 14 fs de más solo por ir al "
+                  "final, más que δ = 10 fs. Además las tres réplicas de cada corriente se tomaron seguidas y se parecen "
+                  "demasiado: Sₖ queda subestimada y t0 = (ȳₖ − τ0)/(Sₖ/√n) se infla en numerador y denominador. Con "
+                  "el orden sorteado cada corriente cae en momentos repartidos de la tarde: ninguna se lleva la parte "
+                  "alta de la deriva, la deriva pasa a la variación entre réplicas (Sₖ la incluye) y el error de cada "
+                  "traza se comporta como aleatorio e independiente, que es lo que supone la prueba t (Montgomery, "
+                  "sec. 1-3). Matiz: el sorteo reparte la deriva pero no borra su nivel promedio; si en toda la tarde "
+                  "el montaje mide en promedio 8 fs de más, eso le pasa a las tres corrientes por igual y es un error "
+                  "sistemático del instrumento frente a τ0, que se controla con el calentamiento de 30 min, el montaje "
+                  "fijo y se discute en el informe. Lo que el sorteo garantiza es que la deriva no favorezca a una "
+                  "corriente y que Sₖ sea realista. Las corrientes no interfieren: cada traza es una realización "
+                  "separada y el láser no guarda memoria de la corriente anterior tras 5 min.",
                   "Montgomery (2004), secs. 1-3 y 2-4.1")
     col = {"I₁": VIOLET, "I₂": RED, "I₃": INK}
-    text(s, MX + 1.9, TOP - 0.1, 9.0, 0.35, "deriva del montaje a lo largo de la tarde →", 13, MUTED, align=PP_ALIGN.CENTER)
+    text(s, MX + 1.9, TOP - 0.1, 9.0, 0.35, "deriva del montaje: +2 fs por traza a lo largo de la tarde →", 13, MUTED,
+         align=PP_ALIGN.CENTER)
     arrow(s, MX + 1.9, TOP + 0.28, MX + 10.9, TOP + 0.28, MUTED, 1.5)
-    filas = [("Agrupado", ["I₁"] * 3 + ["I₂"] * 3 + ["I₃"] * 3, "la deriva entra entera en ȳ₁ y S₁ queda subestimada", RED),
+    filas = [("Agrupado", ["I₁"] * 3 + ["I₂"] * 3 + ["I₃"] * 3,
+              "sesgo de ȳ₁, ȳ₂, ȳ₃: +2, +8 y +14 fs; réplicas seguidas → Sₖ chica", RED),
              ("Sorteado", ["I₂", "I₁", "I₂", "I₃", "I₁", "I₁", "I₃", "I₃", "I₂"],
-              "la deriva se reparte: cada ȳ_{k} sin sesgo, cada S_{k} la incluye", GREEN)]
+              "la deriva se reparte por igual entre corrientes y entra en Sₖ", GREEN)]
     for r_, (nom, orden, expl, c_) in enumerate(filas):
         y = TOP + 0.45 + r_ * 1.25
         text(s, MX, y, 1.8, 0.55, nom, 15, c_, HEAD, anchor=MSO_ANCHOR.MIDDLE)
@@ -201,13 +210,50 @@ def build(out, figdir, analisis):
             rect(s, x, y, 0.9, 0.55, col[lv])
             text(s, x, y, 0.9, 0.55, lv, 15, WHITE, HEAD, PP_ALIGN.CENTER, MSO_ANCHOR.MIDDLE)
         text(s, MX + 1.9, y + 0.6, 9.3, 0.45, expl, 13.5, c_)
-    chips = [("Plan", "3 días × (3 I₁ + 3 I₂ + 3 I₃). Sorteo completo cada día, semilla anotada.", VIO_T, VIOLET),
-             ("Las corrientes no interfieren", "Cada traza es una realización separada; el láser no guarda memoria "
-              "tras 5 min.", GRAY_T, INK),
-             ("Por qué quedan independientes", "El tiempo pasa al error con media cero en cada muestra: lo que supone "
-              "la prueba t.", RED_T, RED)]
+    chips = [("ȳₖ y Sₖ", "Media y desviación estándar de las réplicas de la corriente k (5, 6 o 7 A).", VIO_T, VIOLET),
+             ("Qué protege el sorteo", "Que la deriva no favorezca a una corriente y que Sₖ sea realista: el tiempo "
+              "pasa al error, como supone la prueba t.", RED_T, RED),
+             ("Qué no protege", "El nivel promedio de la deriva, igual en las tres: se controla con calentamiento y "
+              "montaje fijo, y se discute.", GRAY_T, INK)]
     for i, (t_, b_, f_, c_) in enumerate(chips):
         chip(s, MX + i * 4.1, TOP + 3.25, 3.93, 1.7, t_, b_, f_, c_, size=13, tsize=14)
+
+    # 7b · Una corriente por día -------------------------------------------------------------------
+    s = d.content("5 · Cómo se mide", "¿Por qué no medir una corriente por día?",
+                  "Alternativa tentadora: lunes 9 trazas de I₁, martes 9 de I₂, miércoles 9 de I₃. Falla por la misma "
+                  "razón que el orden agrupado, pero a escala de días: cada día trae su propio nivel (realineación, "
+                  "temperatura, humedad, estado del láser al arrancar). Ejemplo: lunes 0, martes +6 fs, miércoles −4 fs. "
+                  "Con una corriente por día el sesgo de ȳ₁, ȳ₂ y ȳ₃ es 0, +6 y −4 fs: el día y la corriente quedan "
+                  "confundidos y no se sabe si lo observado es el láser o el martes. Con 3 réplicas de cada corriente "
+                  "por día, el nivel de cada día se reparte por igual: (0 + 6 − 4)/3 = +0,67 fs en las tres. Dos "
+                  "problemas más: (1) Sₖ sale de una sola sesión y no ve la variación de un día a otro, así que se "
+                  "subestima y t0 se infla; en el plan balanceado las réplicas de cada corriente vienen de tres días; "
+                  "(2) un mal día cuesta una corriente entera, mientras que en el plan balanceado cuesta 3 réplicas de "
+                  "cada corriente y quedan 6. Además, la pregunta es si el láser da el ancho de fábrica, no si lo dio "
+                  "el martes: cada media debe representar varias condiciones de medición. Lo único a favor de una "
+                  "corriente por día es ahorrar cambios de corriente (5 min de estabilización cada uno), pero en el "
+                  "piloto una traza con cambio tomó unos 6 min y caben 48 trazas al día; solo se necesitan 9. Y si el "
+                  "efecto del día fuera cero, con ese diseño no se podría comprobar; con el plan balanceado el día queda "
+                  "como bloque y se puede analizar sin cambiar la toma de datos. Conclusión: 3 días × 3 réplicas por "
+                  "corriente con orden sorteado protegen de la hora (sorteo) y del día (balance).",
+                  "Montgomery (2004), secs. 1-3 y 4-1")
+    table(s, MX, TOP - 0.05, 7.4,
+          [["Plan", "Sesgo de ȳ₁ (5 A)", "ȳ₂ (6 A)", "ȳ₃ (7 A)"],
+           ["Una corriente por día", "0", "+6 fs", "−4 fs"],
+           ["3 de cada corriente por día", "+0,67 fs", "+0,67 fs", "+0,67 fs"]],
+          [2.8, 1.6, 1.5, 1.5], size=14)
+    text(s, MX, TOP + 1.45, 7.4, 0.4, "Ejemplo: nivel del lunes 0, del martes +6 fs, del miércoles −4 fs", 12.5, MUTED)
+    chips = [("Día y corriente confundidos", "El +6 del martes entra entero en ȳ₂: ¿es el láser o es el martes?",
+              RED_T, RED),
+             ("Sₖ chica", "Una sola sesión no ve la variación entre días: t0 se infla.", RED_T, RED),
+             ("Un mal día", "Cuesta una corriente entera; balanceado, solo 3 réplicas de cada una.", RED_T, RED)]
+    for i, (t_, b_, f_, c_) in enumerate(chips):
+        chip(s, MX + 7.75, TOP - 0.05 + i * 1.2, 4.55, 1.1, t_, b_, f_, c_, size=12.5, tsize=14)
+    chip(s, MX, TOP + 2.05, 7.4, 1.25, "¿Y lo que ahorra?", "Cambios de corriente de 5 min. El piloto: 6 min por traza "
+         "con cambio, caben 48 al día y se necesitan 9.", GRAY_T, INK, size=13, tsize=14)
+    chip(s, MX, TOP + 3.6, 12.3, 1.2, "Plan: 3 días × 3 réplicas por corriente, orden sorteado cada día",
+         "El sorteo protege de la hora; el balance protege del día, que queda como bloque y se puede analizar.",
+         GREEN_T, GREEN, size=13.5, tsize=15)
 
     # 8 · Cada réplica ----------------------------------------------------------------------------
     s = d.content("5 · Cómo se mide", "¿Cómo se toma cada réplica?",

@@ -3,6 +3,99 @@
 Registro de cada sesión de trabajo en el repositorio: qué se hizo, qué decisiones se tomaron y
 qué queda pendiente. La entrada más reciente va arriba.
 
+## 2026-10-26 (lunes) — Tema 6: generadores, hipótesis por cadena, bloques, ejemplo CNC y resolución III; protocolo
+
+### Hecho
+- A pedido de Juan Esteban, la antigua diapositiva 57 («¿Qué generadores elijo?») se dividió en dos:
+  **57 «¿Cómo se escogen los generadores?»**: ocho pasos escritos (p = k − log₂N; resolución requerida;
+  diseño básico; una columna de interacción distinta por factor sobrante; multiplicar generadores →
+  2^p − 1 palabras; resolución = palabra más corta; empate → aberración mínima; alias y asignación) con el
+  2^{6−2} trabajado: E = ABC, F = BCD → IV; F = ABCD → DEF, III; E = F = ABCD → EF, II. Regla: generadores
+  largos que compartan pocas letras; con 16 corridas no hay 2^{6−2}_V. **58 «¿Cómo se desempata entre
+  diseños de igual resolución?»**: la tabla 8-13 (tres 2^{7−2}_IV) con cuatro pasos de comparación.
+  Palabras verificadas en Python. 105 diapositivas, guía de 99 páginas.
+- Ejemplo práctico del procedimiento (diapositivas 59–61, «Ejemplo didáctico», construido para la clase): pan
+  con 5 factores (A levadura, B temperatura, C tiempo, D azúcar, E humedad), presupuesto de 8 corridas y una
+  interacción temperatura × tiempo temida. Pasos 1–6: p = 2, se necesita IV, básico 2^3 (AB, AC, BC, ABC); las
+  12 asignaciones posibles dan III (verificado en Python) → con 8 corridas IV es imposible. Decisión: opción 1,
+  16 corridas con E = ABCD (resolución V); opción 2, 8 corridas con D = AB, E = AC y temperatura y tiempo en B y C
+  (BC = DE es de las pocas cadenas sin efecto principal). 108 diapositivas, guía de 102 páginas.
+- La diapositiva del ejemplo 8-5 («¿Cómo elijo un diseño para siete factores?») se amplió a dos, con los ocho
+  pasos: **63 (pasos 1 y 2)** objetivo → resolución IV; tabla N = 8/16/32/64 (2^{7−4}_III no cumple: el 2^3 solo
+  tiene 4 columnas; 2^{7−3}_IV, dobles en grupos de 3; 2^{7−2}_IV, 15 de 21 limpias; 2^{7−1}_VII) → el menor que
+  cumple, 16 corridas. **64 (pasos 3 a 8)** básico 2^4; E, F, G en tres de las cuatro columnas de 3 letras
+  (solo 4 de 165 elecciones dan IV; con ABCD aparece DEG); 7 palabras de 4 letras; sin empate en aberración;
+  7 cadenas de dobles y alias de los principales; importantes en A–D, menores en E–G (proyección en 2^4).
+  Todo verificado en Python. 109 diapositivas, guía de 103 páginas.
+- Hipótesis por cadena (tras la diapositiva 68, «¿Cuál es la hipótesis del diseño?»), dos diapositivas nuevas con el
+  ejemplo 1 (2^{4−1}, I = ABCD): **69 «¿Por qué se prueba la cadena completa?»** columnas A y BCD idénticas en las
+  8 corridas; ℓ_A = (321 − 245)/4 = 19.00 estima A + BCD; «mundos posibles» que dan los mismos datos (solo A,
+  solo BCD, reparto, cancelación → 0); H0: β_A + β_BCD = 0. **70 «¿Cómo se lee la decisión de cada cadena?»**
+  decisión estadística (sobre la cadena) vs atribución (jerarquía, herencia, conocimiento; se declara); ANOVA
+  del modelo reducido por cadena (A + BCD F0 = 222.15, p = 0.0045; C + ABD; D + ABC; AC + BD → AC y AD + BC → AD
+  por herencia, B inactivo); si hay duda, fracción alterna o doblez. 111 diapositivas.
+- A la 69 se le agregó en pantalla el párrafo de los «mundos posibles» (antes solo en la guía).
+- Pregunta de Juan Esteban: si Daniel/Pareto/ANOVA solo ven cadenas, ¿cómo se sabe qué término produce el efecto?
+  Respuesta en una diapositiva nueva, **71 «¿Cómo sé qué término de la cadena produce el efecto?»**: tres capas —
+  antes de correr, la resolución (III/IV/V: qué mezcla se acepta); después, atribución razonada (jerarquía,
+  herencia, conocimiento; se declara); para saberlo, más corridas — con la separación del ejemplo 1 combinando la
+  fracción alterna del 8-3: A = 21.63 y BCD = −2.63, AC = −18.13 y BD = −0.38, AD = 16.63 y BC = 2.38 (la
+  jerarquía y la herencia acertaron). Se quitó de la 70 la tarjeta «Si hay duda» (queda en la 71). 112 diapositivas.
+- Bloques en fraccionados (antes una diapositiva, ahora dos), a pedido de Juan Esteban: **82 «¿Cómo se separa un
+  fraccionado en bloques?»** qué es un bloque y qué es confundir; cinco pasos (cuántos bloques; cadenas; escoger
+  una de solo triples — en el 2^{6−2} solo ABD y ABF lo son —; signo de ABD = A×B×D; ABD − → bloque 1, + → bloque
+  2); atajo de letras en común (par → bloque 1, impar → bloque 2; abf y ae trabajados); tabla con las letras en
+  común. **83 «¿Qué se pierde y qué se conserva al hacer bloques?»** se pierde la cadena ABD (fila de bloques,
+  1 g.l.); las otras 13 cadenas quedan balanceadas (4 + y 4 − por bloque; tabla de la columna A); cuatro bloques:
+  P, Q y PQ (3 g.l.), enlace con el ejemplo 4. Verificado en Python (bloque 1 = ABD −; 14 columnas balanceadas).
+  113 diapositivas.
+- Juan Esteban no entendía qué es un bloque: se agregó antes del procedimiento un **caso concreto** con el ejemplo 3
+  (moldeo, 2^{6−2}_IV): **82 «¿Qué es un bloque? Un caso concreto»** la inyectora solo permite 8 corridas por turno
+  (mañana y tarde), la tarde da +5; bloque = corridas en las mismas condiciones; el reparto ingenuo (8 primeras del
+  orden estándar) mezcla el turno con D (tabla de las 16 corridas con el signo de D). **83 «¿Qué pasa con los
+  efectos según cómo se reparta?»** con los datos del ejemplo 3 + 5 en la tarde: reparto ingenuo → D pasa de 1.38 a
+  6.38 (parece activo); reparto por ABD → solo la cadena ABD pasa de 0.13 a 5.13; principales y dobles iguales.
+  La 84 (procedimiento) quedó en términos de mañana/tarde. 115 diapositivas.
+- **Ejemplo 4 (CNC, ej. 8-6) recorrido completo** (antes 2 diapositivas tras el enunciado, ahora 8): pasos 1–2
+  (respuesta ln(desv.), supuestos → IV, III no sirve, V pide 64; 4 husillos → 4 bloques); paso 3 **bloques deciden
+  16 vs 32**: en el 2^{8−4}_IV las 15 columnas son 8 principales + 7 cadenas de 4 dobles, sin cadenas de triples →
+  4 bloques costarían 12 dobles; paso 4 generadores F = ABC, G = ABD, H = BCDE, 7 palabras, 7 cadenas de dobles con
+  alias, 13 dobles solas; paso 5 **reparto en husillos**: P = ABE, Q = ABH (solo triples), PQ = EH; tabla de las 8
+  corridas de cada husillo; solo EH queda desbalanceada (verificado); paso 6 gráfica normal de 28 efectos (sin las 3
+  columnas de husillos) con Lenth ME = 0.116, SME = 0.223 (B > ME < SME, G en el límite); paso 7 AD vs BG, empate en
+  jerarquía y herencia → conocimiento del proceso o doblez de A o D; paso 8 hipótesis y ANOVA 8-18 con énfasis en la
+  fila de bloques: SS(ABE) + SS(ABH) + SS(EH) = 0.0201 (3 g.l.), sin F0; pasos 9–10 residuales (del libro, fig. 8-20),
+  interacción AD con los promedios del cubo, mejor condición A bajo, B alto, fabricante 1 (0.828).
+  Los 32 datos crudos (tabla 8-16) no están transcritos; todo se rehízo desde la tabla 8-17 de efectos. 121 diapositivas.
+- Resolución III, «¿Cómo obtengo diseños para menos factores?» (antes una diapositiva) ahora en cuatro:
+  **98 «¿Cómo se elimina un factor de un diseño saturado?»** tabla del 2^{7−4} con G = ABC (se borra); cinco pasos:
+  partir del saturado, borrar la columna, relación = palabras sin G (7 de 15), alias A = BD = CE (pierde FG),
+  la columna liberada estima AF + BE + CD. **99 «¿Qué diseño queda según cuántos factores se eliminen?»** tabla
+  6/5/4/4/3 factores con relación de definición, alias de A y lo que estiman las columnas libres; lección: con 4
+  factores quitar D, E, F (conservar G = ABC) da 2^{4−1}_IV, quitar E, F, G solo da III. **100 «¿Qué pasa si se
+  eliminan mal las columnas?»** A, C, E (ACE es palabra → 2^{3−1} repetido, tabla con la corrida duplicada) frente
+  a A, B, C (2^3 completo). **101 «¿Qué diseños saturados existen?»** 2^{3−1}, 2^{7−4}, 2^{15−11}, 2^{31−26}.
+  Verificado en Python. 124 diapositivas.
+- Protocolo del autocorrelador (presentación por nivel, ahora **13** diapositivas), a pedido de Juan Esteban tras
+  preguntar qué es «la deriva de ȳₖ» y por qué no basta una corriente por día: la 7 («¿Por qué se sortea el orden
+  dentro del día?») ahora define ȳₖ y Sₖ, da el ejemplo de deriva +2 fs por traza (agrupado: sesgos +2, +8, +14 fs y
+  Sₖ chica; sorteado: se reparte) y el matiz de que el sorteo no quita el nivel promedio de la deriva (se corrigió
+  «cada ȳₖ sin sesgo»). Nueva 8 «¿Por qué no medir una corriente por día?»: ejemplo lunes 0 / martes +6 / miércoles
+  −4 fs (sesgos 0, +6, −4 frente a +0,67 en las tres con el plan balanceado), Sₖ chica, un mal día cuesta una
+  corriente, lo que ahorra (poco). PDF regenerado con LibreOffice (antes se exportaba con PowerPoint).
+- Tema 6, resolución III (diapositivas 96–101), más texto en pantalla: nueva 96 «¿Qué son los diseños de resolución III
+  y los diseños saturados?» (definiciones, cuenta de grados de libertad con N = 8, las cuatro partes del subtema); la
+  del 2^{7−4} explica cómo se construye; la de la relación de definición explica qué es una palabra, cómo se obtienen
+  (D = AB ⇒ I = ABD; ABD·ACE = BCDE) y para qué sirve al eliminar; nueva 99 «¿Qué significa eliminar un factor y
+  cuál es el procedimiento?» (definición + 7 pasos); la de eliminar G pasa a ser el ejemplo con esos 7 pasos; la
+  tabla de factores eliminados lleva texto y tarjetas. Ahora **126** diapositivas.
+
+### Pendiente
+- Seguir revisando la presentación de fraccionados desde la diapositiva 102 (doblez, Plackett-Burman, resolución IV y V).
+- Re-exportar desde PowerPoint el PDF del protocolo (el actual salió de LibreOffice) si se quiere el acabado anterior.
+- Unir las presentaciones de 2^{k−p} (126) y 3^k (69) y revisar con Sebastián la duración de la exposición (31 oct);
+  envío de la presentación el 30 oct y del paper del caso el 28 oct.
+
 ## 2026-10-26 (lunes) — Presentación aparte de los diseños 3^k (capítulo 9)
 
 ### Hecho
