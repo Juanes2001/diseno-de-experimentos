@@ -3,6 +3,36 @@
 Registro de cada sesión de trabajo en el repositorio: qué se hizo, qué decisiones se tomaron y
 qué queda pendiente. La entrada más reciente va arriba.
 
+## 2026-10-28 (miércoles) — Tema 6: se quitan los diseños saturados
+
+### Hecho
+- A pedido de Juan Esteban se eliminaron de la presentación de fraccionados las 7 diapositivas de diseños
+  saturados (definición, cuenta de grados de libertad, relación de definición del 2^{7−4}, qué significa eliminar
+  un factor y sus 7 pasos, ejemplo 7 → 6 factores, tabla de factores eliminados, columnas mal eliminadas, saturados
+  que existen). Queda una sola diapositiva, «¿Qué es un diseño de resolución III? El 2^{7−4}_{III}» (tabla y alias),
+  porque el doblez y el ejemplo 5 se construyen sobre ese diseño. Se quitó el término del glosario, del índice
+  («Doblez y Plackett-Burman»), del ejemplo 8-5 y del resumen final. Se aplicó sobre la versión compactada de la
+  noche del 26 (112 diapositivas, commit cd3d82f): ahora **106** diapositivas; resolución III ocupa 85–97.
+
+## 2026-10-27 (martes) — Libros de Excel para la medición definitiva
+
+### Hecho
+- Decisión del equipo: 9 réplicas por corriente, **una corriente por día**: 5 A el martes 27, 6 A el miércoles 28 y
+  7 A el sábado 31 oct. (Ojo: es distinto del plan balanceado de la presentación del protocolo, diapositiva 8; el
+  día queda confundido con la corriente, lo que hay que declarar en el informe.)
+- Script nuevo `scripts/trabajo-practico/build_medicion_xlsx.py` → `trabajo-practico/medicion/Medicion_{5,6,7}A_Autocorrelador.xlsx`.
+  Cada libro: Instrucciones, Configuración (τ0 107/76/54 fs, paso 10 µm, factor 0,65, fondo 2 por ala, α 0,05),
+  Registro (fecha, encendido, temperatura, hora inicio/fin por corrida, duración, Δ entre inicios, potencia media,
+  posición del pico, validez, Δτ_AC, τp, estado), Resumen (n, ȳ, S, CV, t0, valor P, IC 95 %, decisión, gráfica de
+  τp en el orden de medición) y hojas R01–R09 más R10–R12 de reposición. Posiciones **fijas** 0–210 µm cada 10 µm
+  (22 lecturas, como R12–R15 del piloto); solo se llena la potencia en W. Hojas de traza protegidas sin contraseña.
+- Verificado con datos sintéticos y recálculo en LibreOffice: n, media, S, t0, P e IC coinciden con scipy; se
+  excluye la traza marcada «No»; duraciones correctas. A 5 A el pico debe quedar cerca de 100–110 µm para que el
+  barrido alcance las dos alas (2 Δτ_AC).
+
+### Pendiente
+- Tomar las mediciones y luego correr el ajuste sech² (adaptar `analiza_piloto.py` a los libros de medición).
+
 ## 2026-10-26 (lunes) — Tema 6: generadores, hipótesis por cadena, bloques, ejemplo CNC y resolución III; protocolo
 
 ### Hecho
@@ -115,7 +145,7 @@ qué queda pendiente. La entrada más reciente va arriba.
 - Seguir revisando la presentación de fraccionados desde la diapositiva 93 (doblez, Plackett-Burman, resolución IV y V).
 - Hacer commit y push del barrido (contenido.py, pptx, guía) para que Sebastián lo vea.
 - Re-exportar desde PowerPoint el PDF del protocolo (el actual salió de LibreOffice) si se quiere el acabado anterior.
-- Unir las presentaciones de 2^{k−p} (112) y 3^k (69) y revisar con Sebastián la duración de la exposición (31 oct);
+- Unir las presentaciones de 2^{k−p} (106) y 3^k (69) y revisar con Sebastián la duración de la exposición (31 oct);
   envío de la presentación el 30 oct y del paper del caso el 28 oct (cualquier hora de ese día; el reglamento no fija hora).
 
 ## 2026-10-26 (lunes) — Presentación aparte de los diseños 3^k (capítulo 9)

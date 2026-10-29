@@ -88,7 +88,7 @@ S("Ruta de la clase",
               ("4 · Secuencias", "Correr una fracción, analizar y decidir"),
               ("5 · Fracción un cuarto", "Dos generadores, alternas, proyección y ejemplo"),
               ("6 · Caso general 2^{k−p}", "Elección, análisis, supuestos, proyección y bloques"),
-              ("7 · Resolución III", "Saturados, doblez y Plackett-Burman"),
+              ("7 · Resolución III", "Doblez y Plackett-Burman"),
               ("8 · Resolución IV y V", "Diseños mínimos, doblez y fracciones irregulares"),
               ("9 · Cierre", "Ideas clave y errores frecuentes"), size=15, cols=5)])
 
@@ -174,7 +174,7 @@ Alias: efectos que se estiman con la misma columna de signos (o con la opuesta, 
 
 Fracción principal: la que se obtiene con todos los generadores en signo positivo. Las demás son fracciones alternas; todas juntas forman la familia.
 
-Diseño básico: el factorial completo en k − p factores sobre el que se construye la fracción. Diseño saturado: el que estudia k = N − 1 factores en N corridas.""",
+Diseño básico: el factorial completo en k − p factores sobre el que se construye la fracción.""",
   body=[tab(["Término", "Significado"],
             [["Generador", "Interacción que define la fracción: ABCD en I = ABCD (equivale a D = ABC)"],
              ["Palabra", "Cada interacción de la relación de definición: generadores y sus productos"],
@@ -182,8 +182,7 @@ Diseño básico: el factorial completo en k − p factores sobre el que se const
              ["Alias", "Efectos que comparten columna de signos (igual u opuesta) y no se distinguen"],
              ["Fracción principal", "La que usa todos los generadores con signo +"],
              ["Fracción alterna", "Cualquier otra de la misma familia (algún generador con signo −)"],
-             ["Diseño básico", "Factorial completo en k − p factores sobre el que se construye"],
-             ["Diseño saturado", "Estudia k = N − 1 factores en N corridas"]],
+             ["Diseño básico", "Factorial completo en k − p factores sobre el que se construye"]],
             size=16, colw=[0.26, 0.74])])
 
 _r = basic(3)
@@ -953,7 +952,7 @@ S("¿Cómo elijo un diseño para siete factores? (pasos 1 y 2)",
 
 Paso 2 primero, porque es el que fija la exigencia: los efectos principales no deben mezclarse con interacciones dobles, así que se pide resolución IV. No se pide V porque basta con una idea de las interacciones dobles; no hace falta estimarlas por separado.
 
-Paso 1: se recorren los tamaños posibles, de menor a mayor, y se busca el más pequeño que alcance la resolución IV. Con N = 8 corridas, p = 7 − 3 = 4: el diseño básico es el 2^{3} en A, B y C, que solo tiene cuatro columnas de interacción (AB, AC, BC y ABC). Los cuatro factores nuevos las ocupan todas, tres de ellos reciben columnas de dos letras y sus generadores tienen tres letras: el diseño es forzosamente de resolución III (es el diseño saturado 2^{7−4}_{III}). Con N = 16, p = 3: existe el 2^{7−3}_{IV}. Con N = 32, p = 2: el 2^{7−2}_{IV}. Con N = 64, p = 1: el 2^{7−1}_{VII}, con I = ABCDEFG.
+Paso 1: se recorren los tamaños posibles, de menor a mayor, y se busca el más pequeño que alcance la resolución IV. Con N = 8 corridas, p = 7 − 3 = 4: el diseño básico es el 2^{3} en A, B y C, que solo tiene cuatro columnas de interacción (AB, AC, BC y ABC). Los cuatro factores nuevos las ocupan todas, tres de ellos reciben columnas de dos letras y sus generadores tienen tres letras: el diseño es forzosamente de resolución III (es el 2^{7−4}_{III}). Con N = 16, p = 3: existe el 2^{7−3}_{IV}. Con N = 32, p = 2: el 2^{7−2}_{IV}. Con N = 64, p = 1: el 2^{7−1}_{VII}, con I = ABCDEFG.
 
 Entre los que cumplen se elige el más pequeño. El de 16 corridas deja los siete efectos principales aliados solo con interacciones triples y las interacciones dobles en grupos de tres: cumple el objetivo. El de 32 corridas estimaría además de forma única 15 de las 21 interacciones dobles, más información de la que se pidió, al doble de costo. Se elige el 2^{7−3}_{IV} de 16 corridas.""",
   left=[txt("**Objetivo**: 7 efectos principales y una idea de las interacciones dobles; triples despreciables", size=15),
@@ -1545,175 +1544,23 @@ Conclusión: la desviación del perfil es mínima con A en nivel bajo (eje x en 
               "Husillos casi iguales. Confirmar AD", size=14)],
   ratio=0.5)
 
-section(7, "Diseños de resolución III", "Saturados, doblez y diseños de Plackett-Burman")
-
-_sat = [["2^{3−1}_{III}", "3", "4", "C = AB"], ["2^{7−4}_{III}", "7", "8", "D = AB, E = AC, F = BC, G = ABC"],
-        ["2^{15−11}_{III}", "15", "16", "las 11 interacciones del 2^{4}"], ["2^{31−26}_{III}", "31", "32", "las 26 interacciones del 2^{5}"]]
-S("¿Qué son los diseños de resolución III y los diseños saturados?",
-  """Un diseño de resolución III es un fraccionado cuya relación de definición tiene como palabra más corta una de tres letras. La consecuencia práctica es que ningún efecto principal está aliado con otro efecto principal, pero cada efecto principal sí está aliado con interacciones de dos factores. Por eso solo se interpretan bien si se puede suponer que esas interacciones son despreciables.
-
-Un diseño saturado es un diseño de resolución III que estudia el máximo número posible de factores con sus corridas: k = N − 1. La razón es una cuenta de grados de libertad. Con N corridas se pueden estimar N − 1 efectos (el grado de libertad restante se usa en la media general). Si hay N − 1 factores, cada uno de esos grados de libertad se gasta en un efecto principal y el diseño queda lleno: no sobra ninguna columna para estimar interacciones ni para el error. Con ocho corridas, siete factores saturan el diseño; con seis factores sobra una columna, con cinco sobran dos, y así sucesivamente.
-
-Estos diseños se usan para tamizado (screening): al comienzo de una investigación, cuando hay muchos factores candidatos y se espera que solo unos pocos importen.
-
-Los saturados que existen se construyen todos igual: se escribe el factorial completo en los primeros factores y a cada interacción de sus columnas se le asigna un factor nuevo. Con el 2^{2} se obtiene el 2^{3−1}_{III} (3 factores en 4 corridas); con el 2^{3}, el 2^{7−4}_{III} (7 en 8), que es el que se desarrolla a continuación; con el 2^{4} en A, B, C y D y once factores igualados a todas sus interacciones, el 2^{15−11}_{III}, que estudia 15 factores en 16 corridas, cada uno alias de siete interacciones dobles; con el 2^{5}, el 2^{31−26}_{III} (31 en 32). Para otro número de factores se eliminan columnas, como se ve más adelante, y cuando N no es potencia de 2 están los diseños de Plackett-Burman.""",
-  left=[txt("**Diseño de resolución III**: fraccionado cuya palabra más corta en la relación de definición tiene "
-            "**tres letras**. Ningún efecto principal está aliado con otro principal, pero **cada principal sí está "
-            "aliado con interacciones dobles**. Solo se interpreta bien si esas interacciones son despreciables.", size=15),
-        txt("**Diseño saturado**: diseño de resolución III que estudia el **máximo número de factores** posible, "
-            "**k = N − 1**. Con N corridas se estiman N − 1 efectos (un grado de libertad es para la media). Si hay "
-            "N − 1 factores, todos los grados de libertad se gastan en efectos principales: el diseño queda **lleno** y "
-            "no sobra ninguna columna para interacciones ni para el error.", size=15),
-        txt("**Para qué se usan**: tamizado (screening), cuando hay muchos factores candidatos y se espera que "
-            "solo unos pocos importen.", size=15)],
-  right=[txt("**Los diseños saturados que existen**", size=15),
-         tab(["Diseño", "Factores", "Corridas", "Factores nuevos ="], _sat, size=14, first_left=False,
-             colw=[0.22, 0.17, 0.17, 0.44]),
-         note("Saturado: **N corridas, N − 1 factores**. Para menos factores se **eliminan columnas** con cuidado "
-              "(se ve más adelante); para N que no es potencia de 2, **Plackett-Burman**", size=14)],
-  ratio=0.55)
+section(7, "Diseños de resolución III", "Doblez y diseños de Plackett-Burman")
 
 _rows = [[str(i + 1)] + [sg(r[c]) for c in "ABCDEFG"] for i, r in enumerate(r4)]
-S("El diseño saturado 2^{7−4}_{III}: construcción y alias",
-  """Los diseños de resolución III permiten estudiar hasta k = N − 1 factores en N corridas, con N múltiplo de 4. El 2^{7−4} estudia siete factores en solo ocho corridas: se escribe el 2^{3} completo en A, B y C y se definen D = AB, E = AC, F = BC y G = ABC. Se dice que el diseño está saturado porque usa todos los grados de libertad para efectos principales.
+S("¿Qué es un diseño de resolución III? El 2^{7−4}_{III}",
+  """Un diseño de resolución III es un fraccionado cuya relación de definición tiene como palabra más corta una de tres letras. Ningún efecto principal está aliado con otro efecto principal, pero cada efecto principal sí está aliado con interacciones de dos factores. Se usa al comienzo de una investigación, cuando hay muchos factores candidatos y se espera que solo unos pocos importen.
 
-El costo es alto: cada efecto principal es alias de tres interacciones dobles. Solo sirve si se puede suponer que las interacciones son despreciables o si se planea un doblez posterior.""",
+El ejemplo de referencia de esta sección es el 2^{7−4}_{III}: siete factores en ocho corridas. Se escribe el 2^{3} completo en A, B y C y se definen D = AB, E = AC, F = BC y G = ABC. Su relación de definición es I = ABD = ACE = BCF = ABCG y todos sus productos (15 palabras); la más corta tiene tres letras.
+
+El costo es alto: despreciando las interacciones de tres o más factores, cada efecto principal es alias de tres interacciones dobles (la tabla de la derecha). Solo sirve si esas interacciones son despreciables o si se planea separarlas después con un doblez, que es el tema de las diapositivas siguientes.""",
   left=[tab(["Corrida", "A", "B", "C", "D = AB", "E = AC", "F = BC", "G = ABC"], _rows, size=14,
             first_left=False),
-        txt("**Cómo se construye**: (1) se escribe el 2^{3} completo en A, B y C; (2) a cada una de sus cuatro "
-            "interacciones (AB, AC, BC, ABC) se le asigna un factor nuevo. Son 3 + 4 = **7 columnas = N − 1**: saturado.",
-            size=14)],
+        txt("**Resolución III**: la palabra más corta de la relación de definición tiene **tres letras** "
+            "(I = ABD = ACE = BCF = ABCG = …). Ningún principal se alía con otro principal, pero **cada principal "
+            "se alía con interacciones dobles**.", size=14)],
   right=[tab(["Columna", "Estima"], [[w, f"{w} + {alias4[w]}"] for w in "ABCDEFG"], size=15,
              first_left=False),
          txt("Alias despreciando interacciones de tres o más factores", size=13)], ratio=0.56)
-
-S("¿Cuál es la relación de definición del 2^{7−4}?",
-  """El 2^{7−4} tiene cuatro generadores: I = ABD, I = ACE, I = BCF e I = ABCG. Su relación de definición completa se obtiene multiplicando los generadores de dos en dos, de tres en tres y los cuatro a la vez: tiene 2^{4} − 1 = 15 palabras. La más corta tiene tres letras, así que es de resolución III.
-
-Cada efecto tiene 15 alias. Si se suponen despreciables las interacciones de tres o más factores, cada estimación es la suma del efecto principal y de tres interacciones dobles; son las cadenas de la tabla de la diapositiva anterior (ecuación 8-1 del libro).
-
-Es una fracción un dieciseisavo del 2^{7}. Hay 16 diseños en la familia, uno por cada combinación de signos de los cuatro generadores; con todos positivos se tiene la fracción principal.
-
-Esta lista de 15 palabras es la herramienta para el resto del subtema: al eliminar un factor se tachan las palabras que contienen su letra, y lo que queda es la relación de definición del diseño más pequeño.""",
-  body=[form("I = ABD = ACE = BCF = ABCG = BCDE = ACDF = CDG", "= ABEF = BEG = AFG = DEF = ADEG = CEFG = BDFG = ABCDEFG", size=17),
-        txt("**Palabra**: producto de letras cuya columna de signos es toda +, es decir, igual a I. **Cómo se obtienen**: "
-            "cada generador se convierte en palabra multiplicando por la letra nueva, D = AB ⇒ D·D = ABD ⇒ **I = ABD** "
-            "(porque D·D = I). Después se multiplican las palabras entre sí y toda letra repetida se cancela: "
-            "ABD · ACE = A^{2}BCDE = **BCDE**. Cuatro generadores dan 2^{4} − 1 = **15 palabras**.", size=15),
-        txt("**Alias de B**: se multiplica B por cada palabra (B · ABD = AD, B · BCF = CF, B · BEG = EG, …):", size=14),
-        form("B = AD = CF = EG = ACG = CDE = AEF = DFG = ABCE = ABFG = BCDG = BDEF = ABCDF = ABDEG = BCEFG = ACDEFG", size=14),
-        cards(("Resolución III", "La palabra más corta tiene **3 letras** (ABD, ACE, …): un principal se alía con dobles"),
-              ("15 alias por efecto", "Despreciando triples: principal + **tres interacciones dobles**"),
-              ("Para eliminar factores", "Al quitar un factor se **tachan las palabras con su letra**; las que quedan son la nueva relación"),
-              size=14)])
-
-S("¿Qué significa eliminar un factor y cuál es el procedimiento?",
-  """Los diseños saturados existen solo para k = 3, 7, 15, 31 factores. Cuando el problema tiene otro número de factores, por ejemplo seis, no se construye un diseño nuevo desde cero: se toma el saturado inmediatamente mayor como plantilla y se dejan sin usar las columnas que sobran. A eso se le llama eliminar factores (o eliminar columnas).
-
-Eliminar una columna no cambia las corridas. La columna sigue existiendo en la matriz, porque sus signos son el producto de otras columnas, pero no se le asigna ningún factor real: nadie fija esa variable en el laboratorio. Por eso las palabras que contienen su letra desaparecen de la relación de definición. Una palabra como ABCG dice que la columna de G es igual al producto de A, B y C; si G ya no es un factor, esa igualdad ya no liga a factores entre sí. Y las columnas que quedan libres no se pierden: cada una estima una cadena de interacciones.
-
-Procedimiento paso a paso:
-1. Contar los factores k y escoger el saturado más pequeño con N − 1 ≥ k (N = 4, 8, 16, 32).
-2. Calcular cuántas columnas sobran: N − 1 − k.
-3. Elegir cuáles eliminar. Se prefieren columnas generadas, se revisa que las que quedan no formen una palabra corta entre sí y, si es posible, que solo sobrevivan palabras de cuatro o más letras, porque así el diseño gana resolución.
-4. Borrar esas columnas de la tabla. Las N corridas quedan iguales.
-5. Escribir la nueva relación de definición: se tacha toda palabra que contenga alguna letra eliminada. La palabra más corta que quede da la resolución.
-6. Escribir los nuevos alias: en cada cadena se tachan los términos que contienen letras eliminadas.
-7. Interpretar las columnas libres: cada una estima una cadena de interacciones; si se suponen nulas, dan grados de libertad para estimar el error.""",
-  left=[txt("**Eliminar un factor** = usar el saturado como **plantilla** para menos factores, dejando **sin asignar** "
-            "las columnas que sobran. Se hace porque los saturados solo existen para k = 3, 7, 15, 31.", size=15),
-        cards(("Las corridas no cambian", "La columna sigue en la matriz (sus signos son producto de otras), pero "
-                                          "**nadie fija esa variable** en el laboratorio"),
-              ("Por qué se tachan palabras", "ABCG dice «la columna G = A·B·C». Si G no es un factor, esa igualdad "
-                                             "**ya no liga factores**: la palabra sale de la relación"),
-              size=14, cols=1)],
-  right=[txt("**Paso a paso**", size=16),
-         num("**Contar k** y escoger el saturado más pequeño con **N − 1 ≥ k** (N = 4, 8, 16, 32)",
-             "**Cuántas sobran**: N − 1 − k columnas",
-             "**Cuáles eliminar**: que lo que queda **no forme palabras cortas**; si se puede, que solo "
-             "sobrevivan palabras de **4 o más letras** (se gana resolución)",
-             "**Borrar** esas columnas: las N corridas quedan iguales",
-             "**Nueva relación**: tachar toda palabra con una letra eliminada; la más corta que quede da la **resolución**",
-             "**Nuevos alias**: tachar en cada cadena los términos con letras eliminadas",
-             "**Columnas libres**: estiman cadenas de interacciones o dan grados de libertad al error", size=13)],
-  ratio=0.45)
-
-_rows98 = [[str(i + 1)] + [sg(r[c]) for c in "ABCDEF"] + ["(" + sg(r["G"]) + ")"] for i, r in enumerate(r4)]
-S("Ejemplo: ¿cómo se pasa del 2^{7−4} a seis factores?",
-  """Se aplican los siete pasos a un caso concreto: hay seis factores y solo se pueden hacer ocho corridas.
-
-Paso 1: con k = 6 el saturado más pequeño que alcanza es el de N = 8, el 2^{7−4}_{III}: el 2^{3} en A, B y C con D = AB, E = AC, F = BC y G = ABC (la tabla).
-
-Paso 2: sobran N − 1 − k = 8 − 1 − 6 = 1 columna.
-
-Paso 3: se elige cuál. Con seis factores en ocho corridas el diseño es necesariamente de resolución III, y quitar D, E, F o G da lo mismo en resolución: siempre quedan siete palabras y la más corta es de tres letras. Se elige G.
-
-Paso 4: se borra la columna de G. Las ocho corridas quedan iguales; solo que nadie fija esa columna. El diseño que queda es un 2^{6−3}_{III}, con D = AB, E = AC y F = BC.
-
-Paso 5: nueva relación de definición. De las 15 palabras del 2^{7−4} (I = ABD = ACE = BCF = ABCG = BCDE = ACDF = CDG = ABEF = BEG = AFG = DEF = ADEG = BDFG = CEFG = ABCDEFG) se tachan las ocho que tienen G y quedan siete: I = ABD = ACE = BCF = BCDE = ACDF = ABEF = DEF. La más corta tiene tres letras: resolución III.
-
-Paso 6: los alias se aligeran. En el 2^{7−4}, A = BD = CE = FG; al quitar G desaparece FG y queda A = BD = CE. Cada efecto principal pasa de tres interacciones dobles aliadas a dos.
-
-Paso 7: la columna liberada no se tira. La columna ABC, que era la de G, ahora estima la cadena de interacciones AF + BE + CD. Sirve para ver si hay interacciones o, si se suponen nulas, como un grado de libertad para el error.""",
-  left=[tab(["Corrida", "A", "B", "C", "D = AB", "E = AC", "F = BC", "G = ABC (se borra)"], _rows98, size=13,
-            first_left=False, pad=0.06),
-        note("Las **8 corridas no cambian**: solo la columna de G deja de ser un factor", size=14)],
-  right=[num("k = 6  ⇒  N − 1 ≥ 6  ⇒  **N = 8**: el **2^{7−4}_{III}**",
-             "Sobran 8 − 1 − 6 = **1 columna**",
-             "Quitar D, E, F o G da igual (siempre III): se elige **G**",
-             "Se **borra** G  ⇒  **2^{6−3}_{III}** con D = AB, E = AC, F = BC",
-             "Se tachan las 8 palabras con G; quedan **7**, la más corta de 3 letras: **III**",
-             "En A = BD = CE = FG sale FG  →  **A = BD = CE**",
-             "La columna ABC (la de G) estima **AF + BE + CD**", size=13),
-         form("I = ABD = ACE = BCF = BCDE", "= ACDF = ABEF = DEF", size=15)],
-  ratio=0.53)
-
-S("¿Qué diseño queda según cuántos factores se eliminen?",
-  """La tabla aplica el mismo procedimiento quitando cada vez más columnas del 2^{7−4}. En cada fila, la relación de definición son las palabras de la original que solo usan las letras que quedan.
-
-Con seis factores (se quita G) queda el 2^{6−3}_{III} de la diapositiva anterior. Con cinco (se quitan F y G) queda el 2^{5−2}_{III}, con D = AB y E = AC e I = ABD = ACE = BCDE; los alias de A son BD y CE, y las dos columnas libres estiman BC + DE y BE + CD.
-
-Con cuatro factores aparece la lección importante: importa cuáles se quitan. Si se quitan E, F y G queda D = AB, con I = ABD: resolución III, y A, B y D siguen aliados con interacciones dobles. Si en cambio se quitan D, E y F y se conserva G = ABC, la única palabra es ABCG, de cuatro letras: resolución IV, y los cuatro efectos principales quedan libres de interacciones dobles. Con el mismo número de corridas se gana una resolución. Es el 2^{4−1}_{IV} de la tabla de diseños recomendados (allí la cuarta letra se llama D, con D = ABC). Las tres columnas libres estiman AB + CG, AC + BG y AG + BC.
-
-Con tres factores lo correcto es quedarse con A, B y C, las columnas del diseño básico: no queda ninguna palabra y el diseño es el 2^{3} completo. La diapositiva siguiente muestra qué pasa si se eligen mal.""",
-  body=[txt("Cada fila repite los siete pasos sobre el 2^{7−4}, quitando cada vez más columnas. La **relación de definición** "
-            "de cada fila son las palabras de la original que **solo usan las letras que quedan**, y la **resolución** es la "
-            "longitud de la más corta. Al quitar columnas los alias se aligeran y las columnas libres pasan a estimar interacciones.",
-            size=15),
-        tab(["Factores", "Se eliminan", "Diseño que queda", "Relación de definición", "Alias de A (dobles)", "Columnas libres estiman"],
-            [["6", "G", "2^{6−3}_{III}", "ABD, ACE, BCF, BCDE, ACDF, ABEF, DEF", "BD, CE", "AF + BE + CD"],
-             ["5", "F, G", "2^{5−2}_{III}", "ABD, ACE, BCDE", "BD, CE", "BC + DE;  BE + CD"],
-             ["4", "E, F, G", "2^{4−1}_{III}", "ABD", "BD", "AC;  BC;  CD"],
-             ["**4**", "**D, E, F**", "**2^{4−1}_{IV}**", "**ABCG**", "**ninguno**", "AB + CG;  AC + BG;  AG + BC"],
-             ["3", "D, E, F, G", "**2^{3} completo**", "ninguna", "ninguno", "AB, AC, BC, ABC"]],
-            size=13, hl=[3], first_left=False, colw=[0.09, 0.12, 0.14, 0.27, 0.14, 0.24]),
-        cards(("Con 4 factores importa cuáles se quitan", "Si se conserva **G = ABC**, la única palabra que sobrevive es "
-                                                       "**ABCG** (4 letras): **resolución IV**, principales libres de dobles. "
-                                                       "Si se conserva D = AB sobrevive ABD (3 letras): solo III"),
-              ("Con 3 factores", "Quedarse con **A, B y C**: no sobrevive ninguna palabra y se obtiene el **2^{3} completo**. "
-                                 "Otra elección puede repetir corridas (diapositiva siguiente)"),
-              size=13)])
-
-_dup3 = {0: 3, 2: 1, 1: 4, 3: 2, 4: 7, 6: 5, 5: 8, 7: 6}
-_rows3 = [[str(i + 1), sg(r["A"]), sg(r["C"]), sg(r["E"]), f"= corrida {_dup3[i]}", sg(r["A"]), sg(r["B"]), sg(r["C"])]
-          for i, r in enumerate(r4)]
-S("¿Qué pasa si se eliminan mal las columnas?",
-  """Supóngase que hay tres factores y se toman del 2^{7−4} las columnas A, C y E, eliminando B, D, F y G. Parece razonable, pero E = AC: la palabra ACE sigue en la relación de definición. El diseño en A, C y E es entonces una fracción 2^{3−1} con I = ACE.
-
-La tabla lo hace visible. En la columna de la izquierda solo aparecen cuatro combinaciones distintas de A, C y E: (−, −, +), (+, −, −), (−, +, −) y (+, +, +), cada una dos veces. Las ocho corridas son dos réplicas de un 2^{3−1}: cada efecto principal sigue aliado con una interacción doble (A = CE, C = AE, E = AC) y la mitad de las combinaciones de tratamientos nunca se prueba.
-
-Con las mismas ocho corridas se puede tener algo mucho mejor: quedarse con A, B y C, las columnas del diseño básico. Entre ellas no hay ninguna palabra, así que las ocho corridas son las ocho combinaciones distintas del 2^{3} completo, sin ningún alias.
-
-La regla práctica: al eliminar columnas, revisar que el subconjunto que queda no forme una palabra de la relación de definición. Si la forma, el diseño se repite en lugar de completarse.""",
-  left=[tab(["N°", "Mala: A", "C", "E = AC", "Se repite", "Buena: A", "B", "C"], _rows3, size=12,
-            first_left=False, pad=0.06, colw=[0.08, 0.13, 0.08, 0.12, 0.21, 0.14, 0.08, 0.08]),
-        txt("Mala elección: A, C, E (cada combinación aparece dos veces). Buena: A, B, C (8 combinaciones distintas)", size=12)],
-  right=[cards(("Quedarse con A, C, E", "ACE es una palabra: **2^{3−1} repetido dos veces**. Solo 4 combinaciones "
-                                         "distintas; A = CE, C = AE, E = AC"),
-               ("Quedarse con A, B, C", "Ninguna palabra: **2^{3} completo**, 8 combinaciones distintas, sin alias"),
-               ("Regla", "El subconjunto que queda **no debe formar una palabra** de la relación de definición"),
-               size=14, cols=1)],
-  ratio=0.56)
 
 S("¿Qué es el doblez y qué otras salidas hay para los alias?",
   """En un diseño de resolución III cada efecto principal está mezclado con interacciones dobles. Para separarlos se usa el ensamblaje secuencial: se corre una segunda fracción en la que se han invertido los signos de algunos factores y se combinan las dos. A esta técnica se le llama doblez o plegado (fold over). Hay dos variantes: el doblez de un solo factor invierte los signos de un factor; el doblez completo, o reflexión, invierte los signos de todos.
@@ -1934,7 +1781,7 @@ Por último, Montgomery señala que el doblez completo de un diseño de resoluci
 S("Resumen · ¿Cuántos factores caben en N corridas?",
   """La tabla se lee por columnas. Con 16 corridas se puede hacer un factorial completo de 4 factores, una fracción un medio de 5, una fracción de resolución IV para 6 a 8 factores, o una de resolución III para 9 a 15.
 
-Dos límites útiles: un diseño de resolución III admite como máximo k = N − 1 factores (diseño saturado), y un diseño de resolución IV necesita al menos N = 2k corridas.""",
+Dos límites útiles: un diseño de resolución III admite como máximo k = N − 1 factores, y un diseño de resolución IV necesita al menos N = 2k corridas.""",
   body=[tab(["Tipo de diseño", "4 corridas", "8 corridas", "16 corridas", "32 corridas"],
             [["Factorial completo", "2", "3", "4", "5"],
              ["Fracción un medio", "3", "4", "5", "6"],
@@ -1942,7 +1789,7 @@ Dos límites útiles: un diseño de resolución III admite como máximo k = N �
              ["Fracción de resolución III", "3", "5 a 7", "9 a 15", "17 a 31"]], size=18,
             colw=[0.36, 0.16, 0.16, 0.16, 0.16]),
         txt("Las celdas indican el **número de factores** que se pueden estudiar", size=15),
-        cards(("Resolución III", "Máximo **k = N − 1** factores (diseño saturado)"),
+        cards(("Resolución III", "Máximo **k = N − 1** factores"),
               ("Resolución IV", "Mínimo **N = 2k** corridas"), size=17)])
 
 # ------------------------------------------------------------------ 9
