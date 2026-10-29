@@ -3,6 +3,50 @@
 Registro de cada sesión de trabajo en el repositorio: qué se hizo, qué decisiones se tomaron y
 qué queda pendiente. La entrada más reciente va arriba.
 
+## 2026-10-28 (miércoles, tarde) — Papers de fraccionados en electrónica y física
+
+### Hecho
+- `git pull`: llegaron los libros de Excel de la medición definitiva (5A, 6A, 7A) y el recorte de la
+  presentación de fraccionados.
+- Juan Esteban preguntó si entre los papers candidatos había alguno de electrónica o física. No había
+  ninguno (de los 20 de la lista del 3 oct, el más cercano es la soldadura láser simulada, n.º 17). Se hizo
+  una búsqueda nueva en OpenAlex, Crossref y web; los resultados quedaron en la sección E de
+  `bibliografia/papers-factoriales-fraccionados.txt` (refs. 21–33) y resumidos en
+  `notas/tema-06-factoriales-fraccionados.md`.
+- Se descargaron y leyeron 7 PDF (Liu 2010, Narula 2018, Figueroa 2023, Ning 2020, Verkouteren 1992,
+  Bartsch 2018, Karimi 1997) para confirmar el diseño exacto. El mejor candidato de electrónica es
+  Liu y Shrauner (2010): 2^(5−1), 16 corridas, grabado por plasma en un reactor MERIE, con los datos
+  completos pero sin ANOVA (habría que calcularla). Con ANOVA impresa: Narula y Tan (2018) y
+  Figueroa et al. (2023), ambos 2^(5−2) de resolución III.
+- No se pudo abrir desde aquí el PDF de Yang y Liao (2009, celdas solares DSSC, IOP bloquea
+  descargas automáticas) ni el de Mane et al. (2007, IOP con paywall); hay que probarlos en el navegador.
+- Segunda pregunta: papers de **mecatrónica** con fraccionados. Quedaron en la sección F del mismo archivo
+  (refs. 34–40). Se leyeron en PDF Şirinterlikçi et al. (2009, robot Fanuc, 2^(6−2) IV con ANOVA y
+  residuales), Cui et al. (2023, motor PMSM, 2^(6−2) IV por FEM) y Macià et al. (2022, eyector neumático,
+  2^(4−1) por CFD). Freeman y Bauer (2026, hexápodo, 2^(7−2) y 2^(7−3)) y Rosid y Tontowi (2021,
+  impresora FDM) solo por resumen: SAGE y la revista indonesia no respondieron.
+
+### Pendiente
+- [ ] Decidir el paper del caso (vence hoy 28 oct). Opciones de electrónica/física: Liu 2010 (más limpio,
+      calcular ANOVA), Narula 2018 o Figueroa 2023 (ANOVA ya impresa). Si no, los de la lista original
+      (Cacua 2017 en español; Rezende 2018).
+- [ ] Abrir en el navegador Yang y Liao (2009) para confirmar la fracción; sería el único de celdas solares.
+- [x] Juan Esteban eligió el caso: **Cui et al. (2023), motor PMSM**; PDF en `exposicion-tema-06/`. Se leyó
+      completo y se corroboró contra la presentación: usa el mismo 2^(6−2) IV del ejemplo 3 (E = ABC, F = BCD),
+      Lenth/Pareto, cadenas de alias y la tabla de resoluciones. Lo que no cubre la presentación es lo que el
+      paper hace después del tamizado (CCD, superficie de respuesta, lobo gris). Detalle y recálculo de
+      efectos en `notas/tema-06-factoriales-fraccionados.md` y `scripts/tema-06/caso_cui.py`.
+- Juan Esteban también adjuntó el PDF de Şirinterlikçi et al. (2009), robot Fanuc. Se leyó completo y se
+      corroboró: es el mismo 2^(6−2) IV (I = SPWD = SMDI = PWMI ≡ ABCE = BCDF = ADEF), con gráfica de
+      Daniel, error agrupado, ANOVA con p-valores, transformación logarítmica y lectura por cadenas. Se
+      detectó una errata en la tabla 5 («SC = PW = MD» debe ser SD = PW = MI) y una inconsistencia de
+      factor 4 entre los coeficientes de las ecuaciones 6–7 y las SS de la ANOVA. No publica los 16 datos.
+      Detalle en `notas/tema-06-factoriales-fraccionados.md`.
+- [ ] Para el informe: calcular ANOVA, residuales y supuestos del fraccionado de Cui (el paper no los trae) y
+      decidir si se reportan las dos lecturas del Pareto (Lenth puro vs. error con 2 g.l.).
+- [ ] Decidir entre Cui (datos sí, ANOVA no) y Şirinterlikçi (ANOVA sí, datos no), o usar los dos.
+- [ ] Enviar el paper a los compañeros hoy 28 oct.
+
 ## 2026-10-28 (miércoles) — Tema 6: se quitan los diseños saturados
 
 ### Hecho

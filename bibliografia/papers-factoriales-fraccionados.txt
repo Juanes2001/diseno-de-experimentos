@@ -172,3 +172,230 @@ D. OTROS CAMPOS Y VARIANTES
     Acceso: revista de acceso abierto; CC BY.
     Diseño: Fraccionado de NIVELES MIXTOS 2^1·3^2·4^2; no es un 2^(k-p).
     Tema: Producción de Trichoderma harzianum; cinco factores. Útil solo si se quiere mostrar la extensión a niveles mixtos.
+
+====================================================================================================
+E. ELECTRÓNICA Y FÍSICA (búsqueda del 28 de octubre de 2026)
+====================================================================================================
+Ninguno de los 20 candidatos anteriores era de electrónica ni de física (el más cercano, el n.º 17,
+es soldadura láser simulada por elementos finitos). Se buscó de nuevo en OpenAlex, Crossref y web con
+términos de electrónica (semiconductores, plasma, películas delgadas, sensores, antenas, soldadura,
+celdas solares) y de física (láser, espectroscopía, aceleradores, plasma). De los marcados con (*) se
+descargó y leyó el PDF completo; el resto se verificó solo con el resumen.
+
+En español no apareció ningún artículo de electrónica o física con fraccionados (solo Six Sigma,
+hidrociclones, farmacia y avalúos).
+
+--- E1. Con el diseño 2^(k-p) confirmado en el texto completo ---
+
+[21] (*) Chunli Liu; B. Shrauner (2010). Statistical Analysis of SiO2 Contact Hole Etching in a Magnetically Enhanced Reactive Ion Etching Reactor. Journal of Magnetics, vol. 15, n.º 3, 132-137.
+    DOI: 10.4283/jmag.2010.15.3.132
+    Enlace: https://doi.org/10.4283/jmag.2010.15.3.132  (PDF libre en KoreaScience)
+    Acceso: abierto (bronce); licencia no informada.
+    Diseño: 2^(5-1), 16 corridas (indicado en el texto). Factores: campo magnético, presión, flujos de Ar, CHF3 y CF4.
+    Respuestas: voltaje DC de autopolarización, tasa de grabado y pendiente de pared. Datos de Applied Materials.
+    Análisis: regresión lineal con efectos principales e interacciones dobles (tablas 2 y 3), R^2 de 99.93 % y 91 %,
+    cálculos en MATLAB. NO reporta tabla ANOVA ni validación de supuestos: habría que rehacerlas con los
+    16 datos de las tablas. Campo: fabricación de semiconductores (grabado por plasma). 6 páginas.
+    >>> MEJOR CANDIDATO DE ELECTRÓNICA: fracción un medio clásica, corto, datos completos.
+
+[22] (*) Udit Narula; Cher Ming Tan (2018). Qualitative Analysis of Growth Parameters for PECVD Based Low Temperature Synthesis of Graphene Using Design of Experiments. Frontiers in Materials, vol. 5, art. 43.
+    DOI: 10.3389/fmats.2018.00043
+    Enlace: https://doi.org/10.3389/fmats.2018.00043
+    Acceso: revista de acceso abierto; CC BY.
+    Diseño: 2^(5-2) de resolución III, 8 corridas, generadores D = AB y E = AC (indicado en el texto).
+    Factores: temperatura, potencia RF, razón H2/CH4, tiempo de depósito, flujo de Ar. Respuesta por atributos
+    (hay/no hay grafeno, 5 muestras por corrida, transformación arcoseno). Minitab 17: ANOVA (tabla 5) con
+    p-valores, gráficos de efectos principales y gráfico normal de efectos. Sin gráficos de residuales.
+    Campo: electrónica / materiales 2D (depósito por plasma). 7 páginas.
+
+[23] (*) Helen Figueroa; Juliet Aristizábal; Elías Reinoso-Guerra; Bárbara Arce; María José Vargas-Straube; Dana Gentil; Cristián Ramírez; José Cordero; Nelson P. Barrera; Carolina Parra (2023). Fractional Factorial Design to Evaluate the Synthesis and Electrochemical Transfer Parameters of h-BN Coatings. Nanomaterials, vol. 13, n.º 23, art. 2992.
+    DOI: 10.3390/nano13232992
+    Enlace: https://doi.org/10.3390/nano13232992
+    Acceso: revista de acceso abierto; CC BY.
+    Diseño: 2^(5-2) de resolución III, 8 corridas, generadores D = -AC y E = ABC; tabla de alias explícita (tabla 2).
+    Factores: masa de precursor, condición del sustrato de Cu, tiempo de síntesis CVD, voltaje de transferencia,
+    concentración de NaOH. Respuestas: rugosidad RMS (AFM) y ángulo de contacto. ANOVA con F y p-valores
+    (tablas 4 y S1-S2), modelos de regresión, diagrama de Pareto de efectos estandarizados.
+    Campo: nitruro de boro hexagonal (material 2D por CVD), aplicación antibiofilm. Grupo chileno.
+
+[24] (*) Jing Ning; José C. Martínez; Jamo Momand; Heng Zhang; Subodh C. Tiwari; Fuyuki Shimojo; Aiichiro Nakano; Rajiv K. Kalia; Priya Vashishta; Paulo S. Branicio; Bart J. Kooi; Robert E. Simpson (2020). Differences in Sb2Te3 growth by pulsed laser and sputter deposition. Acta Materialia, vol. 200, 811-820.
+    DOI: 10.1016/j.actamat.2020.09.035
+    Enlace: https://doi.org/10.1016/j.actamat.2020.09.035 ; preprint libre: https://arxiv.org/abs/2009.05957
+    Acceso: manuscrito aceptado abierto en ScienceDirect (bronce) y preprint en arXiv.
+    Diseño: 2^(5-1) con E = ABCD (resolución V), 16 corridas más un punto central de referencia (tabla 1).
+    Factores (PLD): temperatura, presión, fluencia láser, distancia blanco-sustrato, capa semilla.
+    Respuesta: calidad cristalina Q(00l) de XRD. ANOVA y gráficos de efectos principales; la tabla ANOVA
+    completa no está impresa en el texto (solo conclusiones y figuras). Incluye simulaciones DFT.
+    Campo: física de materiales / crecimiento epitaxial por láser pulsado. Largo (24 págs. en preprint).
+
+[25] (*) R. Michael Verkouteren; George A. Klouda (1992). Factorial Design Techniques Applied to Optimization of AMS Graphite Target Preparation. Radiocarbon, vol. 34, n.º 3, 335-343.
+    DOI: 10.1017/S0033822200063517
+    Enlace: https://doi.org/10.1017/S0033822200063517
+    Acceso: abierto en Cambridge Core (bronce).
+    Diseño: 2^(4-1), 8 corridas, orden aleatorizado (tabla 2); cita Box, Hunter y Hunter (1978). Factores: tamaño
+    de muestra, presión de H2, temperatura y tiempo de pretratamiento del catalizador. Respuesta: tasa de
+    reducción CO2 -> grafito. Diagrama de Pareto de efectos con incertidumbre por Monte Carlo; discute las
+    interacciones dobles confundidas (AC + BD). Sin ANOVA formal.
+    Campo: física nuclear aplicada (espectrometría de masas con acelerador, NIST). Corto.
+
+[26] (*) Heike Bartsch; Rolf Grieseler; José Manuel Mánuel; Jörg Pezoldt; Jens Müller (2018). Magnetron Sputtered AlN Layers on LTCC Multilayer and Silicon Substrates. Coatings, vol. 8, n.º 8, art. 289.
+    DOI: 10.3390/coatings8080289
+    Enlace: https://doi.org/10.3390/coatings8080289
+    Acceso: revista de acceso abierto; CC BY.
+    Diseño: fraccionado de TRES niveles (4 factores a 3 niveles: temperatura, potencia RF, espesor, razón N2/Ar),
+    tabla A1. Análisis de medias (ANOM) y ANOVA en Minitab 18 al 99 % y 99.95 %. No es un 2^(k-p):
+    sirve para la segunda presentación (3^k y niveles mixtos), no para el caso de fraccionados a dos niveles.
+    Campo: microelectrónica (películas piezoeléctricas de AlN sobre cerámica LTCC y silicio).
+
+[27] (*) Kamiar J. Karimi; Andrew J. Booker; A. C. Mong; Bruce Manners (1997). Verification of Space Station secondary power system stability using design of experiment. Intersociety Energy Conversion Engineering Conference (IECEC-97).
+    DOI: 10.1109/iecec.1997.659245
+    Enlace: https://ntrs.nasa.gov/citations/19980017167  (PDF libre en NASA NTRS)
+    Acceso: informe abierto de NASA.
+    Diseño: fraccionados a dos niveles (cargas ON/OFF) sobre un modelo computacional del sistema de potencia DC
+    de la Estación Espacial Internacional; ANOVA como porcentaje de contribución a la suma de cuadrados; discute
+    resolución y confirmación con un diseño de mayor resolución. Son simulaciones, no un experimento físico.
+    Campo: electrónica de potencia (convertidores DC/DC).
+
+--- E2. El resumen confirma el fraccionado, pero el PDF no se pudo abrir desde aquí ---
+
+[28] Chien-Hsin Yang; Shao-Hong Liao (2009). Hydrothermal Processed TiO2 Nanoparticles for Optimization in Dye-Sensitized Solar Cells Using Statistical Experimental Strategies. ECS Transactions, vol. 19, n.º 32, 3-20.
+    DOI: 10.1149/1.3268158
+    Enlace: https://doi.org/10.1149/1.3268158
+    Acceso: abierto en IOPscience (bronce); el sitio bloquea descargas automáticas, abrirlo en el navegador.
+    Diseño: fraccionado con cinco factores (resistencia del vidrio FTO, % PEG, espesor de TiO2, solvente del
+    electrolito, preparación del contraelectrodo de Pt); el resumen reporta interacciones dobles significativas
+    y eficiencia máxima ~9 %. Fracción exacta por confirmar.
+    Campo: celdas solares sensibilizadas por tinte (electrónica / fotovoltaica).
+
+[29] Poorna Mane; Karla M. Mossi; Robert Bryant (2007). Experimental design and analysis for piezoelectric circular actuators in flow control applications. Smart Materials and Structures, vol. 17, n.º 1, art. 015013.
+    DOI: 10.1088/0964-1726/17/01/015013
+    Enlace: https://doi.org/10.1088/0964-1726/17/01/015013
+    Acceso: OpenAlex lo marca bronce, pero IOP mostró paywall al intentar abrirlo; verificar desde la red UNAL.
+    Diseño: dos fraccionados, de cinco y cuatro factores, declarados de resolución V (el resumen dice que los
+    efectos principales se confunden con interacciones triples, lo que corresponde a resolución IV: revisar).
+    Factores: forma de onda, voltaje, frecuencia, altura de cavidad, orificio, presión. Respuesta: velocidad del chorro.
+    Campo: actuadores piezoeléctricos (electromecánica, NASA Langley).
+
+[30] Joachim S. Graff; Raphael Schuler; Xin Song; Gustavo Castillo-Hernández; Gunstein Skomedal; Erik Enebakk; Daniel Nilsen Wright; Marit Stange; Johannes de Boor; Ole Martin Løvvik; Matthias Schrade (2021). Fabrication of a Silicide Thermoelectric Module Employing Fractional Factorial Design Principles. Journal of Electronic Materials, vol. 50, n.º 7, 4041-4049.
+    DOI: 10.1007/s11664-021-08902-y
+    Enlace: https://doi.org/10.1007/s11664-021-08902-y
+    Acceso: abierto (híbrido); CC BY.
+    Diseño: fraccionado "basado en Taguchi" sobre cuatro variables de composición del siliciuro tipo p (fracción
+    exacta por confirmar). Campo: termoelectricidad (materiales electrónicos).
+
+[31] Yen-Sheng Chen; Ting-Yu Ku (2015). Efficiency Improvements of Antenna Optimization Using Orthogonal Fractional Experiments. International Journal of Antennas and Propagation, vol. 2015, art. 708163, 1-12.
+    DOI: 10.1155/2015/708163
+    Enlace: https://doi.org/10.1155/2015/708163
+    Acceso: revista de acceso abierto; CC BY.
+    Diseño: experimentos fraccionados ortogonales para construir superficies de respuesta de antenas RFID y LTE;
+    las corridas son simulaciones electromagnéticas. Campo: antenas (electrónica de RF).
+
+[32] Benjamín Millán-Ramos; José Victoria-Hernández; Dietmar Letzig; Sandra E. Rodil (2024). Exploring the relationship between sputter-deposition conditions and electrochemical response of ZrO2 films on biodegradable MgZnCa alloy. Journal of Vacuum Science & Technology A, vol. 42, n.º 2.
+    DOI: 10.1116/6.0003242
+    Enlace: https://doi.org/10.1116/6.0003242
+    Acceso: abierto (híbrido); CC BY.
+    Diseño: fraccionado con tres factores (potencia, tiempo, fracción de O2); fracción por confirmar.
+    Campo: películas delgadas por pulverización catódica (física de superficies, UNAM); aplicación biomédica.
+
+--- E3. Referencia clásica, NO es de acceso abierto ---
+
+[33] Milan C. Buncick; A. R. K. Ralston; Denice D. Denton; Søren Bisgaard (2000). Characterization of a Plasma Sputter Deposition Process by Fractional Factorial Design. Quality Engineering, vol. 12, n.º 3, 371-385.
+    DOI: 10.1080/08982110008962601
+    Acceso: cerrado (Taylor & Francis); buscar por la biblioteca UNAL. Caso didáctico clásico: serie de
+    fraccionados a dos niveles para caracterizar un sistema de pulverización por plasma.
+
+--- Descartados tras revisar el resumen ---
+- Septiana et al. (2021), filtro de Kalman para el sensor MAX6675 (IJECE): factorial COMPLETO 2^2, no fraccionado.
+- Gardeniers et al. (1996), nitruro de silicio LPCVD (JVST A): factorial COMPLETO.
+- Mroczyński et al. (2020), películas de Al por pulverización (Crystals): Taguchi.
+- Kiliszkiewicz et al. (2020), condensadores impresos por inkjet (SSMT): no declara el diseño.
+- Gopal et al. (2012), impresión de pasta de soldadura (Jurnal Teknologi): 16 corridas a dos niveles, pero el
+  artículo está en malayo y no fue posible abrir el PDF para saber si es 2^4 o 2^(5-1).
+
+====================================================================================================
+F. MECATRÓNICA (búsqueda del 28 de octubre de 2026)
+====================================================================================================
+Búsqueda en OpenAlex, Crossref y web con términos de robótica, actuadores, motores, control, impresión 3D,
+CNC, neumática, drones y vehículos. Los marcados con (*) se leyeron en PDF completo. Advertencia: casi
+todo lo que aparece con "fractional" en robótica y control son controladores de ORDEN FRACCIONARIO
+(fractional-order PID), que no tienen nada que ver con el diseño fraccionado.
+
+En español no apareció ningún artículo de mecatrónica con fraccionados. El más cercano es colombiano:
+Acosta et al. (2020), selección de esquemas de control con un factorial COMPLETO 2^n y luego un diseño
+central compuesto, Rev. Fac. Ing. Univ. Antioquia, DOI 10.17533/udea.redin.20201010 (no es fraccionado).
+
+--- F1. Con el diseño 2^(k-p) confirmado en el texto completo ---
+
+[34] (*) Arif Şirinterlikçi; Murat Tiryakioğlu; Adam Bird; Amie Harris; Kevin Kweder (2009). Repeatability and Accuracy of an Industrial Robot: Laboratory Experience for a Design of Experiments Course. The Technology Interface Journal, vol. 9, n.º 2 (Spring 2009), 10 págs. Robert Morris University.
+    DOI: no tiene.
+    Enlace: https://tiij.org/issues/issues/spring2009/11_Sirinterlikci/Sirinterlikci-Robot%20Repeatability.pdf
+    Acceso: revista abierta (ISSN 1523-9926); licencia no indicada.
+    Diseño: 2^(6-2) de resolución IV, 16 corridas aleatorizadas, SIN réplicas del diseño (35 repeticiones de
+    posicionamiento por corrida para calcular las respuestas). Factores: velocidad (S), carga (P), posición en el
+    volumen de trabajo (W), tipo de movimiento articular/lineal (M), desaceleración (D), puntos intermedios (I).
+    Respuestas: exactitud (AP) y repetibilidad (RP) de posición según ISO 9283, en un robot Fanuc M16iL medido
+    con comparadores de carátula. Análisis: gráfico de Daniel (normal de efectos) para descartar factores, suma
+    de cuadrados agrupada como error y tablas ANOVA con SS, DOF, MS, F y p-valor (tablas 4 y 5); transformación
+    logarítmica de la exactitud por residuales no normales; cadenas de alias explícitas (SP = WD, SM = DI); cita a
+    Montgomery. Hecho en Excel. Resultado: velocidad y tipo de movimiento afectan la exactitud; tipo de
+    movimiento y la interacción SP (o WD, confundida) afectan la repetibilidad; la carga no fue significativa.
+    >>> MEJOR CANDIDATO DE MECATRÓNICA: robot industrial real, sigue paso a paso el cap. 8 de Montgomery
+    (resolución IV, alias, Daniel, ANOVA, supuestos) y fue escrito para un curso de diseño de experimentos.
+
+[35] (*) Junguo Cui; Fanqiang Cui; Jun Zhang; Hongsheng Huang; Liping Tan; Wensheng Xiao (2023). Design Optimization of an Automotive Permanent-Magnet Synchronous Motor by Combining DOE and NMGWO. Electronics, vol. 12, n.º 24, art. 5024.
+    DOI: 10.3390/electronics12245024
+    Enlace: https://doi.org/10.3390/electronics12245024
+    Acceso: revista de acceso abierto; CC BY.
+    Diseño: 2^(6-2) de resolución IV (tabla 3) para tamizar seis variables geométricas del motor; justifica la
+    elección de la resolución (tabla 2) y analiza las cadenas de alias (AC + BE, AF + DE, AD + EF). Respuestas:
+    eficiencia, par medio y rizado de par, obtenidas por elementos finitos (son simulaciones). Diagramas de
+    Pareto de efectos estandarizados con t crítico; luego diseño central compuesto en Minitab 20 y optimización
+    con un algoritmo de lobo gris. Campo: motores eléctricos para vehículos (mecatrónica automotriz).
+
+[36] (*) Llorenç Macià; Robert Castilla; Pedro Javier Gamez-Montero; Gustavo Raush (2022). Multi-Factor Design for a Vacuum Ejector Improvement by In-Depth Analysis of Construction Parameters. Sustainability, vol. 14, n.º 16, art. 10195.
+    DOI: 10.3390/su141610195
+    Enlace: https://doi.org/10.3390/su141610195
+    Acceso: revista de acceso abierto; CC BY.
+    Diseño: fraccionado 2^(4-1), 8 corridas (tabla 7), sobre cuatro parámetros geométricos de un eyector de
+    vacío neumático; corridas por CFD (OpenFOAM). Análisis descriptivo de la mejora por corrida; no reporta ANOVA.
+    Campo: neumática industrial (componente de líneas de producción automatizadas). Débil como caso.
+
+--- F2. El resumen confirma el fraccionado; el PDF no se pudo abrir desde aquí ---
+
+[37] Alec Freeman; Robert Bauer (2026). Factorial designed experiment to select reinforcement learning observations for a hexapod robot trajectory following task. International Journal of Advanced Robotic Systems, vol. 23, n.º 2.
+    DOI: 10.1177/17298806261431893
+    Enlace: https://doi.org/10.1177/17298806261431893
+    Acceso: revista de acceso abierto; CC BY (SAGE bloquea descargas automáticas; abrir en el navegador).
+    Diseño: fracciones un cuarto y un octavo de un 2^7 (2^(7-2) y 2^(7-3)) para elegir cuáles de siete
+    observaciones alimentan a un agente de aprendizaje por refuerzo que controla un hexápodo simulado en
+    MATLAB Simscape; modelos de regresión y validación en el simulador. Campo: robótica (simulación).
+    Muy actual y muy mecatrónico, pero las corridas son entrenamientos de un agente, no un experimento físico.
+
+[38] Ibnu Abdul Rosid; Alva Edy Tontowi (2021). Parameter Optimization of Customized FDM 3D Printer Machine for Biocomposite Material [Sago/PMMA] Using 2k Fractional Factorial Design. OPSI, vol. 14, n.º 2, 188-.
+    DOI: 10.31315/opsi.v14i2.5352
+    Enlace: https://doi.org/10.31315/opsi.v14i2.5352
+    Acceso: revista abierta; CC BY (el servidor de la revista no respondió desde aquí).
+    Diseño: "2^k fraccionado" con 3 parámetros a 2 niveles (velocidad, altura de capa, densidad de relleno) y 3
+    respuestas de error dimensional. Con solo 3 factores sería un 2^(3-1) de 4 corridas: confirmar en el texto.
+    Campo: impresora FDM a medida con extrusor neumático y de tornillo (máquina mecatrónica).
+
+--- F3. Fraccionados de otra familia (arreglos ortogonales), útiles solo como complemento ---
+
+[39] Tryfonas Pantas; George J. Besseris (2024). Lean-and-Green Fractional Factorial Screening of 3D-Printed ABS Mechanical Properties Using a Gibbs Sampler and a Neutrosophic Profiler. Sustainability, vol. 16, n.º 14, art. 5998.
+    DOI: 10.3390/su16145998
+    Acceso: CC BY. Diseño: arreglo ortogonal L12(2^11) (tipo Plackett-Burman) con 11 factores de impresión 3D
+    y 3 réplicas; análisis bayesiano no convencional. Sirve para ilustrar diseños saturados, no un 2^(k-p).
+
+[40] Nikolaos A. Fountas; Kyriaki-E. Aslani; John D. Kechagias; Panagiotis Kyratsis; Nikolaos M. Vaxevanidis (2022). Experimental and Statistical Study of Surface Roughness in CNC Slot Milling of AL 7075 Alloy Using Full and Fractional Factorial Design. Tribology in Industry, vol. 44, n.º 1, 283-293.
+    DOI: 10.24874/ti.1151.07.21.11
+    Acceso: CC BY-NC. Diseño: tres factores a TRES niveles; compara el L27 completo con sub-arreglos L9.
+    Útil para la presentación 3^k (fracción un tercio del 3^3), no para fraccionados a dos niveles.
+
+--- Descartados tras revisar el texto o el resumen ---
+- De Simone et al. (2025), mecanismo de empuje para vehículo aéreo urbano (Actuators): DOE en Minitab pero
+  NO fraccionado (el propio texto dice que su análisis no sería posible con uno).
+- Yao et al. (2020), UAV tailsitter (Sensors): factorial COMPLETO 2^9 por CFD y luego CCD.
+- Parnianifard et al. (2020), robot de cinco barras (PLoS ONE): controlador de orden fraccionario, no DOE.
+- Liou et al. (1993), tolerancias cinemáticas de robot: método Taguchi.
+- Davis (2021), tamizado de parámetros de un motor de reluctancia conmutada: tesis de maestría (Ryerson),
+  el PDF no descargó; probablemente usa fraccionados, pero no es artículo.
