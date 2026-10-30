@@ -3,6 +3,22 @@
 Registro de cada sesión de trabajo en el repositorio: qué se hizo, qué decisiones se tomaron y
 qué queda pendiente. La entrada más reciente va arriba.
 
+## 2026-10-30 (viernes) — Lectura del cap. 8 de Gutiérrez–De la Vara
+
+### Hecho
+- Juan Esteban pidió leer el cap. 8 de Gutiérrez–De la Vara (fraccionados 2^(k−p), explicado de forma más
+  sencilla) para adaptar la presentación a ese estilo. Leído completo (págs. 259–293) y resumido en
+  `notas/gutierrez-de-la-vara/cap-08-factoriales-fraccionados-2k-p.md`, con una sección sobre el estilo de
+  explicación (13 rasgos), el contenido por sección y una tabla de diferencias con Montgomery. Ejemplos
+  recalculados en Python: vibración 2^(7−4) (A 10.20, C −16.50, E 22.60; SC 208.08, 544.5, 1021.52; SCT
+  1840.24, igual a la tabla 8.15) y semiconductores 2^(5−1) (A 10.875, B 33.625, C 10.625, AB 7.125).
+- Para seguir editando desde otro dispositivo, la indicación de estilo quedó en `CLAUDE.md` y al inicio
+  de la ficha (nota «Para retomar desde otro dispositivo»).
+
+### Pendiente
+- Recibir las indicaciones de Juan Esteban sobre qué partes de la presentación cambiar con ese estilo.
+- La presentación se envía hoy (30 oct); la exposición es mañana.
+
 ## 2026-10-28 (miércoles, tarde) — Papers de fraccionados en electrónica y física
 
 ### Hecho

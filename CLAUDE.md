@@ -45,7 +45,7 @@ Todo se envía a doe_unal@yahoo.com. Retraso: −10 % por día, máximo 3 retras
   capítulo; índice en `notas/montgomery/README.md`). Consultar la ficha del capítulo que
   haga falta en lugar de volver a leer el libro; el PDF es un escaneo sin texto y no está en
   el repo. El tema 6 corresponde a `cap-08-factoriales-fraccionados-2k-p.md`.
-- **Gutiérrez–De la Vara** se resume igual en `notas/gutierrez-de-la-vara/` (por ahora el cap. 2;
+- **Gutiérrez–De la Vara** se resume igual en `notas/gutierrez-de-la-vara/` (caps. 2 y 8;
   el PDF local sí tiene capa de texto). La teoría del diseño de comparación simple (cap. 2 de ambos
   libros) se ensambla en PDF con `scripts/trabajo-practico/build_teoria.sh`.
 - **Las diapositivas de la profesora** están transcritas en `notas/clases/` (una nota por tema,
@@ -57,6 +57,11 @@ Todo se envía a doe_unal@yahoo.com. Retraso: −10 % por día, máximo 3 retras
   `contenido.py`) y `./build.sh 3k` (diseños 3^k y niveles mixtos, cap. 9, contenido en
   `contenido_3k.py`). Los bloques comunes están en `bloques.py`; los cálculos en `doe.py` y `doe3.py`.
   Son dos presentaciones separadas mientras se editan; se unirán cuando ambas estén listas.
+- **Estilo de la exposición del tema 6 (desde el 30 oct 2026):** Juan Esteban quiere simplificar la
+  presentación de fraccionados con el estilo «más sencillo» del cap. 8 de Gutiérrez–De la Vara. Antes de
+  editar `scripts/tema-06/contenido.py`, leer la sección 1 (estilo) y la sección 3 (diferencias con
+  Montgomery) de `notas/gutierrez-de-la-vara/cap-08-factoriales-fraccionados-2k-p.md`, y esperar sus
+  indicaciones concretas antes de reestructurar.
 - Los informes siguen Normas ICONTEC y deben incluir siempre: planteamiento del problema,
   justificación del diseño, plan experimental, análisis e interpretación, validación de
   supuestos, conclusiones y recomendaciones.

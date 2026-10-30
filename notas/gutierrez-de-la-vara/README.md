@@ -8,6 +8,7 @@ tiene capa de texto (`bibliografia/`, ignorado por git).
 | Cap. | Ficha | Págs. del libro | Contenido |
 |---|---|---|---|
 | 2 | [cap-02-inferencia-uno-y-dos-tratamientos.md](cap-02-inferencia-uno-y-dos-tratamientos.md) | 18–59 | Población y muestra, distribuciones, estimación puntual y por intervalo, prueba de hipótesis, pruebas para media, varianza y proporciones, dos tratamientos, igualdad de varianzas, muestras pareadas; tabla de diferencias frente a Montgomery cap. 2 |
+| 8 | [cap-08-factoriales-fraccionados-2k-p.md](cap-08-factoriales-fraccionados-2k-p.md) | 259–293 | **Estilo de explicación** (referencia para simplificar la exposición del tema 6), 2^(3−1) con contrastes, resolución, construcción en dos pasos, 2^(5−1) semiconductores, 2^(k−2), 2^(k−p) y tabla 8.8, 2^(7−4) vibración, aberración mínima, saturados, Plackett-Burman, aclaración con otra fracción; diferencias con Montgomery |
 
 Las fichas de los capítulos 2 de ambos libros se ensamblan en el PDF de teoría del diseño de
 comparación simple con `scripts/trabajo-practico/build_teoria.sh`
