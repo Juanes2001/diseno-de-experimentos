@@ -3,6 +3,30 @@
 Registro de cada sesión de trabajo en el repositorio: qué se hizo, qué decisiones se tomaron y
 qué queda pendiente. La entrada más reciente va arriba.
 
+## 2026-10-30 (viernes, tarde) — Presentación combinada Montgomery + Gutiérrez
+
+### Hecho
+- Juan Esteban pidió una copia de la presentación de fraccionados que combine los dos libros: explicaciones
+  detalladas y sencillas de Gutiérrez, términos de Montgomery que Gutiérrez no trae, y los ejemplos como
+  demostraciones. Nuevo `scripts/tema-06/contenido_combinado.py` (copia de `contenido.py`, que queda intacto) y
+  opción `./build.sh combinado` → `exposicion-tema-06/Tema6_Fraccionados_Montgomery_Gutierrez.pptx` (115
+  diapositivas) y `Guia_Tema6_Fraccionados_Montgomery_Gutierrez.pdf`.
+- Cambios frente a la versión de Montgomery: secciones reordenadas como Gutiérrez (el 2^(3−1) va antes de la
+  resolución); nuevas «¿Cuántos efectos importan realmente?» (tabla 8.1), «¿Qué se gana y qué se pierde?» (los
+  dos hechos y el criterio económico), alias comparando contrastes, atajo módulo 2 con relación definidora,
+  interpretación de alias y tabla de vocabulario de ambos libros; resolución con las tres definiciones cortas;
+  construcción en dos pasos con el ejemplo 8.1 (D = −ABC); «la otra mitad» de semiconductores (tabla 8.4:
+  A 12.75, B 34.25, C 8.75, AB 8.75, mismas conclusiones); ejemplo de la vibración 2^(7−4) en cuatro
+  diapositivas (Pareto, Daniel, mejor ANOVA idéntico a la tabla 8.15, cubo con mínimo 40.55); doblez como
+  casos 1 y 2 de Gutiérrez; patrón W en aberración mínima; ruta de análisis Pareto + Daniel → mejor ANOVA →
+  mejor tratamiento; referencias con ambos libros.
+- Revisión visual de las diapositivas nuevas (PDF de LibreOffice rasterizado con PyMuPDF). Queda un desborde
+  de 0.08 in en «Ejemplo 4 · Paso 3», que ya existía en la versión original.
+
+### Pendiente
+- Que Juan Esteban revise la presentación combinada y decida cuál se envía hoy (30 oct).
+- Commit y push hechos el 30 oct.
+
 ## 2026-10-30 (viernes) — Lectura del cap. 8 de Gutiérrez–De la Vara
 
 ### Hecho

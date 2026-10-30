@@ -10,6 +10,16 @@ Cifras de los ejemplos recalculadas en Python (vibración y semiconductores) y c
 > Estado de la presentación al 30 oct 2026: 106 diapositivas, sin diseños saturados; resolución III en
 > las diapositivas 85–97 y resoluciones IV y V desde la 98. Ojo: regenerar con `build.sh` pisa cualquier
 > edición hecha a mano en PowerPoint sobre el `.pptx`.
+>
+> **Presentación combinada (30 oct 2026).** `scripts/tema-06/contenido_combinado.py`, generada con
+> `bash scripts/tema-06/build.sh combinado` → `exposicion-tema-06/Tema6_Fraccionados_Montgomery_Gutierrez.pptx`
+> (115 diapositivas) y su guía en PDF. Secciones: 1 ¿Por qué fraccionar? (tabla 8.1, los dos hechos, economía),
+> 2 el 2^(3−1) (contrastes → alias → módulo 2 → interpretación → vocabulario de ambos libros), 3 resolución,
+> 4 fracción un medio (dos pasos, ej. 8.1, colapsar, ejemplos 1 y 2 + «la otra mitad» de semiconductores),
+> 5 otra fracción aclara (alterna/complementaria, confirmación, café), 6 fracción un cuarto (estructura de alias
+> reducida), 7 caso general (fórmulas de Gutiérrez, patrón W, mejor ANOVA, bloques solo de Montgomery, CNC),
+> 8 resolución III (vibración 2^(7−4) de Gutiérrez, doblez = casos 1 y 2, ejemplo del ojo, Plackett-Burman),
+> 9 resolución IV y V, 10 cierre.
 
 ## 1. Estilo de explicación (lo que distingue a este libro de Montgomery)
 

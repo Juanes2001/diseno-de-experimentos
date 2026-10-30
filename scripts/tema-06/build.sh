@@ -2,6 +2,7 @@
 # Regenera la presentación y la guía del tema 6 a partir del contenido elegido.
 #   ./build.sh        → fraccionados 2^(k-p) (contenido.py)
 #   ./build.sh 3k     → diseños 3^k y niveles mixtos (contenido_3k.py)
+#   ./build.sh combinado → fraccionados con Montgomery y Gutiérrez–De la Vara (contenido_combinado.py)
 # Requiere python-pptx (hay un entorno en ../../.venv). El PDF de la guía se imprime
 # desde Chrome sin abrirlo; si no está en esa ruta, abrir el HTML en un navegador
 # basado en Chromium e imprimirlo en A4, sin encabezados ni pies de página.
@@ -12,6 +13,9 @@ OUT=../../exposicion-tema-06
 mkdir -p "$OUT"
 if [ "${1:-}" = "3k" ]; then
   export CONTENIDO=contenido_3k; BASE=Tema6_Factoriales_3k; GUIA=Guia_Tema6_Factoriales_3k
+elif [ "${1:-}" = "combinado" ]; then
+  export CONTENIDO=contenido_combinado; BASE=Tema6_Fraccionados_Montgomery_Gutierrez
+  GUIA=Guia_Tema6_Fraccionados_Montgomery_Gutierrez
 else
   export CONTENIDO=contenido; BASE=Tema6_Factoriales_Fraccionados; GUIA=Guia_Tema6_Factoriales_Fraccionados
 fi
