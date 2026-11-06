@@ -10,8 +10,15 @@ qué queda pendiente. La entrada más reciente va arriba.
   27 oct (R01–R09, 22 posiciones cada una; corridas de 7:03 a 8:27, todas marcadas como válidas). No hubo
   reposiciones (R10–R12 vacías).
 
+- Se subieron también los libros de 6 A (miércoles 28 oct, 6:40 a 7:57) y 7 A (sábado 31 oct, 5:19 a 6:43),
+  cada uno con sus 9 réplicas completas (22 posiciones), todas válidas y sin reposiciones.
+- Ojo: en 6 A la R09 tiene hora de inicio y de fin iguales (07:57), así que su duración sale 0 min;
+  probablemente la hora de fin está mal escrita. Corregirla antes de reportar tiempos por corrida.
+
 ### Pendiente
-- Subir los libros de 6 A y 7 A cuando estén llenos y hacer el análisis (ajuste sech², prueba t contra τ0).
+- Corregir la hora de fin de la R09 a 6 A.
+- Análisis de las tres corrientes: ajuste sech², prueba t contra τ0 y declarar en el informe que el día
+  quedó confundido con la corriente.
 
 ## 2026-10-30 (viernes, tarde) — Presentación combinada Montgomery + Gutiérrez
 
