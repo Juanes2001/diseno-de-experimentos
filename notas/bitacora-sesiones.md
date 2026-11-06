@@ -3,6 +3,16 @@
 Registro de cada sesión de trabajo en el repositorio: qué se hizo, qué decisiones se tomaron y
 qué queda pendiente. La entrada más reciente va arriba.
 
+## 2026-11-06 (viernes) — Datos de la medición a 5 A
+
+### Hecho
+- Se subió `trabajo-practico/medicion/Medicion_5A_Autocorrelador.xlsx` con las 9 réplicas medidas el martes
+  27 oct (R01–R09, 22 posiciones cada una; corridas de 7:03 a 8:27, todas marcadas como válidas). No hubo
+  reposiciones (R10–R12 vacías).
+
+### Pendiente
+- Subir los libros de 6 A y 7 A cuando estén llenos y hacer el análisis (ajuste sech², prueba t contra τ0).
+
 ## 2026-10-30 (viernes, tarde) — Presentación combinada Montgomery + Gutiérrez
 
 ### Hecho
