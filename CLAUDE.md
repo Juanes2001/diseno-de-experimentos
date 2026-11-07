@@ -67,6 +67,12 @@ Todo se envía a doe_unal@yahoo.com. Retraso: −10 % por día, máximo 3 retras
   Desde el 30 oct 2026 existe una versión aparte, `contenido_combinado.py` → `Tema6_Fraccionados_Montgomery_Gutierrez.pptx`
   (115 diapositivas): orden y explicaciones de Gutiérrez, terminología y temas extra de Montgomery, ejemplos de
   ambos. Las ediciones de estilo Gutiérrez van ahí; `contenido.py` queda como la versión solo Montgomery.
+- **Desde el 30 oct 2026 (noche) la presentación combinada se edita a mano en PowerPoint** (Juan Esteban borró
+  diapositivas). **No regenerarla con `./build.sh combinado`**: pisaría sus ediciones. Lo nuevo se escribe en
+  `contenido_combinado.py`, se genera aparte solo lo nuevo y se inserta con
+  `scripts/tema-06/insertar_diapositivas.py` (ubica por el título de la diapositiva anterior). Los números de
+  diapositiva que él cite son los de su archivo. No escribir el .pptx mientras PowerPoint lo tenga abierto con
+  cambios sin guardar.
 - Los informes siguen Normas ICONTEC y deben incluir siempre: planteamiento del problema,
   justificación del diseño, plan experimental, análisis e interpretación, validación de
   supuestos, conclusiones y recomendaciones.

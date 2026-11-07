@@ -156,7 +156,7 @@ def svg_bar(b, W=420, H=300):
         o.append(f'<text x="{(px0 + px1) / 2}" y="{H - 8}" font-size="10.5" text-anchor="middle" fill="#5b6b73">{html.escape(b["xlab"])}</text>')
     else:
         px0, px1, py0, py1 = 46, W - 46, 8, H - 34
-        lo, hi = min(0, min(vals)), max(0, max(vals))
+        lo, hi = min(0, min(vals)), max([0, *vals, *(r[0] for r in b.get("refs", []))])
         span = (hi - lo) * 1.12
         X = lambda v: px0 + (v - lo) / span * (px1 - px0)
         bh = (py1 - py0) / len(cats)
@@ -172,6 +172,14 @@ def svg_bar(b, W=420, H=300):
             o.append(f'<text x="{px0 - 6}" y="{y + bh * 0.42:.1f}" font-size="10.5" text-anchor="end" fill="#142b33">{html.escape(c)}</text>')
         o.append(f'<line x1="{X(0):.1f}" x2="{X(0):.1f}" y1="{py0}" y2="{py1}" stroke="#9aa8ae"/>')
         o.append(f'<text x="{(px0 + px1) / 2}" y="{H - 10}" font-size="10.5" text-anchor="middle" fill="#5b6b73">{html.escape(b["xlab"])}</text>')
+    if b.get("refs") and not vertical:
+        # líneas de referencia (ME y SME de Lenth): la primera etiqueta a la izquierda, las demás a la derecha
+        o[0] = o[0].replace(f'viewBox="0 0 {W} {H}"', f'viewBox="0 -14 {W} {H + 14}"')
+        for i, (v, lab, style) in enumerate(b["refs"]):
+            dash = ' stroke-dasharray="5,3"' if style == "dash" else ""
+            o.append(f'<line x1="{X(v):.1f}" x2="{X(v):.1f}" y1="{py0 - 4}" y2="{py1}" stroke="#e36414" stroke-width="1.6"{dash}/>')
+            anc, dx = ("end", -3) if i == 0 else ("start", 3)
+            o.append(f'<text x="{X(v) + dx:.1f}" y="{py0 - 6}" font-size="10" font-weight="bold" fill="#e36414" text-anchor="{anc}">{html.escape(lab)}</text>')
     o.append("</svg>")
     return "".join(o)
 

@@ -390,6 +390,59 @@ def grid(axis, on):
     axis.format.line.color.rgb = RGBColor(0x9A, 0xA8, 0xAE)
 
 
+def draw_bar_refs(slide, chart, b, x, y, w, h):
+    """Líneas de referencia verticales sobre un gráfico de barras horizontales (Pareto con Lenth).
+    Se fija la escala del eje y el área interna del gráfico (manualLayout) para saber dónde cae
+    cada valor, y se superponen conectores y etiquetas sobre la diapositiva."""
+    from pptx.oxml.ns import qn
+    from lxml import etree
+    vals = [abs(v) for v in b["vals"]] + [r[0] for r in b["refs"]]
+    step = 5 if max(vals) <= 50 else 10
+    vmax = step * math.ceil(max(vals) * 1.15 / step)
+    va = chart.value_axis
+    va.minimum_scale = 0
+    va.maximum_scale = vmax
+    va.major_unit = step * (2 if vmax / step > 8 else 1)
+    # área interna del gráfico como fracción del marco: x, y, ancho, alto
+    lx, ly, lw, lh = 0.27, 0.24, 0.66, 0.56
+    pa = chart._chartSpace.find(qn("c:chart")).find(qn("c:plotArea"))
+    old = pa.find(qn("c:layout"))
+    if old is not None:
+        pa.remove(old)
+    lay = etree.SubElement(pa, qn("c:layout"))
+    pa.remove(lay)
+    pa.insert(0, lay)
+    ml = etree.SubElement(lay, qn("c:manualLayout"))
+    for tag, val in (("layoutTarget", "inner"), ("xMode", "edge"), ("yMode", "edge"),
+                     ("x", lx), ("y", ly), ("w", lw), ("h", lh)):
+        etree.SubElement(ml, qn(f"c:{tag}")).set("val", str(val))
+    top, bot = y + h * ly, y + h * (ly + lh)
+    for i, (v, lab, style) in enumerate(b["refs"]):
+        px = x + w * (lx + lw * v / vmax)
+        ln = slide.shapes.add_connector(MSO_CONNECTOR.STRAIGHT, Inches(px), Inches(top - 0.05),
+                                        Inches(px), Inches(bot))
+        ln.line.color.rgb = ACC
+        ln.line.width = Pt(1.75)
+        if style == "dash":
+            from pptx.enum.dml import MSO_LINE_DASH_STYLE
+            ln.line.dash_style = MSO_LINE_DASH_STYLE.DASH
+        # etiquetas encima del área interna: la primera a la izquierda de su línea, las demás a la derecha
+        tw = 1.3
+        tx = px - tw - 0.02 if i == 0 else px + 0.02
+        tb = slide.shapes.add_textbox(Inches(tx), Inches(top - 0.32), Inches(tw), Inches(0.26))
+        tf = tb.text_frame
+        tf.margin_left = tf.margin_right = tf.margin_top = tf.margin_bottom = 0
+        tf.word_wrap = False
+        p = tf.paragraphs[0]
+        p.alignment = PP_ALIGN.RIGHT if i == 0 else PP_ALIGN.LEFT
+        r = p.add_run()
+        r.text = lab
+        r.font.size = Pt(11)
+        r.font.bold = True
+        r.font.name = BODY
+        r.font.color.rgb = ACC
+
+
 def draw_chart(slide, b, x, y, w, h):
     kind = b["kind"]
     if kind == "scatter":
@@ -502,6 +555,8 @@ def draw_chart(slide, b, x, y, w, h):
             anchor.addprevious(skip)
         else:
             ax.append(skip)
+        if b.get("refs") and not vertical:
+            draw_bar_refs(slide, chart, b, x, y, w, h)
     elif kind == "line":
         cd = CategoryChartData()
         cd.categories = b["cats"]

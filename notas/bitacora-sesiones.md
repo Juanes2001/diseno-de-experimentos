@@ -3,6 +3,20 @@
 Registro de cada sesión de trabajo en el repositorio: qué se hizo, qué decisiones se tomaron y
 qué queda pendiente. La entrada más reciente va arriba.
 
+## 2026-11-07 (sábado) — Lectura a fondo del paper del robot Fanuc
+
+### Hecho
+- Se releyó completo Şirinterlikçi et al. (2009) (`exposicion-tema-06/TechnologyInterface-…pdf`), con las
+  ecuaciones revisadas en imagen. Se recalcularon los p-valores de las tablas 4 y 5 y se confirmaron los generadores
+  y la errata «SC = PW = MD» → SD = PW = MI.
+- Duda de Juan Esteban: qué son las 35 «corridas» si el paper dice que no hay réplicas. Respuesta: son 16 corridas
+  (2^(6−2)) y en cada una el robot va 35 veces al punto; las 35 lecturas se resumen en un AP y un RP por corrida, son
+  submuestras y no réplicas. Se agregó a `notas/tema-06-factoriales-fraccionados.md` junto con otras erratas.
+- Commit de los cambios pendientes de la sesión del 30–31 oct (presentación combinada, `insertar_diapositivas.py`).
+
+### Pendiente
+- Los pendientes del 30 oct siguen abiertos (revisar rayas de Lenth y diapositivas de 4 bloques en PowerPoint).
+
 ## 2026-11-06 (viernes) — Datos de la medición a 5 A
 
 ### Hecho
@@ -19,6 +33,68 @@ qué queda pendiente. La entrada más reciente va arriba.
 - Corregir la hora de fin de la R09 a 6 A.
 - Análisis de las tres corrientes: ajuste sech², prueba t contra τ0 y declarar en el informe que el día
   quedó confundido con la corriente.
+
+## 2026-10-30 (viernes, noche) — Proyección, doblez y rayas de Lenth en el Pareto
+
+### Hecho
+- Juan Esteban preguntó por la proyección cuando los factores activos forman una palabra. Se explicó con
+  el ejemplo del ojo (2^(7−4), ABD palabra → dos réplicas de un 2^(3−1)) y el paso siguiente en dos
+  variantes, con los datos de Montgomery recalculados. Completar las cuatro esquinas que faltan en A, B y D
+  da A = 1.21, B = 37.24, D = 28.04 y BD = 19.41. El bloque queda confundido con ABD. El doblez completo da
+  los valores de la tabla del ejemplo 8-7. Las 8 corridas del doblez caen justo en las 4 esquinas que faltaban.
+- Hallazgo: las diapositivas no muestran la tabla de la segunda fracción del doblez ni el cálculo de ℓ′.
+  Completar las esquinas faltantes no está desarrollado en ninguno de los dos libros.
+- Diapositiva 50 (ejemplo 3, moldeo): el Pareto ahora trae la raya continua del ME = 2.41 y la punteada del
+  SME = 4.89 de Lenth. Las notas explican el cálculo paso a paso (s0, PSE = 0.9375, t = 2.571 y 5.219) y cómo
+  se leen las dos rayas. `bars()` acepta `refs` y los dos renderizadores las dibujan.
+- Después, a pedido de Juan Esteban, se agregaron las rayas ME y SME a todos los Pareto de la presentación
+  combinada (diapositivas 30, 32, 50, 94, 100 y 106), con un párrafo de lectura en cada una. Semiconductores
+  (las dos mitades) y el ojo: los activos superan las dos rayas. Vibración (7 efectos, 3 activos): ME = 18.91 y
+  SME = 45.27, solo E supera el ME. Plackett-Burman: ME = 54.70 y SME = 117.17, ningún efecto lo supera. Las dos
+  ilustran la advertencia de Montgomery: Lenth falla con muchos efectos activos. El Pareto del ojo pasó a
+  valores absolutos. La diapositiva de Lenth de la sección 7 ahora define también el SME.
+- Bajo cada tabla ANOVA se agregó el resumen del modelo al estilo de Minitab, con S, R² y R² ajustado
+  (diapositivas 27, 31, 51, 88 y 95). La diapositiva genérica de la tabla ANOVA trae las fórmulas y cuándo usar
+  el R² ajustado. Para la CNC (tabla 8-18 del libro) se calculó con la convención de Minitab, que cuenta los
+  bloques en el modelo: R² = 84.47 % y R² ajustado = 79.94 %. La vibración da 93.71 %, igual que Gutiérrez.
+- Diapositiva 55 (cómo se escogen los generadores): el paso 8 decía «sin poner en la misma cadena los que
+  pueden interactuar», que es impreciso porque en las cadenas van interacciones y no factores. Ahora dice que
+  dos interacciones sospechosas no deben caer en la misma cadena, con la regla de Montgomery: los factores
+  que pueden interactuar van en el diseño básico. Las notas traen un ejemplo de asignación buena y mala en el
+  2^(6−2) con E = ABC y F = BCD.
+- Diapositiva 56 (aberración mínima) reescrita con la terminología de Gutiérrez, cap. 8, pág. 280, cotejada
+  en el PDF: relación definidora, patrón de longitud de palabra W = (A1, …, Ak), pares de interacciones dobles
+  que son alias, d_MA y criterio A_r, glosario de «mínima aberración». Los diseños son d1 y d2 de su ec. 8.3,
+  más d3, que es el diseño A de Montgomery. Pares de alias recalculados: 3, 6 y 9. Las notas explican la
+  correspondencia con Montgomery: d2 es su diseño B, y su diseño C es d1 con las letras cambiadas.
+- **Cambio de flujo:** Juan Esteban borró diapositivas a mano en PowerPoint. Su versión tiene 101, contra 115 de la
+  generada. Desde ahora esa presentación no se regenera. Ver CLAUDE.md y `scripts/tema-06/insertar_diapositivas.py`.
+- Pidió un ejemplo de 4 bloques para la diapositiva 66 de su versión («¿Cómo se separa un fraccionado en bloques?»).
+  Se escribieron dos diapositivas en `contenido_combinado.py` con el mismo moldeo en 4 turnos de 4 corridas:
+  «¿Y si hacen falta 4 bloques? Dos columnas y su producto» y «¿Qué pasa con los efectos con 4 bloques?». Se
+  confunden ABD, ABF y su producto DF. En el 2^(6−2) ese producto cae en la cadena de dobles AE = BC = DF, por eso
+  Montgomery recomienda 2 bloques de 8. Con corrimientos 0, 4, 2 y 10 solo cambian las tres cadenas confundidas,
+  en 4, 6 y 2 unidades. Generadas aparte y probadas sobre una copia de su autorrecuperación.
+- 31 oct, madrugada. Diapositiva 83 (vibración): se recalculó Lenth de forma independiente y está bien: PSE = 5.025,
+  ME = 18.91 y SME = 45.27. E supera el ME, y C y A no. Lenth falla porque 3 de 7 efectos son activos y d = 2.33. Con el
+  error del mejor ANOVA, el umbral es 2.776 × √(16.535/2) = 7.98, que superan A, C y E. No se cambió la diapositiva.
+- 31 oct, sección 9 (resolución IV y V) rehecha con tres ideas de Montgomery, a pedido de Juan Esteban. Se reemplazaron
+  sus diapositivas 97 a 99 (diseños mínimos, fracciones irregulares, doblez parcial) por cuatro: por qué el doblez
+  completo convierte III en IV (palabras impares cambian de signo y desaparecen, con el 2^(7−4)); paso a paso del
+  2^(3−1) al 2^(4−1) (tabla 8-27); el doblez de IV no siempre separa las dobles (2^(6−2): sobrevive ADEF, quedan
+  AD = EF, AE = DF, AF = DE); y por qué la resolución V es la más poderosa. Todo se verificó con tablas de signos. También
+  se vio que invertir todos los factores de un resolución IV da una réplica. Se actualizaron el subtítulo de la
+  portada de la sección y la tarjeta 9 de la ruta de la clase. El resumen (tabla 8-29) se dejó. Quedan 105 diapositivas.
+- La guía se revisó visualmente. El .pptx no se pudo rasterizar porque este equipo no tiene LibreOffice. La
+  posición de las rayas se verificó con la geometría del gráfico.
+
+### Pendiente
+- Abrir en PowerPoint las diapositivas 30, 32, 50, 94, 100 y 106 y confirmar que las rayas caen sobre su valor del eje.
+- Decidir si se agregan diapositivas con la tabla de la segunda fracción del doblez y el cálculo de ℓ′.
+- Abrir en PowerPoint las diapositivas 67 a 69 (4 bloques) y revisar que se vean bien. La 67, «¿Cómo se arma la tabla de 4 bloques?»,
+  se agregó a las 23:45 a pedido de Juan Esteban: muestra las 16 corridas con los signos de A, B, D y F, el cálculo de ABD y ABF,
+  la pareja (signo de ABD, signo de ABF) y su bloque. La 68 se reemplazó para mostrar la notación en la tabla: filas «Signo de ABD»,
+  «Signo de ABF» y «Pareja (ABD, ABF)». La presentación quedó con 104 diapositivas.
 
 ## 2026-10-30 (viernes, tarde) — Presentación combinada Montgomery + Gutiérrez
 

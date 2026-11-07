@@ -79,9 +79,11 @@ def daniel(points, activos, origen=False):
     return [(a + sg_ * z0, z0), (a + sg_ * max(zs), max(zs))]
 
 
-def bars(cats, vals, xlab, h=3.6, title=None, fmt="0.00"):
+def bars(cats, vals, xlab, h=3.6, title=None, fmt="0.00", refs=None):
+    """refs: líneas de referencia verticales [(valor, etiqueta, "solid" | "dash"), ...]
+    (p. ej. el ME y el SME de Lenth en un diagrama de Pareto). Solo en barras horizontales."""
     return {"t": "chart", "kind": "bar", "cats": cats, "vals": vals, "xlab": xlab, "h": h,
-            "title": title, "fmt": fmt}
+            "title": title, "fmt": fmt, "refs": refs or []}
 
 
 def lines(cats, series, ylab, h=3.6, title=None):

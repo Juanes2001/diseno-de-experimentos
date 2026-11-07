@@ -112,6 +112,17 @@ PDF en `exposicion-tema-06/TechnologyInterface-RepeatabilityandAccuracyofanIndus
 - Como caso para el informe es más corto y más didáctico que Cui (fue escrito para un curso de DOE), y
   permite reproducir la ANOVA desde las SS; pero no se pueden recalcular efectos ni residuales sin los datos.
   Cui sí publica los 16 datos pero no la ANOVA. Son complementarios.
+- **Las 35 repeticiones no son réplicas** (aclarado el 7 nov 2026): cada una de las 16 corridas se monta una vez y el
+  robot va 35 veces seguidas al mismo punto; esas 35 lecturas se resumen en un solo AP y un solo RP por corrida, así
+  que el ANOVA tiene 16 datos y 15 g.l. (no 559). Son submuestras de la misma corrida, sin volver a montar ni
+  aleatorizar: miden la variación dentro de la corrida (que es la respuesta RP), no el error entre corridas. Usarlas
+  como error sería pseudorreplicación. Una réplica real exigiría correr otra vez las 16 combinaciones (32 corridas).
+- Otras erratas y críticas: en la ec. 4 la sumatoria quedó fuera de la raíz y falta el cuadrado
+  (S_l = √(Σ(l_i − l̄)²/(n−1))); l_i se mide contra x_c y no contra x̄ como en ISO 9283, lo que mezcla exactitud con
+  repetibilidad; la ec. 7 incluye SP sin el principal S (rompe jerarquía); agrupar como error los efectos más pequeños
+  de la gráfica de Daniel subestima el error; la conclusión dice que «la mayoría» de los factores fueron significativos
+  (solo S, M y SP = WD); y afirma confirmar la repetibilidad de 0,1 mm con un RP medio de 0,176. Los p-valores de las
+  tablas 4 y 5 se recalcularon con F(1,9) y F(1,8) y coinciden.
 
 ## Ideas para la exposición
 Versión del 25 oct 2026 en `exposicion-tema-06/` (presentación de 104 diapositivas y guía, solo teoría, sin Minitab; cada ejemplo abre con una diapositiva de enunciado: situación, objetivo y lo que se pide), organizada en el orden del capítulo 8: propósito y vocabulario, resolución, fracción un medio, secuencias, fracción un cuarto, caso general (análisis, proyección, bloques), resolución III (doblez, Plackett-Burman), resolución IV y V y cierre. Sigue la

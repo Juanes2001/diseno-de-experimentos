@@ -47,7 +47,7 @@ y2 = [8, 9, 34, 52, 16, 22, 45, 60, 6, 10, 30, 50, 15, 21, 44, 63]
 w2 = ["A", "B", "C", "D", "E", "AB", "AC", "AD", "AE", "BC", "BD", "BE", "CD", "CE", "DE"]
 ef2 = {w: effect(r2, y2, w) for w in w2}
 m2 = fit(r2, y2, ["A", "B", "C", "AB"])
-pse2 = lenth([ef2[w][1] for w in w2]); me2 = t_ppf(0.05, 15 / 3) * pse2
+pse2 = lenth([ef2[w][1] for w in w2]); me2 = t_ppf(0.05, 15 / 3) * pse2; sme2 = t_ppf(1 - 0.95 ** (1 / 15), 15 / 3) * pse2
 ad2 = anderson_darling(m2["res"])
 # la otra mitad del mismo 2^5 (Gutiérrez, tabla 8.4, fracción complementaria I = −ABCDE)
 r2b = basic(4); add_factor(r2b, "E", "ABCD", sign=-1)
@@ -91,6 +91,12 @@ random.seed(6)
 orden = list(range(1, 9)); random.shuffle(orden)
 
 # ================================================================ diapositivas
+def resumen(m, size=14):
+    """Resumen del modelo bajo cada ANOVA, como el «Model Summary» de Minitab: S, R² y R² ajustado."""
+    return tab(["S", "R^{2}", "R^{2} ajustado"],
+               [[f(m["S"], 4), f"{100 * m['r2']:.2f} %", f"{100 * m['r2adj']:.2f} %"]], size=size, first_left=False)
+
+
 SLIDES.append({"kind": "title", "title": "Diseños factoriales fraccionados 2^{k−p}",
                "sub": "Tema 6 · Diseño de Experimentos Avanzados (3008475) · Montgomery y Gutiérrez–De la Vara",
                "meta": "Juan Esteban Rodríguez Ochoa · Sebastián Zapata Henao\n"
@@ -109,7 +115,7 @@ Los ejemplos de ambos libros se usan como demostraciones: cada uno muestra una i
               ("6 · Fracción un cuarto", "Dos generadores, estructura de alias reducida, ejemplo"),
               ("7 · Caso general 2^{k−p}", "Generadores, análisis, supuestos y bloques"),
               ("8 · Resolución III", "Vibración 2^{7−4}, doblez y Plackett-Burman"),
-              ("9 · Resolución IV y V", "Diseños mínimos y fracciones irregulares"),
+              ("9 · Resolución IV y V", "Doblez de III a IV, límites en IV, poder de V"),
               ("10 · Cierre", "Ideas clave y errores frecuentes"), size=13, cols=5),
         txt("Orden y explicaciones: **Gutiérrez–De la Vara**, cap. 8.  Terminología y temas adicionales: "
             "**Montgomery**, cap. 8.  Ejemplos: de ambos libros", size=14)])
@@ -481,12 +487,12 @@ _an = [[t if len(t) == 1 else t, f(ss, 1), "1", f(ss, 1), f(F), pv(p)] for t, ss
 _an += [["Error", f(m1["sse"], 1), str(m1["dfe"]), f(m1["mse"]), "", ""],
         ["Total", f(m1["sst"], 1), "7", "", "", ""]]
 S("Ejemplo 1 · ANOVA e interpretación",
-  f"""Se ajusta el modelo con A, C, D, AC y AD. Los dos efectos descartados (B y AB) forman el error, con 2 grados de libertad. Los cinco términos son significativos al 5 %: todos tienen F_{{0}} mayor que F_{{0.05, 1, 2}} = {f(f_ppf(0.05, 1, 2))} y valores p menores que 0.01. El modelo explica el {100 * m1['r2']:.2f} % de la variabilidad.
+  f"""Se ajusta el modelo con A, C, D, AC y AD. Los dos efectos descartados (B y AB) forman el error, con 2 grados de libertad. Los cinco términos son significativos al 5 %: todos tienen F_{{0}} mayor que F_{{0.05, 1, 2}} = {f(f_ppf(0.05, 1, 2))} y valores p menores que 0.01. El modelo explica el {100 * m1['r2']:.2f} % de la variabilidad y el R^{{2}} ajustado es {100 * m1['r2adj']:.2f} %.
 
 Advertencia: esta tabla ANOVA no aparece en el libro, que en este ejemplo solo estima los efectos y da el modelo; se calculó aquí a partir de los datos. El error tiene solo 2 grados de libertad y se formó con los dos efectos más pequeños, elegidos después de ver los datos, de modo que los valores F y p son optimistas y los supuestos apenas se pueden verificar. La conclusión es tentativa.
 
 Interpretación: la temperatura (A) aumenta la filtración; el efecto de la concentración (C) depende de la temperatura (interacción AC negativa) y el de la agitación (D) también (interacción AD positiva). La presión (B) no influye, de modo que el diseño se proyecta en un 2^{{3}} completo en A, C y D. La mejor condición es A alto, C bajo y D alto. El factorial completo original llegó a las mismas conclusiones con el doble de corridas.""",
-  left=[tab(["SV", "SS", "DF", "MS", "F_{0}", "P-Value"], _an, size=15),
+  left=[tab(["SV", "SS", "DF", "MS", "F_{0}", "P-Value"], _an, size=15), resumen(m1),
         form("ŷ = 70.75 + 9.50 x_{1} + 7.00 x_{3} + 8.25 x_{4} − 9.25 x_{1}x_{3} + 9.50 x_{1}x_{4}", size=15)],
   right=[bul(f"Todos los términos: F_{{0}} > F_{{0.05, 1, 2}} = {f(f_ppf(0.05, 1, 2))}  →  se rechaza H_{{0}}",
              f"R^{{2}} = {100 * m1['r2']:.2f} %;  R^{{2}} ajustado = {100 * m1['r2adj']:.2f} %",
@@ -526,7 +532,7 @@ S("Ejemplo 2 · ¿Qué efectos son activos?",
 
 Esa es la primera clasificación para el ANOVA: los cuatro que se apartan forman el modelo reducido y los once que quedan sobre la recta se combinan como error, con 11 grados de libertad.
 
-El método de Lenth coincide: el pseudo error estándar es PSE = {f(pse2, 4)} y el margen de error es ME = {f(me2)}; solo esos cuatro efectos lo superan.
+El método de Lenth coincide: el pseudo error estándar es PSE = {f(pse2, 4)}, el margen de error es ME = {f(me2)} y el margen de error simultáneo es SME = {f(sme2)}. En el Pareto son la raya continua y la punteada; solo esos cuatro efectos las superan, y los superan con holgura.
 
 Como el diseño es de resolución V, AB es alias de CDE, una interacción triple, y se atribuye a AB suponiendo que las interacciones triples son despreciables.
 
@@ -536,20 +542,21 @@ Montgomery usa solo la gráfica normal en este ejemplo; Gutiérrez usa Pareto y 
                 line=daniel(_p2, _a2 := {k for k, i in enumerate(_srt) if w2[i] in ("A", "B", "C", "AB")}),
                 hi=_a2, title="Gráfica normal con recta de Daniel"),
         note("Fuera de la recta → **modelo** (B, A, C, AB).  Sobre la recta → **error** (11 g.l.)", size=14)],
-  right=[bars(_top, [abs(ef2[w][1]) for w in _top], "|Efecto|", h=3.4, title="Pareto de efectos (los 8 mayores)"),
-         note(f"Lenth: PSE = {f(pse2, 4)},  ME = {f(me2)}.  Activos: **B, A, C y AB**", size=15)],
+  right=[bars(_top, [abs(ef2[w][1]) for w in _top], "|Efecto|", h=3.4, title="Pareto con Lenth (los 8 mayores)",
+              refs=[(me2, f"ME = {f(me2)}", "solid"), (sme2, f"SME = {f(sme2)}", "dash")]),
+         note(f"Lenth: PSE = {f(pse2, 4)},  ME = {f(me2)},  SME = {f(sme2)}.  Activos: **B, A, C y AB**", size=15)],
   ratio=0.5)
 
 _an = [[t, f(ss, 2), "1", f(ss, 2), f(F), pv(p)] for t, ss, _, _, F, p in m2["anova"]]
 _an += [["Error", f(m2["sse"], 2), str(m2["dfe"]), f(m2["mse"], 4), "", ""],
         ["Total", f(m2["sst"], 2), "15", "", "", ""]]
 S("Ejemplo 2 · ANOVA y conclusión",
-  f"""El modelo reducido incluye A, B, C y AB; los once efectos descartados forman el error con 11 grados de libertad. Los cuatro términos son altamente significativos (F_{{0.05, 1, 11}} = {f(f_ppf(0.05, 1, 11))}) y el modelo explica el {100 * m2['r2']:.2f} % de la variabilidad.
+  f"""El modelo reducido incluye A, B, C y AB; los once efectos descartados forman el error con 11 grados de libertad. Los cuatro términos son altamente significativos (F_{{0.05, 1, 11}} = {f(f_ppf(0.05, 1, 11))}) y el modelo explica el {100 * m2['r2']:.2f} % de la variabilidad, con R^{{2}} ajustado de {100 * m2['r2adj']:.2f} %.
 
 Los tres efectos principales son positivos: el rendimiento aumenta con apertura grande, mayor tiempo de exposición y mayor tiempo de desarrollo. La interacción AB es positiva: el efecto de la apertura es mayor cuando el tiempo de exposición es alto.
 
 Como D y E no influyen, el diseño se proyecta en dos réplicas de un 2^{{3}} en A, B y C. La mejor condición es A, B y C en nivel alto, con rendimiento promedio de 61.5. D y E se pueden fijar donde resulte más económico.""",
-  left=[tab(["SV", "SS", "DF", "MS", "F_{0}", "P-Value"], _an, size=15),
+  left=[tab(["SV", "SS", "DF", "MS", "F_{0}", "P-Value"], _an, size=15), resumen(m2),
         form("ŷ = 30.31 + 5.56 x_{1} + 16.94 x_{2} + 5.44 x_{3} + 3.44 x_{1}x_{2}", size=16)],
   right=[bul(f"F_{{0.05, 1, 11}} = {f(f_ppf(0.05, 1, 11))}: los cuatro términos son significativos",
              f"R^{{2}} = {100 * m2['r2']:.2f} %;  R^{{2}} ajustado = {100 * m2['r2adj']:.2f} %",
@@ -559,10 +566,11 @@ Como D y E no influyen, el diseño se proyecta en dos réplicas de un 2^{{3}} en
 
 _cmp = [[w, f(ef2[w][1]), f(ef2b[w][1])] for w in ["A", "B", "C", "AB", "D", "E"]]
 _top2b = sorted(w2, key=lambda w: -abs(ef2b[w][1]))[:8]
+pse2b = lenth([ef2b[w][1] for w in w2]); me2b = t_ppf(0.05, 15 / 3) * pse2b; sme2b = t_ppf(1 - 0.95 ** (1 / 15), 15 / 3) * pse2b
 S("Ejemplo 2 · ¿Y si se hubiera corrido la otra mitad?",
   f"""Gutiérrez usa este mismo experimento como ejemplo integrador, con un propósito distinto: demostrar que no hacía falta el factorial completo. El 2^{{5}} completo (32 corridas, capítulo 6 de ambos libros) se puede partir en sus dos mitades: la fracción principal, I = ABCDE, que es la que se analizó, y la fracción complementaria, I = −ABCDE, con las otras 16 corridas. Ambas se construyen en dos pasos: el 2^{{4}} en A, B, C y D, y la columna E como el producto ABCD (o −ABCD).
 
-La tabla compara los efectos estimados con cada mitad. Las dos detectan los mismos cuatro efectos activos, B, A, C y AB, con magnitudes parecidas, y en ambas D y E son despreciables. Los Pareto son prácticamente los mismos, también los gráficos de Daniel y el mejor tratamiento: A, B y C en nivel alto, con D y E fijados por criterio económico. El modelo con A, B, C y AB explica el {100 * m2b['r2']:.2f} % de la variabilidad en la complementaria, frente al {100 * m2['r2']:.2f} % en la principal.
+La tabla compara los efectos estimados con cada mitad. Las dos detectan los mismos cuatro efectos activos, B, A, C y AB, con magnitudes parecidas, y en ambas D y E son despreciables. Los Pareto son prácticamente los mismos (en el de la complementaria, Lenth da PSE = {f(pse2b, 4)}, ME = {f(me2b)} y SME = {f(sme2b)}, y los mismos cuatro efectos superan las dos rayas), también los gráficos de Daniel y el mejor tratamiento: A, B y C en nivel alto, con D y E fijados por criterio económico. El modelo con A, B, C y AB explica el {100 * m2b['r2']:.2f} % de la variabilidad en la complementaria, frente al {100 * m2['r2']:.2f} % en la principal.
 
 El mensaje de Gutiérrez: bastaba con una fracción a la mitad, y por lo tanto con la mitad de los recursos, para obtener las mismas conclusiones que con el factorial completo. Agrega que incluso con un cuarto del diseño (un 2^{{5−2}}) se llega a lo mismo en este caso.
 
@@ -572,7 +580,8 @@ Nota para quien coteje: Gutiérrez imprime d = 8 en la fracción principal; Mont
         note("Las dos mitades detectan **B, A, C y AB**; D y E son ruido en ambas", size=15),
         txt("Complementaria: Gutiérrez, tabla 8.4", size=12)],
   right=[bars(_top2b, [abs(ef2b[w][1]) for w in _top2b], "|Efecto|", h=3.2,
-              title="Pareto de la mitad complementaria (8 mayores)"),
+              title="Pareto de la mitad complementaria (8 mayores)",
+              refs=[(me2b, f"ME = {f(me2b)}", "solid"), (sme2b, f"SME = {f(sme2b)}", "dash")]),
          note("«Bastaba con una fracción a la mitad»: **mismas conclusiones, mitad del costo** (Gutiérrez)", size=15)],
   ratio=0.5)
 
@@ -866,7 +875,11 @@ Cómo se lee. Los efectos nulos son solo ruido y caen sobre la recta, alrededor 
 
 ¿Por qué AB y no CE? C y E no tienen efecto principal (−0.88 y 0.38). Por el principio de herencia, una interacción suele ser activa solo si alguno de sus factores lo es; A y B lo son, C y E no. Se atribuye la cadena a AB.
 
-Dos efectos quedan en una zona gris: AD + EF (−5.38) y ABF (−4.88). Son mucho menores que los tres anteriores. El método de Lenth da PSE = {f(pse3, 4)}, ME = {f(me3)} y SME = {f(sme3)}: los dos superan el ME, y AD + EF apenas supera el SME. Montgomery los deja fuera del modelo. En AD + EF, de los cuatro factores solo A es activo; D, E y F no tienen efecto principal (1.38, 0.38 y 0.38). ABF es una cadena de interacciones triples, que por jerarquía se suponen despreciables. Además, su tamaño no cambia las conclusiones. Quedan en el error.
+La raya vertical del Pareto. El diagrama de Pareto ordena los efectos por su valor absoluto; la raya vertical marca hasta dónde puede llegar un efecto que sea solo ruido. La traza el método de Lenth (Montgomery, sec. 6-5), que estima el ruido con los mismos efectos, porque sin réplicas no hay error puro. Paso 1: s_{{0}} = 1.5 × la mediana de los 15 valores absolutos = 1.5 × 1.375 = 2.06. Paso 2: se apartan los efectos mayores que 2.5 s_{{0}} = 5.16, que pueden ser reales, y se repite con los 11 restantes: PSE = 1.5 × 0.625 = {f(pse3, 4)}. El PSE, o pseudo error estándar, hace el papel del error estándar de un efecto. Paso 3: ME, el margen de error, = t_{{0.025, m/3}} × PSE = {f(me3 / pse3, 3)} × {f(pse3, 4)} = {f(me3)}, con m/3 = 15/3 = 5 grados de libertad. Es la raya continua: juzga cada efecto por separado con 5 % de riesgo. Pero con 15 efectos, en promedio 0.75 efectos nulos la cruzarían por azar. Paso 4: SME, el margen de error simultáneo, = t_{{γ, m/3}} × PSE con γ = (1 + 0.95^{{1/m}})/2; aquí t = {f(sme3 / pse3, 3)} y SME = {f(sme3)}. Es la raya punteada: controla el riesgo de los 15 efectos a la vez, de modo que la probabilidad de que algún efecto nulo la cruce es 5 %.
+
+Cómo se lee: un efecto más allá del SME es activo con bastante seguridad; uno entre el ME y el SME es dudoso y se decide con la gráfica normal y el conocimiento del proceso; uno antes del ME es ruido.
+
+Dos efectos quedan en esa zona dudosa: AD + EF (−5.38), que apenas pasa el SME, y ABF (−4.88), que queda entre el ME y el SME. Son mucho menores que los tres grandes. Montgomery los deja fuera del modelo. En AD + EF, de los cuatro factores solo A es activo; D, E y F no tienen efecto principal (1.38, 0.38 y 0.38). ABF es una cadena de interacciones triples, que por jerarquía se suponen despreciables. Además, su tamaño no cambia las conclusiones. Quedan en el error.
 
 Primera clasificación para el ANOVA: al modelo A, B y AB; al error, los otros doce.""",
   left=[scatter(_p3, "Efecto", "Puntuación normal", h=4.2, labels=_lab3, line=daniel(_p3, _act3), hi=_act3,
@@ -875,9 +888,11 @@ Primera clasificación para el ANOVA: al modelo A, B y AB; al error, los otros d
   right=[num("**Sobre la recta** = ruido: 10 efectos cerca de cero",
              "**Se apartan con claridad**: B = 35.63, A = 13.88 y AB + CE = 11.88",
              "**AB + CE se atribuye a AB**: A y B son activos; C (−0.88) y E (0.38) no",
-             f"**Zona gris**: AD + EF = −5.38 y ABF = −4.88. Lenth: ME = {f(me3)}, SME = {f(sme3)}; mucho menores que los tres grandes, quedan en el error",
-             size=14),
-         bars([lab3.get(w, w).replace(" (+ alias)", "") for w in _top3], [abs(ef3[w][1]) for w in _top3], "|Efecto|", h=2.6, title="Pareto (los 8 mayores)")],
+             f"**Rayas de Lenth**: continua = **ME** = {f(me3)} (cada efecto, 5 %); punteada = **SME** = {f(sme3)} (los 15 a la vez, 5 %)",
+             f"**Zona dudosa**: AD + EF = −5.38 y ABF = −4.88; mucho menores que los tres grandes, quedan en el error",
+             size=13),
+         bars([lab3.get(w, w).replace(" (+ alias)", "") for w in _top3], [abs(ef3[w][1]) for w in _top3], "|Efecto|", h=2.7,
+              title="Pareto con Lenth (los 8 mayores)", refs=[(me3, f"ME = {f(me3)}", "solid"), (sme3, f"SME = {f(sme3)}", "dash")])],
   ratio=0.5)
 
 _rows = [[lab3.get(w, w), f(ef3[w][1], 3), f(ef3[w][2], 2)] for w in w3]          # las 15 cadenas, orden de la tabla 8-11
@@ -889,17 +904,16 @@ S("Ejemplo 3 · Modelo y ANOVA",
 
 El factor C también está en la tabla: su efecto es −0.875 y su SS 3.06, de modo que no cambia la contracción promedio y va al error.
 
-Hipótesis para cada término: H_{{0}}: el efecto es cero; H_{{A}}: no lo es. Los tres términos tienen F_{{0}} muy por encima de F_{{0.05, 1, 12}} = {f(f_ppf(0.05, 1, 12))} y valores p menores que 0.001: se rechaza H_{{0}} en los tres. El modelo explica el {100 * m3['r2']:.2f} % de la variabilidad de la contracción.
+Hipótesis para cada término: H_{{0}}: el efecto es cero; H_{{A}}: no lo es. Los tres términos tienen F_{{0}} muy por encima de F_{{0.05, 1, 12}} = {f(f_ppf(0.05, 1, 12))} y valores p menores que 0.001: se rechaza H_{{0}} en los tres. El modelo explica el {100 * m3['r2']:.2f} % de la variabilidad de la contracción; el R^{{2}} ajustado es {100 * m3['r2adj']:.2f} %.
 
 Lectura de los coeficientes: cada coeficiente es la mitad del efecto. La contracción promedio es 27.31; subir la velocidad del tornillo (B) la aumenta 17.81 por encima del promedio, subir la temperatura (A) la aumenta 6.94, y cuando las dos están altas se suma otro 5.94. Para reducir la contracción conviene A y B en nivel bajo.
 
 El libro no presenta esta tabla ANOVA; se calculó aquí a partir de los datos de la tabla 8-10. Fuente: Montgomery, ejemplo 8-4.""",
   left=[tab(["Cadena (tabla 8-11)", "Efecto", "SS"], _rows, size=12, hl=[0, 1, 6], first_left=False, pad=0.05),
         note("A, B y AB explican **6411 de 6659** de la SS total. C (−0.875) es ruido", size=13)],
-  right=[tab(["SV", "SS", "DF", "MS", "F_{0}", "P-Value"], _an3, size=15),
+  right=[tab(["SV", "SS", "DF", "MS", "F_{0}", "P-Value"], _an3, size=15), resumen(m3),
          form("ŷ = 27.31 + 6.94 x_{1} + 17.81 x_{2} + 5.94 x_{1}x_{2}", size=16),
          bul(f"F_{{0}} > F_{{0.05, 1, 12}} = {f(f_ppf(0.05, 1, 12))} en los tres: **se rechaza H_{{0}}**",
-             f"R^{{2}} = {100 * m3['r2']:.2f} %",
              "Coeficiente = efecto / 2. Para **reducir** la contracción: **A y B bajos**", size=15)],
   ratio=0.42)
 
@@ -955,7 +969,9 @@ S("¿Cómo se escogen los generadores?",
 5. Multiplicar los generadores entre sí, de dos en dos, de tres en tres, etc., cancelando las letras repetidas (A² = I). Así se obtiene la relación de definición completa, con 2^{p} − 1 palabras.
 6. La resolución es la longitud de la palabra más corta. Si es menor que la requerida en el paso 2, se vuelve al paso 4 con otras columnas.
 7. Si hay varios candidatos con la misma resolución, se escoge el de aberración mínima: el que tiene menos palabras de esa longitud mínima (siguiente diapositiva).
-8. Con el diseño elegido se escriben los alias de las interacciones que interesan y se asignan los factores reales a las letras, de modo que los que pueden interactuar no queden en la misma cadena.
+8. Con el diseño elegido se escriben las cadenas de alias y se asignan los factores reales a las letras, de modo que dos interacciones que se sospechan activas no queden en la misma cadena. Las letras ya están amarradas por los generadores, pero todavía se decide qué factor real va en cada letra, y esa decisión cambia qué interacciones reales quedan juntas. Si dos interacciones sospechosas comparten cadena, el diseño solo estima su suma y no se podrá saber cuál es la real. Regla práctica de Montgomery: los factores que se creen importantes y que pueden interactuar van en las columnas del diseño básico (A, B, C, D) y los factores menores en las columnas generadas (E, F).
+
+Ejemplo del paso 8 con el primer candidato. Sus cadenas de interacciones dobles son AB = CE, AC = BE, AD = EF, AE = BC = DF, AF = DE, BD = CF y BF = CD. Supóngase que se sospecha que la temperatura interactúa con la presión y con el tiempo, y la velocidad con el tiempo; la humedad y el operador no deberían interactuar con nada. Asignación buena: temperatura, presión, tiempo y velocidad en A, B, C y D, humedad en E y operador en F. Las tres interacciones sospechosas caen en cadenas distintas (AB = CE, AC = BE y BF = CD), y su compañera de cadena siempre involucra a la humedad o al operador. Asignación mala: la velocidad en E y la humedad en D. Entonces temperatura × presión (AB) y velocidad × tiempo (CE) caen en la misma cadena, AB = CE: si esa cadena sale grande, los datos no dicen cuál de las dos es. Es la misma ambigüedad de la cadena AD + BG del ejemplo de la máquina CNC. Gutiérrez lo resume en su ejemplo 8.3: un pequeño cambio en la asignación cambia radicalmente la estructura de alias.
 
 En el 2^{6−2} de la tabla, el primer candidato (E = ABC, F = BCD) da tres palabras de cuatro letras: resolución IV. El segundo usa F = ABCD; como ABCE y ABCDF comparten las letras A, B y C, su producto es DEF, de solo tres letras, y la resolución baja a III. El tercero repite la columna ABCD para E y para F: el producto es EF y los dos factores quedan aliados entre sí (resolución II), por eso cada factor nuevo debe usar una columna distinta. La regla práctica es elegir generadores largos que compartan pocas letras. Con 16 corridas no existe un 2^{6−2} de resolución V: haría falta asignar a E y a F columnas de cuatro letras distintas, y en el 2^{4} la única es ABCD. Fuente: Montgomery, sección 8-4.""",
   left=[num("Fijar k y las corridas N que se pueden pagar: **p = k − log₂N** generadores",
@@ -968,8 +984,8 @@ En el 2^{6−2} de la tabla, el primer candidato (E = ABC, F = BCD) da tres pala
             "**2^{p} − 1 palabras**",
             "**Resolución** = longitud de la palabra más corta; si no alcanza, volver al paso 4 con otras columnas",
             "Si hay empate en resolución: **aberración mínima** (siguiente diapositiva)",
-            "Escribir los alias y **asignar** los factores reales a las letras, sin poner en la misma cadena "
-            "los que pueden interactuar", size=14)],
+            "Escribir las cadenas y **asignar** los factores reales a las letras: dos interacciones sospechosas "
+            "**no** deben caer en la misma cadena. Los factores que pueden interactuar, en el **básico** (A, B, C, D)", size=14)],
   right=[txt("**Ejemplo**: 6 factores, 16 corridas ⇒ p = 2, básico 2^{4} en A, B, C, D", size=15),
          tab(["Generadores", "Palabras", "R"],
              [["E = ABC,  F = BCD", "ABCE, BCDF, ADEF", "IV"],
@@ -980,27 +996,34 @@ En el 2^{6−2} de la tabla, el primer candidato (E = ABC, F = BCD) da tres pala
          note("Con 16 corridas no hay 2^{6−2}_{V}: solo existe una columna de 4 letras, ABCD", size=14)],
   ratio=0.5)
 
-S("¿Cómo se desempata entre diseños de igual resolución?",
-  """Primer criterio: máxima resolución. Segundo criterio, para desempatar entre diseños de igual resolución: aberración mínima, es decir, el menor número de palabras de longitud mínima.
+S("¿Cómo se desempata entre diseños de igual resolución? Aberración mínima",
+  """Gutiérrez trata este tema en la sección «Diseños fraccionados con aberración mínima» (pág. 280). Parte de una observación: que dos diseños factoriales fraccionados tengan la misma resolución no significa que posean la misma habilidad para estimar los efectos potencialmente importantes.
 
-Los pasos para comparar candidatos son: (1) escribir la relación de definición completa de cada uno; (2) anotar la longitud de cada palabra; (3) descartar los de menor resolución; (4) entre los que quedan, contar cuántas palabras tienen la longitud mínima y quedarse con el que tiene menos; (5) comprobarlo contando las cadenas de interacciones dobles aliadas entre sí, que es lo que realmente se pierde.
+Su ejemplo son los dos diseños 2^{7−2} de la ecuación 8.3, d_{1} y d_{2}, con relaciones definidoras I = DEFG = ABCDF = ABCEG e I = ABCF = ADEG = BCDEFG. Ambos son de resolución IV. Sin embargo, d_{1} tiene tres pares de interacciones dobles que son alias y d_{2} tiene seis pares; así, aunque los dos tienen la misma resolución, d_{1} permite estimar limpiamente más interacciones de dos factores. La tabla agrega un tercer diseño, d_{3}, que tiene nueve pares.
 
-La tabla compara tres diseños 2^{7−2} de resolución IV. El diseño C tiene una sola palabra de cuatro letras, frente a tres y dos de los diseños A y B; por eso deja menos interacciones dobles confundidas entre sí y es el preferido. En la práctica no hay que buscar los generadores: las tablas de diseños recomendados ya entregan el diseño de máxima resolución y aberración mínima, y el software estadístico trae generadores predeterminados. Gutiérrez lo resume así: quizá lo más difícil es encontrar los mejores generadores, y para eso están las tablas (su tabla 8.8) y el software.
+Patrón de longitud de palabra: para un diseño 2^{k−p} es W = (A_{1}, A_{2}, …, A_{k}), donde A_{i} es el número de palabras con i letras en la relación definidora. Para d_{1}, W = (0, 0, 0, 1, 2, 0, 0): no hay palabras de una, dos ni tres letras, hay una de cuatro y dos de cinco.
 
-Gutiérrez escribe la comparación con el patrón de longitudes de palabra, W = (A_{1}, A_{2}, …), donde A_{i} es el número de palabras de i letras. Gana el diseño que tiene menos palabras cortas: el diseño C de la tabla tiene W = (0, 0, 0, 1, 2, 0, 0) y el A, W = (0, 0, 0, 3, 0, 0, 0).""",
-  body=[tab(["", "Diseño A", "Diseño B", "Diseño C"],
-            [["Generadores", "F = ABC,  G = BCD", "F = ABC,  G = ADE", "F = ABCD,  G = ABDE"],
-             ["Relación de definición", "I = ABCF = BCDG = ADFG", "I = ABCF = ADEG = BCDEFG",
-              "I = ABCDF = ABDEG = CEFG"],
-             ["Longitud de las palabras", "4, 4, 4", "4, 4, 6", "4, 5, 5"],
-             ["Cadenas de interacciones dobles aliadas", "7", "6", "3"]], size=16,
-            colw=[0.25, 0.25, 0.25, 0.25]),
-        num("Escribir la **relación de definición** de cada candidato y la longitud de cada palabra",
-            "Descartar los de menor **resolución**",
-            "Entre los que quedan, contar las palabras de **longitud mínima**: gana el que tiene **menos**",
-            "Comprobar: menos **cadenas de interacciones dobles** aliadas entre sí", size=15),
-        note("Los tres son IV; el diseño C tiene una sola palabra de 4 letras: es el de **aberración mínima**. "
-             "Con el patrón W de Gutiérrez: C = (0, 0, 0, **1**, 2, 0, 0) frente a A = (0, 0, 0, **3**, 0, 0, 0)", size=15)])
+Aberración mínima: d_{MA} es la fracción con aberración mínima si A_{r}(d_{MA}) < A_{r}(d_{i}) para toda i, donde r es el número de letras de la palabra más pequeña de la relación definidora. Aquí r = 4 y A_{4}(d_{1}) = 1 < A_{4}(d_{2}) = 2 < A_{4}(d_{3}) = 3: d_{1} tiene menor aberración y es el diseño con aberración mínima. Gutiérrez define la mínima aberración, en su glosario al margen, como el criterio que permite escoger un diseño 2^{k−p} entre las posibles fracciones con la misma resolución, y dice que casi siempre permite escoger el mejor.
+
+Los pasos para comparar diseños son: (1) escribir la relación definidora de cada uno; (2) descartar los de menor resolución; (3) escribir el patrón de longitud de palabra de cada uno; (4) comparar A_{r}, el número de palabras más pequeñas, y quedarse con el que tiene menos; (5) comprobarlo contando los pares de interacciones dobles que son alias, que es lo que realmente se pierde.
+
+En la práctica no hay que buscar los generadores: las tablas de diseños recomendados ya entregan el diseño de máxima resolución y aberración mínima, y el software estadístico trae generadores predeterminados. Gutiérrez lo resume así: quizá lo más difícil es encontrar los mejores generadores, y para eso están las tablas (su tabla 8.8) y el software.
+
+Correspondencia con Montgomery (tabla 8-13): él dice relación de definición, patrón de longitud de palabras y diseño de aberración mínima. El d_{2} de Gutiérrez es su diseño B y el d_{3} de la tabla es su diseño A. Su diseño C (F = ABCD, G = ABDE; I = ABCDF = ABDEG = CEFG) tiene el mismo patrón que d_{1} y también tres pares: es el mismo diseño con las letras cambiadas.""",
+  body=[tab(["", "d_{1}", "d_{2}", "d_{3}"],
+            [["Generadores", "F = ABCD,  G = ABCE", "F = ABC,  G = ADE", "F = ABC,  G = BCD"],
+             ["Relación definidora", "I = DEFG = ABCDF = ABCEG", "I = ABCF = ADEG = BCDEFG",
+              "I = ABCF = BCDG = ADFG"],
+             ["Patrón de longitud de palabra W", "(0, 0, 0, **1**, 2, 0, 0)", "(0, 0, 0, **2**, 0, 1, 0)",
+              "(0, 0, 0, **3**, 0, 0, 0)"],
+             ["Pares de interacciones dobles que son alias", "3", "6", "9"]], size=15,
+            hl=[], colw=[0.28, 0.24, 0.24, 0.24]),
+        num("Escribir la **relación definidora** de cada diseño",
+            "Descartar los de menor **resolución**: r = número de letras de la **palabra más pequeña**",
+            "Escribir el **patrón de longitud de palabra** W = (A_{1}, …, A_{k}); A_{i} = palabras con i letras",
+            "**Aberración mínima**: gana d_{MA} con A_{r}(d_{MA}) < A_{r}(d_{i}). Comprobar: menos **pares de interacciones dobles que son alias**", size=14),
+        note("Los tres son de resolución IV y A_{4}(d_{1}) = 1 < A_{4}(d_{2}) = 2 < A_{4}(d_{3}) = 3: "
+             "**d_{1} es el diseño con aberración mínima**. d_{1} y d_{2}: Gutiérrez, ec. 8.3, pág. 280", size=14)])
 
 E("didáctico", "generadores para un pan", "ejemplo construido para la clase",
   ["Una panadería quiere aumentar el **volumen** de su pan (mL). Se estudian cinco factores a dos niveles: "
@@ -1276,6 +1299,8 @@ El estadístico de prueba de cada efecto es F_{0} = MS del efecto / MS del error
 
 Si el diseño tiene n réplicas, N = n·2^{k−p} y el error incluye además el error puro, con 2^{k−p}(n − 1) grados de libertad.
 
+Debajo de la tabla se reporta el resumen del modelo, como lo hace Minitab. R^{2} es la fracción de la variabilidad total que explica el modelo: 1 − SS_{E}/SS_{T}. Siempre crece al agregar términos, aunque sean ruido. El R^{2} ajustado divide cada suma de cuadrados entre sus grados de libertad, 1 − [SS_{E}/(N − 1 − m)] / [SS_{T}/(N − 1)], y por eso baja si se agrega un término que no aporta. En un fraccionado, donde el error se arma con los efectos descartados, sirve para comparar modelos con distinto número de términos: si R^{2} y R^{2} ajustado están muy separados, sobran términos. S es la raíz del MS del error, la desviación estándar estimada del ruido.
+
 Montgomery presenta esta tabla para el 2^{k} con réplicas; la versión para el fraccionado es la misma con N = 2^{k−p} y coincide con las ANOVA de sus ejemplos.""",
   body=[tab(["SV", "SS", "DF", "MS", "F_{0}"],
             [["Efecto i (cadena de alias)", "SS_{i} = (Contraste_{i})^{2} / N", "1", "MS_{i} = SS_{i}",
@@ -1283,6 +1308,7 @@ Montgomery presenta esta tabla para el 2^{k} con réplicas; la versión para el 
              ["Error", "SS_{E} = SS_{T} − Σ SS_{i}  (por sustracción)", "N − 1 − m", "SS_{E} / (N − 1 − m)", ""],
              ["Total", "SS_{T} = Σ y^{2} − (Σ y)^{2} / N", "N − 1", "", ""]],
             size=17, colw=[0.25, 0.33, 0.13, 0.17, 0.12]),
+        form("R^{2} = 1 − SS_{E} / SS_{T}      R^{2}_{aj} = 1 − [SS_{E} / (N − 1 − m)] / [SS_{T} / (N − 1)]      S = √MS_{E}", size=16),
         bul("**m**: número de efectos incluidos en el modelo; **N**: total de corridas",
             "Se rechaza H_{0} si  **F_{0} > F_{α, 1, N−1−m}**  o si el valor p < α",
             "Con **n réplicas**:  N = n · 2^{k−p}  y hay error puro con 2^{k−p}(n − 1) g.l.", size=17)])
@@ -1292,7 +1318,7 @@ S("Sin réplicas no hay error: ¿cómo decido?",
 
 La gráfica de probabilidad normal (o seminormal) de los efectos: los efectos inactivos se comportan como ruido normal de media cero y caen sobre una recta; los activos se alejan de ella.
 
-El método de Lenth, que traza la línea de referencia del diagrama de Pareto: estima un pseudo error estándar (PSE) a partir de la mediana de los efectos y declara activo todo efecto cuyo valor absoluto supere el margen de error.
+El método de Lenth, que traza las líneas de referencia del diagrama de Pareto: estima un pseudo error estándar (PSE) a partir de la mediana de los efectos y declara activo todo efecto cuyo valor absoluto supere el margen de error ME, que juzga cada efecto por separado con 5 % de riesgo. El margen de error simultáneo SME controla el riesgo de todos los efectos a la vez: más allá del SME el efecto es activo con bastante seguridad; entre ME y SME es dudoso; antes del ME es ruido.
 
 Montgomery advierte que el método de Lenth solo es razonable cuando hay pocos efectos activos y recomienda usarlo como complemento de la gráfica normal. En el ejemplo 1, donde cinco de siete efectos son grandes, Lenth no detecta ninguno (PSE = 24.75).
 
@@ -1301,7 +1327,8 @@ Y los principios de interpretación de cadenas: escasez de efectos (Montgomery l
             "**Pareto con método de Lenth**: activo si |efecto| > margen de error; complementa la gráfica normal, no la sustituye",
             "Los efectos descartados pasan a formar el **error** del ANOVA"),
         form("s_{0} = 1.5 · mediana |ℓ_{i}|", "PSE = 1.5 · mediana { |ℓ_{i}| : |ℓ_{i}| < 2.5 s_{0} }",
-             "ME = t_{0.025, m/3} · PSE", size=17),
+             "ME = t_{0.025, m/3} · PSE  (raya continua del Pareto)",
+             "SME = t_{γ, m/3} · PSE,  γ = (1 + 0.95^{1/m})/2  (raya punteada)", size=17),
         note("Lenth solo es razonable con **pocos efectos activos**: en el ejemplo 1, con cinco de siete efectos grandes, "
              "no detecta ninguno (PSE = 24.75). Las cadenas activas se atribuyen con escasez, jerarquía y herencia", size=15)])
 
@@ -1466,6 +1493,104 @@ Qué se pierde y qué se conserva. Supóngase que la tarde da respuestas sistem�
          note("**Se pierde** la cadena ABD = ACF = BEF = CDE: su contraste es la diferencia entre turnos (fila de "
               "**bloques** del ANOVA, 1 g.l.). **Se conserva** el resto: las otras 13 cadenas tienen 4 + y 4 − en "
               "cada turno y la diferencia se cancela en sus contrastes", size=13)], ratio=0.44)
+
+# ---- 4 bloques: el mismo moldeo en 4 turnos de 4 corridas (confunde ABD, ABF y su producto DF)
+_s4 = lambda r, w: (lambda v: v)(__import__("math").prod(r[k] for k in w))
+_key4 = [(-1, -1), (-1, 1), (1, -1), (1, 1)]                     # signos (ABD, ABF) de los bloques 1 a 4
+_blq4 = [[r for r in r3 if (_s4(r, "ABD"), _s4(r, "ABF")) == k] for k in _key4]
+_com4 = lambda r: f"{sum(1 for k in 'ABD' if r[k] > 0)}, {sum(1 for k in 'ABF' if r[k] > 0)}"
+_rows4 = [["Signo de ABD", M, M, "+", "+"], ["Signo de ABF", M, "+", M, "+"],
+          ["Pareja (ABD, ABF)", f"({M}, {M})", f"({M}, +)", f"(+, {M})", "(+, +)"],
+          ["**Signo de DF = ABD × ABF**", "**+**", f"**{M}**", f"**{M}**", "**+**"]]
+_rows4 += [[("Corridas" if i == 0 else ""),
+            *[f"{_nom(b[i])}  ({_com4(b[i])})" for b in _blq4]] for i in range(4)]
+_sh4 = [0, 4, 2, 10]                                              # corrimiento de cada bloque
+_y4 = [v + _sh4[_key4.index((_s4(r, "ABD"), _s4(r, "ABF")))] for v, r in zip(y3, r3)]
+_ef4b = [("A", "A"), ("B", "B"), ("D", "D"), ("AB (+ CE)", "AB"), ("AD (+ EF)", "AD"),
+         ("AE + BC + DF", "AE"), ("ABD + ACF + BEF + CDE", "ABD"), ("ABF + ACD + BDE + CEF", "ABF")]
+_ce4 = [[n, f(_efm(y3, t)), f(_efm(_y4, t)), f(_efm(_y4, t) - _efm(y3, t))] for n, t in _ef4b]
+_dif4 = {t: _efm(_y4, t) - _efm(y3, t) for t in ("ABD", "ABF", "AE")}
+
+_sgn = lambda v: "+" if v > 0 else M
+_par4 = lambda r: (_s4(r, "ABD"), _s4(r, "ABF"))
+_arm4 = [[str(i + 1), _nom(r), *[_sgn(r[k]) for k in "ABDF"],
+          f"**{_sgn(_s4(r, 'ABD'))}**", f"**{_sgn(_s4(r, 'ABF'))}**",
+          f"({_sgn(_s4(r, 'ABD'))}, {_sgn(_s4(r, 'ABF'))})", f"**{_key4.index(_par4(r)) + 1}**"]
+         for i, r in enumerate(r3)]
+
+S("¿Cómo se arma la tabla de 4 bloques? Los signos de ABD y ABF",
+  f"""Esta diapositiva muestra de dónde sale el reparto en 4 bloques, corrida por corrida. El punto de partida es la tabla de signos del diseño: las 16 corridas del moldeo en orden estándar, con A, B, C y D del diseño básico y E = ABC, F = BCD. Para repartir en 4 bloques se usan dos columnas, porque una sola tiene dos signos y solo parte las corridas en dos grupos. Se escogen ABD = ACF = BEF = CDE y ABF = ACD = BDE = CEF porque son las dos únicas cadenas formadas solo por interacciones triples; la diapositiva siguiente explica qué más queda confundido. Por eso solo hacen falta las columnas de A, B, D y F.
+
+Paso 1. Para cada corrida se leen los signos de A, B, D y F en la tabla del diseño. Un signo + significa que la letra aparece en el nombre de la corrida: abf tiene A +, B +, D − y F +.
+
+Paso 2. El signo de ABD es el producto de los signos de A, B y D. Para abf: (+)(+)(−) = −.
+
+Paso 3. El signo de ABF es el producto de los signos de A, B y F. Para abf: (+)(+)(+) = +.
+
+Paso 4. Se anota la pareja de signos, siempre en el mismo orden: primero el de ABD y después el de ABF. Para abf la pareja es (−, +). La notación (−, +) no se refiere a niveles de factores: son los signos de las dos columnas de interacción que se usan para repartir.
+
+Paso 5. Cada una de las cuatro parejas posibles es un bloque: (−, −) es el bloque 1, (−, +) el bloque 2, (+, −) el bloque 3 y (+, +) el bloque 4. Para abf, bloque 2. Otro ejemplo: (1) tiene todos los signos negativos, así que ABD = (−)(−)(−) = − y ABF = (−)(−)(−) = −: pareja (−, −), bloque 1. Y df: A −, B −, D +, F +, así que ABD = (−)(−)(+) = + y ABF = (−)(−)(+) = +: pareja (+, +), bloque 4.
+
+Paso 6. Se agrupan las corridas por bloque. Cada pareja aparece exactamente cuatro veces, así que cada bloque recibe cuatro corridas. El resultado es la tabla de la diapositiva siguiente. Después se aleatoriza el orden de las corridas dentro de cada bloque y el orden en que se asignan los bloques a los turnos.
+
+Por qué cada bloque recibe justo cuatro corridas: ABD y ABF son dos columnas distintas de la tabla de signos, y dos columnas distintas de un diseño 2^{{k−p}} son ortogonales: las cuatro combinaciones de sus signos aparecen el mismo número de veces.""",
+  left=[tab(["Corrida", "Tratamiento", "A", "B", "D", "F", "ABD", "ABF", "Pareja", "Bloque"], _arm4,
+            size=11, first_left=False, pad=0.03,
+            colw=[0.09, 0.14, 0.07, 0.07, 0.07, 0.07, 0.09, 0.09, 0.17, 0.14])],
+  right=[num("Leer los signos de **A, B, D y F** de cada corrida",
+             "**ABD** = signo de A × signo de B × signo de D",
+             "**ABF** = signo de A × signo de B × signo de F",
+             "Anotar la **pareja** (signo de ABD, signo de ABF)",
+             "Cada pareja es un bloque; agrupar: **4 corridas por bloque**", size=13),
+         tab(["Pareja (ABD, ABF)", "Bloque"],
+             [[f"({M}, {M})", "1"], [f"({M}, +)", "2"], [f"(+, {M})", "3"], ["(+, +)", "4"]],
+             size=13, first_left=False),
+         note(f"**abf**: A +, B +, D {M}, F +  ⇒  ABD = (+)(+)({M}) = **{M}**,  ABF = (+)(+)(+) = **+**  ⇒  "
+              f"({M}, +)  ⇒  **bloque 2**", size=13)],
+  ratio=0.6)
+
+S("¿Y si hacen falta 4 bloques? Dos columnas y su producto",
+  f"""Mismo moldeo, un 2^{{6−2}} de 16 corridas, pero ahora la inyectora solo permite 4 corridas por turno: hacen falta 4 turnos, es decir, 4 bloques de 4 corridas.
+
+Cómo se lee la tabla. Es el resultado de la diapositiva anterior, agrupado por bloque. Cada columna es un bloque. Las tres primeras filas dicen qué tienen en común sus corridas: el signo de ABD, el signo de ABF y la pareja que forman, escrita (signo de ABD, signo de ABF). Por ejemplo, (−, +) es el bloque 2: todas sus corridas tienen ABD negativo y ABF positivo. Debajo están las cuatro corridas de cada bloque; entre paréntesis, las letras que cada una tiene en común con ABD y con ABF, que sirven de atajo.
+
+Por qué se necesitan dos columnas. Una columna tiene solo dos signos, así que parte las corridas en dos grupos. Para tener cuatro grupos se usan dos columnas a la vez, y cada corrida va al bloque que corresponde a su pareja de signos. Se escogen las dos cadenas formadas solo por interacciones triples: ABD = ACF = BEF = CDE y ABF = ACD = BDE = CEF. Bloque 1: ABD −, ABF −; bloque 2: ABD −, ABF +; bloque 3: ABD +, ABF −; bloque 4: ABD +, ABF +.
+
+Por qué se confunde también el producto. Cuatro bloques tienen 4 − 1 = 3 grados de libertad, así que entre bloques caben tres contrastes, no dos. El tercero es el producto de las dos columnas escogidas, su interacción generalizada: ABD × ABF = A^{{2}}B^{{2}}DF = DF. Dentro de cada bloque ABD y ABF tienen signo fijo, así que su producto también: DF vale + en los bloques 1 y 4 y − en los bloques 2 y 3 (fila resaltada). DF queda confundida con los bloques aunque nadie la escogió, y con ella toda su cadena, AE = BC = DF.
+
+El costo en este diseño. El 2^{{6−2}} solo tiene dos cadenas formadas únicamente por interacciones triples, y su producto cae en una cadena de interacciones dobles. Con 4 bloques de 4 corridas no hay forma de evitarlo: se pierde la cadena AE = BC = DF. Por eso la tabla XII de Montgomery recomienda para este diseño solo 2 bloques de 8. Si hacen falta 4 bloques, hay que asignar los factores de modo que AE, BC y DF sean interacciones improbables, o pasar a un diseño más grande, como se hace en el ejemplo de la máquina CNC (32 corridas en 4 bloques).
+
+Atajo para repartir sin calcular signos: contar las letras en común con ABD y con ABF. Par con ABD y par con ABF: bloque 1, el principal, porque contiene a (1). Par e impar: bloque 2. Impar y par: bloque 3. Impar e impar: bloque 4. Ejemplo: abf tiene dos letras en común con ABD (a, b) y tres con ABF (a, b, f): par e impar, bloque 2. Fuente: Montgomery, sección 8-4 (bloques en fraccionados) y tabla XII(f); el reparto en 4 bloques del moldeo es un ejemplo construido para la clase.""",
+  left=[tab(["", "Bloque 1", "Bloque 2", "Bloque 3", "Bloque 4"], _rows4, size=12, hl=[3],
+            first_left=True, colw=[0.2, 0.2, 0.2, 0.2, 0.2], pad=0.06),
+        txt("Moldeo (ejemplo 3) en 4 turnos de 4 corridas. Entre paréntesis: letras en común con ABD y con ABF", size=11)],
+  right=[num("**4 bloques = 3 g.l.**: caben **3 columnas** confundidas, no 2",
+             "Escoger **2 cadenas** de orden alto: **ABD** y **ABF**",
+             "La tercera **no se escoge**: es su producto, ABD × ABF = A²B²DF = **DF**",
+             "Repartir por la **pareja de signos** (ABD, ABF): (−,−) bloque 1, (−,+) 2, (+,−) 3, (+,+) 4", size=13),
+         note("**DF** también tiene signo fijo en cada bloque: queda confundida con toda su cadena, "
+              "**AE = BC = DF**, aunque nadie la escogió", size=13),
+         note("En el 2^{6−2} el producto de las dos cadenas de triples cae en **dobles**: con bloques de 4 se pierde "
+              "AE = BC = DF. Por eso Montgomery recomienda aquí **2 bloques de 8**", size=13)],
+  ratio=0.58)
+
+S("¿Qué pasa con los efectos con 4 bloques?",
+  f"""Como en el caso de dos bloques, se toman los datos reales del ejemplo 3 y se les suma un corrimiento distinto en cada turno: 0, 4, 2 y 10 unidades en los bloques 1 a 4. Después se recalculan los efectos.
+
+Cambian exactamente tres cadenas, las tres confundidas con los bloques. La cadena ABD sube {f(_dif4["ABD"])}: es el promedio de los corrimientos de los bloques con ABD + (bloques 3 y 4) menos el de los bloques con ABD − (bloques 1 y 2): (2 + 10)/2 − (0 + 4)/2 = 4. La cadena ABF sube {f(_dif4["ABF"])}: (4 + 10)/2 − (0 + 2)/2 = 6. Y la cadena AE + BC + DF sube {f(_dif4["AE"])}: (0 + 10)/2 − (4 + 2)/2 = 2, porque DF es + en los bloques 1 y 4. Esa es la prueba numérica de que la tercera columna, la que nadie escogió, también absorbe la diferencia entre bloques.
+
+Todos los efectos principales y las demás cadenas de interacciones dobles quedan exactamente igual que sin bloques: cada una de sus columnas tiene dos signos + y dos − dentro de cada bloque, y el corrimiento se cancela.
+
+En el ANOVA, los bloques ocupan una fila con 3 grados de libertad, y su suma de cuadrados es la suma de las de las tres columnas confundidas, igual que en el ejemplo de la máquina CNC. La cadena AE + BC + DF ya no se puede estimar: su contraste mide a la vez la interacción y la diferencia entre turnos.""",
+  left=[tab(["Efecto", "Sin bloques", "Con 4 turnos", "Cambio"], _ce4, size=14, hl=[5, 6, 7],
+            colw=[0.4, 0.2, 0.2, 0.2]),
+        txt("Datos del ejemplo 3; a los bloques 1 a 4 se les suman 0, 4, 2 y 10 unidades", size=12)],
+  right=[bul(f"**ABD** cambia {f(_dif4['ABD'])}: (2 + 10)/2 − (0 + 4)/2",
+             f"**ABF** cambia {f(_dif4['ABF'])}: (4 + 10)/2 − (0 + 2)/2",
+             f"**AE + BC + DF** cambia {f(_dif4['AE'])}: (0 + 10)/2 − (4 + 2)/2. La columna que **nadie escogió** también absorbe los bloques",
+             "Principales y demás dobles: **iguales** que sin bloques", size=14),
+         note("ANOVA: fila de **bloques con 3 g.l.** = SS(ABD) + SS(ABF) + SS(DF). La cadena AE = BC = DF se pierde", size=13)],
+  ratio=0.52)
 
 E(4, "máquina CNC", "Montgomery, ejemplo 8-6",
   ["Una máquina CNC de cinco ejes produce el impulsor de un motor de turbina. Una característica de calidad clave es el **perfil de los álabes**: interesa su desviación respecto al perfil especificado en el plano, medida como la desviación estándar de la diferencia entre ambos.",
@@ -1645,12 +1770,15 @@ Modelo: ŷ = β_{{0}} + β_{{A}} x_{{A}} + β_{{B}} x_{{B}} + β_{{D}} x_{{D}} +
 
 La fila de bloques merece atención. Su suma de cuadrados, 0.0201 con 3 grados de libertad, es exactamente la suma de las tres columnas confundidas con los husillos: SS(ABE) + SS(ABH) + SS(EH) = {f(ef8["ABE"][1], 6)} + {f(ef8["ABH"][1], 6)} + {f(ef8["EH"][1], 6)} = {f(ssb8, 4)}. Se separa del error para que la diferencia entre husillos no infle el error y no le reste potencia a las pruebas. No lleva F_{{0}}: los husillos no se asignaron al azar a las corridas, así que la prueba de bloques no tiene la misma validez que las de los factores. Su cuadrado medio, 0.0067, es menor que el del error (0.0171): los husillos casi no difieren.
 
-El error, 0.4099 con 24 grados de libertad, reúne las 24 columnas que no entraron al modelo ni a los bloques: 31 − 4 − 3 = 24.""",
+El error, 0.4099 con 24 grados de libertad, reúne las 24 columnas que no entraron al modelo ni a los bloques: 31 − 4 − 3 = 24.
+
+Resumen del modelo, calculado aquí con la convención de Minitab, que cuenta los bloques como términos del modelo: S = 0.1307, R^{{2}} = 1 − 0.4099/2.6389 = 84.47 % y R^{{2}} ajustado = 1 − (0.4099/24)/(2.6389/31) = 79.94 %. El libro no los reporta.""",
   left=[tab(["SV", "SS", "DF", "MS", "F_{0}", "P-Value"],
             [["A", "0.6740", "1", "0.6740", "39.42", "<0.0001"], ["B", "0.3217", "1", "0.3217", "18.81", "0.0002"],
              ["D", "0.0935", "1", "0.0935", "5.47", "0.0280"], ["AD", "1.1197", "1", "1.1197", "65.48", "<0.0001"],
              ["**Bloques**", "**0.0201**", "**3**", "**0.0067**", "", ""], ["Error", "0.4099", "24", "0.0171", "", ""],
              ["Total", "2.6389", "31", "", "", ""]], size=14, hl=[4]),
+        tab(["S", "R^{2}", "R^{2} ajustado"], [["0.1307", "84.47 %", "79.94 %"]], size=13, first_left=False),
         form(f"H_{{0}}: β_{{AD}} + β_{{BG}} = 0,   F_{{0.05, 1, 24}} = {f(f_ppf(0.05, 1, 24))}", size=15)],
   right=[cards(("Bloques = las 3 columnas de los husillos",
                 f"SS(ABE) + SS(ABH) + SS(EH) = **{f(ssb8, 4)}** con **3 g.l.**"),
@@ -1723,6 +1851,7 @@ _zv = normal_scores(_vv)
 _sv = sorted(range(7), key=lambda i: _vv[i])
 _pv = [(_vv[i], _zv[i]) for i in _sv]
 _av = {k for k, i in enumerate(_sv) if "ABCDEFG"[i] in "ACE"}
+psev = lenth(_vv); mev = t_ppf(0.05, 7 / 3) * psev; smev = t_ppf(1 - 0.95 ** (1 / 7), 7 / 3) * psev
 S("Vibración · Pareto y Daniel: ¿qué efectos son activos?",
   f"""Sin error, Gutiérrez recurre primero al diagrama de Pareto de efectos y al gráfico de Daniel.
 
@@ -1730,9 +1859,12 @@ El Pareto hace un trabajo excelente: detecta tres efectos importantes y cuatro d
 
 El gráfico de Daniel lo confirma: cuatro efectos caen sobre la recta (no afectan) y tres se separan de ella, los mismos de las tres barras más altas del Pareto.
 
+Las rayas de Lenth, en cambio, fallan aquí: PSE = {f(psev, 3)}, ME = {f(mev)} y SME = {f(smev)}; solo E supera el ME, y ninguno el SME. Con apenas siete efectos, tres de ellos grandes, la mediana de los efectos ya no representa el ruido: los efectos activos la inflan, y con m/3 = 2.33 grados de libertad el valor t es muy grande. Es la advertencia de Montgomery: Lenth solo es razonable cuando hay pocos efectos activos. Por eso aquí se decide con el Pareto y el gráfico de Daniel, y el mejor ANOVA confirma después A, C y E.
+
 Interpretación de los alias: por jerarquía, cada efecto grande se atribuye al efecto principal de su cadena. Es justamente el supuesto con el que se eligió un diseño de resolución III. Si hubiera duda (por ejemplo, si la columna de A fuera en realidad la interacción CE entre diámetro y precarga), se aclararía con otra fracción, como se ve en seguida.""",
-  left=[bars(_ov, [abs(efv[w]) for w in _ov], "|Efecto|", h=3.8, title="Pareto de efectos (fig. 8.6)"),
-        note("Tres barras grandes: **E, C y A**", size=15)],
+  left=[bars(_ov, [abs(efv[w]) for w in _ov], "|Efecto|", h=3.8, title="Pareto de efectos (fig. 8.6)",
+             refs=[(mev, f"ME = {f(mev)}", "solid"), (smev, f"SME = {f(smev)}", "dash")]),
+        note(f"Tres barras grandes: **E, C y A**. Lenth con 7 efectos solo marca E: **falla con muchos activos**", size=14)],
   right=[scatter(_pv, "Efecto", "Puntuación normal", h=3.8,
                  labels={k: "ABCDEFG"[i] for k, i in enumerate(_sv) if "ABCDEFG"[i] in "ACE"},
                  line=daniel(_pv, _av), hi=_av, title="Gráfico de Daniel (fig. 8.7)"),
@@ -1754,7 +1886,7 @@ S("Vibración · Mejor ANOVA y mejor tratamiento",
 Interpretación: a mayor precarga, mayor vibración; a mayor diámetro, menor vibración; a mayor tamaño de grano, mayor vibración. El mejor tratamiento es grano en nivel bajo, diámetro en nivel alto y precarga en nivel bajo. Como solo hay tres factores activos, el diseño se colapsa (proyecta) en un 2^{{3}} completo en A, C y E, y tiene sentido la gráfica de cubo con la vibración predicha: la mínima, {f(_mn[3])}, está en (A −, C +, E −). Los otros cuatro factores se fijan por criterio económico o de productividad.
 
 Lo que demuestra el ejemplo: con 8 corridas en lugar de 128 se encontraron los tres factores que importan entre siete.""",
-  left=[tab(["SV", "SS", "DF", "MS", "F_{0}", "P-Value"], _anv, size=15),
+  left=[tab(["SV", "SS", "DF", "MS", "F_{0}", "P-Value"], _anv, size=15), resumen(mv),
         form(f"ŷ = {f(_b0)} + {f(efv['A'] / 2)} x_{{A}} − {f(-efv['C'] / 2)} x_{{C}} + {f(efv['E'] / 2)} x_{{E}}", size=16),
         txt("Gutiérrez, tabla 8.15", size=12)],
   right=[tab(["Grano A", "Diámetro C", "Precarga E", "Vibración predicha"],
@@ -1828,13 +1960,17 @@ E(5, "tiempo de enfoque del ojo", "Montgomery, ejemplo 8-7",
   ["Estimar los efectos de la primera fracción", "Listar las explicaciones compatibles con los alias",
    "Elegir y correr una segunda fracción que las separe", "Decidir qué efectos son los reales"])
 
-_o4 = sorted("ABCDEFG", key=lambda w: abs(ef4[w]))
+_o4 = sorted("ABCDEFG", key=lambda w: -abs(ef4[w]))
+pse4 = lenth([ef4[w] for w in "ABCDEFG"]); me4 = t_ppf(0.05, 7 / 3) * pse4; sme4 = t_ppf(1 - 0.95 ** (1 / 7), 7 / 3) * pse4
 S("Ejemplo 5 · Una primera fracción ambigua",
   """Se corre el 2^{7−4}_{III} de ocho corridas del enunciado anterior (Montgomery, ejemplo 8-7).
 
-Tres estimaciones son grandes: ℓ_{B} = 38.38, ℓ_{D} = 28.88 y ℓ_{A} = 20.63. La lectura más simple es que A, B y D son activos. Pero como D = AB, hay otras tres explicaciones igual de lógicas: A, B y la interacción AB; A, D y la interacción AD; o B, D y la interacción BD. La fracción sola no permite distinguirlas.""",
-  left=[bars(_o4, [ef4[w] for w in _o4], "Efecto estimado (ms)", h=3.9,
-             title="Primera fracción: efectos estimados"),
+Tres estimaciones son grandes: ℓ_{B} = 38.38, ℓ_{D} = 28.88 y ℓ_{A} = 20.63. La lectura más simple es que A, B y D son activos. Pero como D = AB, hay otras tres explicaciones igual de lógicas: A, B y la interacción AB; A, D y la interacción AD; o B, D y la interacción BD. La fracción sola no permite distinguirlas.""" + f"""
+
+En el Pareto, Lenth da PSE = {f(pse4, 3)}, ME = {f(me4)} y SME = {f(sme4)}: las columnas B, D y A superan las dos rayas con holgura y las otras cuatro quedan por debajo del ME. Lenth dice qué columnas son grandes, pero no a cuál efecto de su cadena de alias pertenece cada una: eso sigue sin resolverse.""",
+  left=[bars(_o4, [abs(ef4[w]) for w in _o4], "|Efecto| (ms)", h=3.9,
+             title="Pareto de la primera fracción",
+             refs=[(me4, f"ME = {f(me4)}", "solid"), (sme4, f"SME = {f(sme4)}", "dash")]),
         note("Grandes: ℓ_{B} = 38.38,  ℓ_{D} = 28.88,  ℓ_{A} = 20.63", size=15)],
   right=[txt("**Cuatro explicaciones posibles**", size=18),
          tab(["Explicación", "Efectos activos"],
@@ -1925,69 +2061,136 @@ E(6, "Plackett-Burman con datos simulados", "Montgomery, ejemplo 8-8",
    "Explicar de dónde salen los efectos falsos", "Decidir qué diseño habría sido mejor"])
 
 _srt_pb = sorted(_pbL, key=lambda l: -abs(ef_pb[l]))
+psepb = lenth([ef_pb[l] for l in _pbL]); mepb = t_ppf(0.05, 11 / 3) * psepb; smepb = t_ppf(1 - 0.95 ** (1 / 11), 11 / 3) * psepb
 S("Ejemplo 6 · Plackett-Burman con datos simulados",
   """Montgomery simula datos para mostrar la dificultad (ejemplo 8-8). El modelo verdadero tiene tres efectos principales, A, B y D, y dos interacciones, AB y AD, más un error normal con varianza 9. Se corre el Plackett-Burman de 12 corridas para 11 factores.
 
 Al estimar los efectos aparecen siete grandes: A, B, C, D, E, J y K. Solo tres son reales; los demás son interacciones que se repartieron como alias parciales sobre otros efectos principales. Con estos datos no es evidente cuáles de esos efectos son en realidad interacciones. Un doblez del diseño resolvería en general los efectos principales, pero suele dejar incertidumbre sobre las interacciones.
 
+""" + f"""Las rayas de Lenth tampoco ayudan: con siete de once efectos grandes, PSE = {f(psepb, 2)}, ME = {f(mepb)} y SME = {f(smepb)}, y ningún efecto supera el ME, ni siquiera D = 34.00, que es real. Los efectos grandes inflan la mediana, y Lenth solo funciona con pocos efectos activos.
+""" + """
 Recomendación del libro: si la elección es entre un 2^{11−7}_{III} geométrico de 16 corridas y un Plackett-Burman de 12 que quizá haya que doblar (24 corridas), el geométrico puede ser mejor elección. Nota para quien coteje: la tabla 8-26 imprime 12.667 para el efecto de C; con los datos es 13.667, que es lo que da su propio coeficiente.""",
   left=[form("y = 200 + 8x_{1} + 10x_{2} + 12x_{4} − 12x_{1}x_{2} + 9x_{1}x_{4} + ε", size=16),
-        bars(_srt_pb, [abs(ef_pb[l]) for l in _srt_pb], "|Efecto|", h=3.5, title="Efectos estimados (valor absoluto)")],
+        bars(_srt_pb, [abs(ef_pb[l]) for l in _srt_pb], "|Efecto|", h=3.5, title="Pareto de efectos con Lenth",
+             refs=[(mepb, f"ME = {f(mepb)}", "solid"), (smepb, f"SME = {f(smepb)}", "dash")])],
   right=[cards(("Lo que es real", "**A, B, D**, AB y AD"),
                ("Lo que aparece", "**Siete** efectos grandes: A, B, C, D, E, J y K"),
                ("Recomendación", "Preferir un **2^{11−7}_{III}** de 16 corridas a un PB de 12 que haya que doblar"),
                size=15, cols=1)], ratio=0.55)
 
-section(9, "Diseños de resolución IV y V", "Diseños mínimos, doblez y fracciones irregulares")
+section(9, "Diseños de resolución IV y V", "Del doblez de III a IV, los límites del doblez en IV y el poder de la resolución V")
 
-_rows = [["+", "−", "−", "+"], ["+", "+", "−", "−"], ["+", "−", "+", "−"], ["+", "+", "+", "+"],
-         ["−", "+", "+", "−"], ["−", "−", "+", "+"], ["−", "+", "−", "+"], ["−", "−", "−", "−"]]
-S("¿Qué es un diseño de resolución IV y cómo se obtiene de uno de resolución III?",
-  """Un 2^{k−p} es de resolución IV si los efectos principales están separados de las interacciones dobles y algunas interacciones dobles son alias entre sí. Si se suprimen las interacciones de tres o más factores, los efectos principales se estiman directamente. Ya se vieron dos: el 2^{6−2}_{IV} del ejemplo 3 y el 2^{7−3}_{IV} que resultó de combinar las dos fracciones del ejemplo 5.
+# ---- Resolución IV y V (Montgomery, secs. 8-5 y 8-6): tres ideas, cálculos verificados con las tablas de signos
+S("¿Por qué el doblez completo convierte un diseño de resolución III en uno de resolución IV?",
+  """Montgomery (sec. 8-5) muestra que el doblez completo, la segunda fracción con los signos de todos los factores invertidos, siempre convierte un diseño de resolución III en uno de resolución IV. La razón está en los signos de las columnas.
 
-Hay un límite inferior de tamaño: todo diseño 2^{k−p}_{IV} debe tener al menos 2k corridas. Los diseños de resolución IV con exactamente 2k corridas se llaman diseños mínimos. Por ejemplo, el 2^{4−1}_{IV} tiene 8 = 2·4 corridas y el 2^{8−4}_{IV} tiene 16 = 2·8.
+Una columna de r letras es el producto de r columnas de factores. Si se invierten todos los factores, esa columna queda multiplicada por (−1)^{r}: cambia de signo si r es impar y no cambia si r es par. La columna de un efecto principal (una letra) cambia; la de una interacción doble (dos letras) no cambia. Por eso en la primera fracción del 2^{7−4} la columna de A es igual a la de BD (A = BD), y en el doblez es su opuesta (A = −BD).
 
-Los diseños de resolución IV se pueden obtener doblando un diseño de resolución III. Se toma el 2^{k−p}_{III}, se le agrega la segunda fracción con todos los signos invertidos, y se aprovecha la columna identidad: en la primera fracción es toda +, y en la segunda se cambia a toda −. Esa columna se asigna al factor k + 1. El resultado es un 2^{k+1−p}_{IV}. La tabla es la del libro (tabla 8-27): del 2^{3−1}_{III} con I = ABC se obtiene un 2^{4−1}_{IV}, y es fácil verificar que su relación de definición es I = ABCD. Con cuatro corridas más se gana un factor y se sube de resolución III a IV.""",
-  left=[bul("Principales **separados** de las interacciones dobles; algunas dobles son **alias entre sí**",
-            "Suprimiendo triples, los principales se estiman **directamente**",
-            "Tamaño mínimo **N ≥ 2k**; con exactamente 2k corridas se llama diseño **mínimo**", size=15),
-        tab(["Diseño mínimo", "Factores", "Corridas = 2k"],
-            [["2^{4−1}_{IV}", "4", "8"], ["2^{8−4}_{IV}", "8", "16"], ["2^{16−11}_{IV}", "16", "32"]],
-            size=14, first_left=False)],
-  right=[tab(["D (columna I)", "A", "B", "C"], _rows, size=13, hl=[0, 1, 2, 3], first_left=False, pad=0.07),
-         num("Tomar el **2^{k−p}_{III}** y agregar la fracción con **todos los signos invertidos**",
-             "La columna **I** pasa de + a −: se asigna al factor **k + 1**  ⇒  2^{3−1}_{III} → 2^{4−1}_{IV}, I = ABCD",
-             size=14),
-         txt("Tabla 8-27 del libro: arriba la fracción original (I = ABC), abajo la invertida", size=12)], ratio=0.48)
+Lo mismo pasa con las palabras de la relación de definición. El 2^{7−4}_{III} con D = AB, E = AC, F = BC y G = ABC tiene 15 palabras: siete de tres letras, siete de cuatro y una de siete. En la primera fracción todas valen +. En el doblez, las de tres y siete letras (impares) valen − y las de cuatro letras (pares) siguen valiendo +. Al juntar las 16 corridas, una palabra impar vale + en la mitad de las corridas y − en la otra mitad: ya no es constante, así que deja de ser palabra. Solo sobreviven las siete de cuatro letras: el diseño combinado es un 2^{7−3} con I = ABCG = ABEF = ACDF = ADEG = BCDE = BDFG = CEFG, de resolución IV.
 
-S("¿Cómo se dobla un diseño de resolución IV?",
-  """También se doblan diseños de resolución IV, para separar interacciones dobles que son alias entre sí. Montgomery y Runger señalan tres objetivos posibles: romper tantas cadenas de interacciones dobles como sea posible, romper las de una cadena específica, o romper las que incluyen un factor específico.
+Esto vale para cualquier diseño de resolución III: todas las palabras de tres letras desaparecen, y las que quedan tienen un número par de letras, al menos cuatro. Montgomery lo dice así: el doblez completo de un diseño de resolución III produce uno de resolución IV, con los efectos principales libres de interacciones dobles. Fue lo que ocurrió en el ejemplo 5 del ojo: lo que parecía el efecto de A era la interacción BD.
 
-Una forma de hacerlo es correr una segunda fracción en la que se invierte el signo de todos los generadores con número impar de letras. En el 2^{6−2} del ejemplo 3, con I = ABCE e I = BCDF, la segunda fracción usa I = −ABCE e I = −BCDF, y el diseño combinado tiene un solo generador, I = ADEF. Sigue siendo de resolución IV, pero las únicas interacciones dobles que quedan con alias son AD = EF, AE = DF y AF = DE. En el 2^{8−3}_{IV}, con I = ABCF, ABDG y BCDEH, el combinado queda con I = CDFG = BCDEH = BEFGH y solo CD = FG, CF = DG y CG = DF siguen aliadas.
+Comprobación hecha aquí con las tablas de signos de las dos fracciones.""",
+  left=[tab(["Palabras del 2^{7−4}", "Letras", "1.ª fracción", "Doblez", "¿En el combinado?"],
+            [["ABD, ACE, AFG, BCF, BEG, CDG, DEF", "3", "+", M, "**No**"],
+             ["ABCG, ABEF, ACDF, ADEG, BCDE, BDFG, CEFG", "4", "+", "+", "**Sí**"],
+             ["ABCDEFG", "7", "+", M, "**No**"]], size=13, hl=[1], first_left=True,
+            colw=[0.42, 0.11, 0.15, 0.13, 0.19], pad=0.06),
+        form("Al invertir todos los factores: columna de r letras × (−1)^{r}",
+             "Principal (1 letra): cambia.   Doble (2 letras): no cambia", size=15),
+        note("Combinado: **2^{7−3}_{IV}**, I = ABCG = ABEF = ACDF = ADEG = BCDE = BDFG = CEFG", size=13)],
+  right=[num("Doblez completo: **invertir los signos de todos** los factores",
+             "Las palabras con número **impar** de letras cambian de signo; las **pares** no",
+             "Juntas, una palabra impar vale + en la mitad y − en la otra: **deja de ser palabra**",
+             "Quedan solo palabras pares, de **4 letras o más**: **resolución IV**", size=14),
+         note("En la 1.ª fracción **A = BD**; en el doblez **A = −BD**. La semisuma da A y la semidiferencia da BD", size=13),
+         note("Montgomery: el doblez completo de un resolución III **siempre** da un resolución IV", size=13)],
+  ratio=0.55)
 
-Advertencia: el doblez de un resolución III garantiza un combinado de resolución IV, pero el doblez de un resolución IV no necesariamente separa todas las interacciones dobles. Si la fracción original tiene una cadena con más de dos interacciones dobles, el doblez no las separa por completo.""",
-  body=[tab(["Diseño original", "Segunda fracción", "Diseño combinado", "Interacciones dobles que siguen aliadas"],
-            [["2^{6−2}_{IV}:  I = ABCE,  I = BCDF", "I = −ABCE,  I = −BCDF", "I = ADEF", "AD = EF,  AE = DF,  AF = DE"],
-             ["2^{8−3}_{IV}:  I = ABCF, ABDG, BCDEH", "I = −ABCF, −ABDG, BCDEH", "I = CDFG = BCDEH = BEFGH", "CD = FG,  CF = DG,  CG = DF"]],
-            size=14, colw=[0.27, 0.24, 0.23, 0.26]),
-        cards(("Objetivos", "Romper muchas cadenas, una cadena específica, o las de un factor específico"),
-              ("Procedimiento", "Invertir los generadores con **número impar** de letras"),
-              ("Advertencia", "Con cadenas de **más de dos** interacciones dobles, no se separan todas"), size=14)])
+_r34 = [["Original", "1", "+", M, M, "+", "+"], ["", "2", "+", "+", M, M, "+"], ["", "3", "+", M, "+", M, "+"],
+        ["", "4", "+", "+", "+", "+", "+"],
+        ["Doblez", "5", M, "+", "+", M, "+"], ["", "6", M, M, "+", "+", "+"], ["", "7", M, "+", M, "+", "+"],
+        ["", "8", M, M, M, M, "+"]]
+S("¿Cómo se hace paso a paso? Del 2^{3−1}_{III} al 2^{4−1}_{IV}",
+  """El caso más pequeño muestra el procedimiento completo (Montgomery, tabla 8-27).
 
-S("¿Qué es un diseño de resolución V?",
-  """En un diseño de resolución V los efectos principales y las interacciones dobles no tienen como alias otros principales ni otras interacciones dobles. Son diseños muy poderosos: si las interacciones de tres o más factores son despreciables, estiman de forma única todos los efectos principales y todas las interacciones dobles. La palabra más corta de su relación de definición debe tener cinco letras. Ejemplos: el 2^{5−1} con I = ABCDE y el 2^{8−2} con I = ABCDG = ABEFH.
+Paso 1. La fracción original es el 2^{3−1} con C = AB, es decir, I = ABC: cuatro corridas. Sus alias son A = BC, B = AC y C = AB: cada efecto principal está mezclado con una interacción doble (resolución III).
 
-Su problema es el tamaño: los diseños estándar de resolución V son grandes cuando el número de factores es moderado. Por eso interesan las fracciones irregulares de resolución V, disponibles para 4 a 9 factores: 12 corridas para 4 factores, 24 para 5 (tabla 8-28 del libro, tres cuartas partes del 2^{5}), 48 para 6, 7 u 8, y 96 para 9.
+Paso 2. Se escribe la segunda fracción copiando las cuatro corridas con todos los signos de A, B y C invertidos. Ahora C = −AB, es decir, I = −ABC. Sus alias cambian de signo: A = −BC, B = −AC y C = −AB.
 
-Por último, Montgomery señala que el doblez completo de un diseño de resolución IV o V suele ser innecesario: en general solo hay una o dos interacciones aliadas de interés, y sus alias se pueden separar agregando unas pocas corridas a la fracción original. Esa técnica se llama doblez parcial (ver ejemplo 10-5 del libro).""",
-  left=[bul("Principales e interacciones dobles **sin alias entre sí**",
-            "Palabra más corta de **5 letras**",
-            "Ejemplos: **2^{5−1}**, I = ABCDE;  **2^{8−2}**, I = ABCDG = ABEFH", size=16),
-        note("**Doblez parcial**: separar una o dos interacciones agregando **pocas corridas**", size=15)],
-  right=[tab(["Factores", "Fracción irregular de resolución V"],
-             [["4", "12 corridas"], ["5", "24 corridas (3/4 del 2^{5})"], ["6, 7 u 8", "48 corridas"], ["9", "96 corridas"]],
-             size=16, colw=[0.3, 0.7], first_left=False),
-         txt("Fuente: Montgomery, sec. 8-6 y tabla 8-28", size=13)], ratio=0.52)
+Paso 3. Juntas son ocho corridas, las ocho combinaciones de A, B y C. Con la semisuma y la semidiferencia de las estimaciones de las dos fracciones se separan A de BC, B de AC y C de AB.
+
+Paso 4. El truco de Montgomery: la columna identidad I vale + en las cuatro corridas originales, y en las cuatro del doblez se cambia a −. Esa columna se le asigna a un factor nuevo, D. El experimento gana un factor sin agregar corridas.
+
+Paso 5. Se comprueba la relación de definición multiplicando las cuatro columnas en cada corrida: A · B · C · D vale + en las ocho corridas (última columna de la tabla). El diseño combinado es un 2^{4−1} con I = ABCD, de resolución IV: A = BCD, B = ACD, C = ABD, D = ABC, y las dobles quedan en parejas, AB = CD, AC = BD y AD = BC.
+
+Resultado: con cuatro corridas más se pasa de tres factores en resolución III a cuatro factores en resolución IV. En general, doblando un 2^{k−p}_{III} y usando la columna I para un factor más se obtiene un 2^{k+1−p}_{IV}.""",
+  left=[tab(["Fracción", "Corrida", "D (columna I)", "A", "B", "C", "A·B·C·D"], _r34, size=13,
+            first_left=True, colw=[0.18, 0.12, 0.2, 0.1, 0.1, 0.1, 0.2], pad=0.05),
+        txt("Montgomery, tabla 8-27: arriba el 2^{3−1} con I = ABC; abajo, todos los signos invertidos", size=11)],
+  right=[num("Original: **C = AB** (I = ABC). Alias: A = BC, B = AC, C = AB: **resolución III**",
+             "Doblez: copiar las corridas **invirtiendo A, B y C**. Ahora C = −AB",
+             "Juntas: **8 corridas**; ½(ℓ + ℓ′) y ½(ℓ − ℓ′) separan A de BC, B de AC, C de AB",
+             "La columna **I** vale + arriba y **−** abajo: se usa para un **factor nuevo D**",
+             "A·B·C·D = + en las 8 corridas ⇒ **I = ABCD**: 2^{4−1}_{IV}", size=14),
+         note("Con 4 corridas más: **un factor más** y de resolución **III a IV**", size=14)],
+  ratio=0.5)
+
+_ch62 = [["AB = CE", "AB y CE **separadas**"], ["AC = BE", "AC y BE **separadas**"],
+         ["BD = CF", "BD y CF **separadas**"], ["BF = CD", "BF y CD **separadas**"],
+         ["AE = BC = DF", "BC sale; **AE = DF siguen**"], ["AD = EF", "**Siguen aliadas**"],
+         ["AF = DE", "**Siguen aliadas**"]]
+S("¿Doblar un diseño de resolución IV separa todas las interacciones dobles? No siempre",
+  """Montgomery (sec. 8-6) advierte que el doblez de un diseño de resolución III garantiza uno de resolución IV, pero el doblez de un diseño de resolución IV no necesariamente separa todas las interacciones dobles. Se ve con el 2^{6−2}_{IV} del ejemplo 3, el moldeo, con E = ABC y F = BCD, es decir, I = ABCE = BCDF = ADEF.
+
+Primero, qué no hay que hacer: invertir todos los factores. En un diseño de resolución IV todas las palabras tienen cuatro letras, un número par, así que ninguna cambia de signo: la segunda fracción tendría la misma relación de definición y serían las mismas 16 corridas, una réplica. Montgomery invierte, en cambio, los generadores con número impar de letras: E = ABC y F = BCD tienen tres letras, así que la segunda fracción usa E = −ABC y F = −BCD. En la práctica se invierten solo las columnas de E y F.
+
+Qué pasa con las palabras. ABCE y BCDF cambian de signo entre las dos fracciones y desaparecen del diseño combinado. Pero ADEF es su producto, (ABCE)(BCDF), y en la segunda fracción vale (−)(−) = +: no cambia de signo y sobrevive. El diseño combinado de 32 corridas tiene un solo generador, I = ADEF, y sigue siendo de resolución IV.
+
+Qué se separa y qué no. De las siete cadenas de interacciones dobles del diseño original, cuatro se separan por completo y BC sale de la cadena AE = BC = DF. Pero AD = EF, AE = DF y AF = DE siguen aliadas, porque las tres salen de la palabra ADEF que sobrevivió. Lo mismo ocurre en el 2^{8−3}_{IV}: después del doblez quedan CD = FG, CF = DG y CG = DF.
+
+Por qué no es mala suerte. Con dos o más generadores, el producto de dos palabras que cambian de signo no cambia de signo, así que siempre sobrevive alguna palabra. Si esa palabra tiene cuatro letras, deja tres parejas de interacciones dobles aliadas. Montgomery lo resume: si la fracción original tiene alguna cadena con más de dos interacciones dobles, el doblez no las separa por completo.
+
+Comprobación hecha aquí con las tablas de signos de las dos fracciones.""",
+  left=[tab(["Cadena en el 2^{6−2}_{IV}", "Después del doblez (32 corridas)"], _ch62, size=13,
+            hl=[4, 5, 6], colw=[0.42, 0.58], pad=0.06),
+        txt("Ejemplo 3 (moldeo): E = ABC, F = BCD;  doblez: E = −ABC, F = −BCD", size=11)],
+  right=[tab(["Palabra", "1.ª fracción", "Doblez", "¿En el combinado?"],
+             [["ABCE", "+", M, "No"], ["BCDF", "+", M, "No"], ["**ADEF = (ABCE)(BCDF)**", "+", "**(−)(−) = +**", "**Sí**"]],
+             size=13, hl=[2], first_left=True, colw=[0.4, 0.2, 0.22, 0.18], pad=0.05),
+         bul("Invertir **todos** los factores no sirve: palabras de 4 letras no cambian de signo (sería una réplica)",
+             "Se invierten los generadores **impares**: E = −ABC, F = −BCD",
+             "**ADEF** sobrevive: quedan **AD = EF, AE = DF, AF = DE**", size=13),
+         note("III → IV está **garantizado**; IV → separar todas las dobles, **no siempre**", size=13)],
+  ratio=0.48)
+
+S("¿Por qué los diseños de resolución V son los más poderosos?",
+  """En la escala de resolución, el número dice qué tan lejos quedan los alias: en un diseño de resolución R, un efecto de p letras solo puede estar aliado con efectos de al menos R − p letras. En resolución III, un principal (p = 1) se mezcla con interacciones dobles; en resolución IV, con triples, pero las dobles se mezclan entre sí; en resolución V, la palabra más corta tiene cinco letras, así que un principal solo se mezcla con interacciones de cuatro factores y una doble solo con interacciones de tres.
+
+Por eso Montgomery los llama diseños muy poderosos: si las interacciones de tres o más factores son despreciables, estiman de forma única todos los efectos principales y todas las interacciones dobles. No hace falta interpretar cadenas ni correr otra fracción para separar dobles, y la conclusión sobre las interacciones no depende de supuestos de herencia o de conocimiento del proceso.
+
+Ejemplo 2 (semiconductores): el 2^{5−1}_{V} con I = ABCDE tiene 16 corridas y 15 grados de libertad, exactamente los 5 efectos principales más las 10 interacciones dobles, cada una aliada solo con una triple (AB = CDE). La interacción AB = 6.88 se atribuye a AB sin necesidad de otra fracción.
+
+Además, por la propiedad de proyección, un diseño de resolución V se proyecta en un factorial completo en cualquier subconjunto de cuatro factores.
+
+El precio es el tamaño: con k moderadamente grande los diseños de resolución V tienen muchas corridas (tabla 8-14 del libro). Por eso Montgomery recomienda usar la resolución más alta que permita el número de corridas disponible: a mayor resolución, menos restrictivos son los supuestos sobre qué interacciones son despreciables.""",
+  left=[tab(["Resolución", "Palabra más corta", "Un principal se mezcla con", "Una doble se mezcla con", "Se estiman limpios"],
+            [["III", "3 letras", "dobles", "principales y dobles", "nada sin suponer dobles nulas"],
+             ["IV", "4 letras", "triples", "**otras dobles**", "los principales"],
+             ["V", "5 letras", "cuádruples", "triples", "**principales y todas las dobles**"]], size=13, hl=[2],
+            first_left=True, colw=[0.14, 0.16, 0.22, 0.22, 0.26], pad=0.05),
+        form("Resolución R: un efecto de p letras solo se alía con efectos de **R − p** letras o más", size=15),
+        note("**Ejemplo 2**: 2^{5−1}_{V}, I = ABCDE. 15 g.l. = 5 principales + 10 dobles; AB = CDE, así que "
+             "AB = 6.88 se atribuye a AB **sin otra fracción**", size=13)],
+  right=[tab(["Factores", "Diseño de resolución V o más", "Corridas"],
+             [["5", "2^{5−1}_{V}", "16"], ["6", "2^{6−1}_{VI}", "32"], ["7", "2^{7−1}_{VII}", "64"],
+              ["8", "2^{8−2}_{V}", "64"], ["9", "2^{9−2}_{VI}", "128"], ["10", "2^{10−3}_{V}", "128"]],
+             size=13, first_left=False, colw=[0.25, 0.45, 0.3], pad=0.05),
+         txt("Montgomery, tabla 8-14", size=11),
+         bul("Se proyecta en un **factorial completo** en cualquier grupo de **4 factores**",
+             "Precio: el **tamaño** crece rápido con k",
+             "Montgomery: usar la **mayor resolución** que permitan las corridas", size=13)],
+  ratio=0.6)
 
 S("Resumen · ¿Cuántos factores caben en N corridas?",
   """La tabla se lee por columnas. Con 16 corridas se puede hacer un factorial completo de 4 factores, una fracción un medio de 5, una fracción de resolución IV para 6 a 8 factores, o una de resolución III para 9 a 15.
